@@ -1,0 +1,7 @@
+Clone https://github.com/flutter/flutter.git
+
+Install Flutter and DART plugins n Andriod Studio
+Add a device in device manager
+
+Create 'New flutter app' in android studio.
+Point to flutter GIT folder
