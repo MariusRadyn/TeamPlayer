@@ -67,6 +67,7 @@ flutter:
     - images/settings.png
     - images/profile2.png
     - images/playlist.png
+    - images/music.png
     - assets/power.riv
 
   # An image asset can refer to one or more resolution-specific "variants", see

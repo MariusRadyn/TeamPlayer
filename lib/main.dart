@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:team_player/pages/home.dart';
-import 'package:team_player/pages/page2.dart';
-import 'package:team_player/pages/page3.dart';
+import 'package:team_player/pages/PlaylistPage.dart';
+import 'package:team_player/pages/ProfilePage.dart';
 
 void main() => runApp(MaterialApp(
   debugShowCheckedModeBanner: false,
@@ -11,7 +11,7 @@ void main() => runApp(MaterialApp(
   initialRoute: '/',
   routes: {
     '/': (context) => Home() ,
-    '/page1': (context) => Page2() ,
-    '/page2': (context) => Page3() ,
+    '/page1': (context) => PlaylistPage() ,
+    '/page2': (context) => ProfilePage() ,
   },
 ));
