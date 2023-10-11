@@ -6,7 +6,7 @@ import 'package:team_player/pages/ProfilePage.dart';
 void main() => runApp(MaterialApp(
   debugShowCheckedModeBanner: false,
   theme: ThemeData(
-    primarySwatch: Colors.amber,
+    primarySwatch: Colors.lightBlue,
   ),
   initialRoute: '/',
   routes: {
