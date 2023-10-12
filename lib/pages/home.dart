@@ -29,7 +29,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      //backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text('Team Player',
           style: TextStyle(
@@ -37,7 +38,7 @@ class _HomeState extends State<Home> {
             fontSize: 30.0,
           ),
         ),
-        backgroundColor: Colors.grey[800],
+        //backgroundColor: Colors.grey[800],
         centerTitle: true,
       ),
       //bottomNavigationBar: BottomNavBarHome(),

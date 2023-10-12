@@ -11,7 +11,8 @@ class PlaylistPage extends StatefulWidget {
 
 class _PlaylistPageState extends State<PlaylistPage> {
 
-  final List songList = [
+
+  final List _playList = [
     'How Great is God - Chris Tomlin',
     'Yahwe - Bethel',
     'Jira - Hilsong',
@@ -21,17 +22,20 @@ class _PlaylistPageState extends State<PlaylistPage> {
 
   void reorderItems(int oldIndex, int newIndex){
     setState(() {
-
       // Fix error when moving down
       if(oldIndex < newIndex) newIndex--;
 
-      final tile = songList.removeAt(oldIndex);
-      songList.insert(newIndex, tile);
+      final tile = _playList.removeAt(oldIndex);
+      _playList.insert(newIndex, tile);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final Color oddItemColor = colorScheme.primary.withOpacity(0.05);
+    final Color evenItemColor = colorScheme.primary.withOpacity(0.10);
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -45,20 +49,31 @@ class _PlaylistPageState extends State<PlaylistPage> {
         ),
         centerTitle: true,
       ),
-     body: ReorderableListView(
-         children: [
-           for (final song in songList)
-             ListTile(
-               key: ValueKey(song),
-               title: PlayListItem(
-                   text: song,
-                 onDelete: (){},
-               ),
-             )
-         ],
-         onReorder: (oldIndex, newIndex) => reorderItems(oldIndex, newIndex),
+     body: ReorderableListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 40),
+        itemCount: _playList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return ListTile(
+            key: Key('$index'),
+            tileColor: index.isOdd ? oddItemColor : evenItemColor,
+            title: Text(_playList[index]),
+          );
+        },
+        onReorder: (int oldIndex, int newIndex) => reorderItems(oldIndex, newIndex),
+         //children: [
+           // for (final song in platList)
+           //   ListTile(
+           //     key: ValueKey(song),
+           //     title: PlayListItem(
+           //         text: song,
+           //       onDelete: (){},
+           //     ),
+           //   )
+          )
+         //],
+         //onReorder: (oldIndex, newIndex) => reorderItems(oldIndex, newIndex),
        
-     ),
+     //),
     );
   }
 }

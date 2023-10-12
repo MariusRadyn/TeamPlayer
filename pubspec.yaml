@@ -32,6 +32,7 @@ dependencies:
     sdk: flutter
   scrollable_reorderable_navbar: ^0.0.1
   cupertino_icons: ^1.0.2
+  google_fonts: ^6.1.0
 
 
 dev_dependencies:
