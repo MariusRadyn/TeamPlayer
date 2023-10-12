@@ -10,6 +10,7 @@ void main() => runApp(MaterialApp(
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.purple,
+      
       brightness: Brightness.light,
     ),
     textTheme: TextTheme(
