@@ -34,8 +34,8 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text('Team Player',
           style: TextStyle(
-            color: Colors.white,
-            fontSize: 30.0,
+            //color: Colors.white,
+            //fontSize: 30.0,
           ),
         ),
         //backgroundColor: Colors.grey[800],

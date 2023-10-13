@@ -7,21 +7,11 @@ import 'package:team_player/pages/ProfilePage.dart';
 void main() => runApp(MaterialApp(
   debugShowCheckedModeBanner: false,
   theme: ThemeData(
-    useMaterial3: true,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.purple,
-      
-      brightness: Brightness.light,
-    ),
+    useMaterial3: false,
+    colorScheme: ColorScheme.fromSeed(seedColor: Colors.black26,brightness: Brightness.light,),
     textTheme: TextTheme(
-      displayLarge: const TextStyle(
-        fontSize: 72,
-        fontWeight: FontWeight.bold,
-      ),
-      titleLarge: GoogleFonts.rubikPixels(
-        fontSize: 30,
-        fontStyle: FontStyle.italic,
-      ),
+      displayLarge: const TextStyle(fontSize: 72, fontWeight: FontWeight.bold,),
+      titleLarge: GoogleFonts.rubikPixels(fontSize: 30,fontStyle: FontStyle.italic,),
       bodyMedium: GoogleFonts.merriweather(),
       displaySmall: GoogleFonts.pacifico(),
     ),
