@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:team_player/theme/theme_constants.dart';
 import 'package:team_player/utils/playListItem.dart';
 import 'package:team_player/utils/playListItem.dart';
 
@@ -11,13 +13,11 @@ class PlaylistPage extends StatefulWidget {
 
 class _PlaylistPageState extends State<PlaylistPage> {
 
-
-  final List _playList = [
-    'How Great is God - Chris Tomlin',
-    'Yahwe - Bethel',
-    'Jira - Hilsong',
-    'Let it Rain - Chris McLarne',
-    'Listen - Bethel',
+  final List<c_PlayList> _playList = [
+    // 'Yahwe - Bethel',
+    // 'Jira - Hilsong',
+    // 'Let it Rain - Chris McLarne',
+    // 'Listen - Bethel',
   ];
 
   void reorderItems(int oldIndex, int newIndex){
@@ -32,31 +32,37 @@ class _PlaylistPageState extends State<PlaylistPage> {
 
   @override
   Widget build(BuildContext context) {
+
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final Color oddItemColor = colorScheme.primary.withOpacity(0.05);
     final Color evenItemColor = colorScheme.primary.withOpacity(0.10);
 
+    TextTheme _textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        iconTheme: IconThemeData(size: 40.0,color: Colors.white,),
-        backgroundColor: Colors.blue[900],
-        title: const Text('Play List',
-          style: TextStyle(
-            fontSize: 30.0,
-            color: Colors.white,
-          ),
-        ),
-        centerTitle: true,
+      appBar: const CupertinoNavigationBar(
+        middle: Text('Playlist'),
       ),
+
      body: ReorderableListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 40),
         itemCount: _playList.length,
         itemBuilder: (BuildContext context, int index) {
-          return ListTile(
+          return CupertinoListTile(
             key: Key('$index'),
-            tileColor: index.isOdd ? oddItemColor : evenItemColor,
-            title: Text(_playList[index]),
+            backgroundColor : index.isOdd ? oddItemColor : evenItemColor,
+            backgroundColorActivated: COLOR_DARK_PRIMARY,
+            title: Text(
+              _playList[index],
+              style: TextStyle(color: Colors.white),
+            ),
+            subtitle: Text('test',
+              style: TextStyle(
+                  color: Colors.white38,
+                  fontStyle: FontStyle.italic,
+                  fontSize: 15.0,
+              ),
+            ),
           );
         },
         onReorder: (int oldIndex, int newIndex) => reorderItems(oldIndex, newIndex),
@@ -76,4 +82,15 @@ class _PlaylistPageState extends State<PlaylistPage> {
      //),
     );
   }
+}
+class c_PlayList{
+  final String SongName;
+  final String Writer;
+
+  c_PlayList(
+    this.SongName,
+    this.Writer,
+  );
+}
+
 }

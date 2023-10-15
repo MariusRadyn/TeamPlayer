@@ -28,17 +28,13 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    TextTheme _textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      //backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Team Player',
-          style: TextStyle(
-            //color: Colors.white,
-            //fontSize: 30.0,
+        title: Text('Team Player',
+          style: _textTheme.titleLarge,
           ),
-        ),
-        //backgroundColor: Colors.grey[800],
         centerTitle: true,
       ),
       //bottomNavigationBar: BottomNavBarHome(),
@@ -67,10 +63,5 @@ class _HomeState extends State<Home> {
           ),
         ),
     );
-  }
-
-  void doMenu()
-  {
-    print('Halo');
   }
 }

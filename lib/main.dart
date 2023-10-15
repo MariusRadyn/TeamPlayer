@@ -3,23 +3,44 @@ import 'package:team_player/pages/home.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:team_player/pages/PlaylistPage.dart';
 import 'package:team_player/pages/ProfilePage.dart';
+import 'package:team_player/theme/theme_constants.dart';
+import 'package:team_player/theme/theme_manager.dart';
 
-void main() => runApp(MaterialApp(
-  debugShowCheckedModeBanner: false,
-  theme: ThemeData(
-    useMaterial3: false,
-    colorScheme: ColorScheme.fromSeed(seedColor: Colors.black26,brightness: Brightness.light,),
-    textTheme: TextTheme(
-      displayLarge: const TextStyle(fontSize: 72, fontWeight: FontWeight.bold,),
-      titleLarge: GoogleFonts.rubikPixels(fontSize: 30,fontStyle: FontStyle.italic,),
-      bodyMedium: GoogleFonts.merriweather(),
-      displaySmall: GoogleFonts.pacifico(),
-    ),
-  ),
-  initialRoute: '/',
-  routes: {
-    '/': (context) => Home() ,
-    '/page1': (context) => PlaylistPage() ,
-    '/page2': (context) => ProfilePage() ,
-  },
-));
+ThemeManager _themeManager = ThemeManager();
+
+void main(){
+  runApp(MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    _themeManager.addListener(themeListner);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _themeManager.removeListener(themeListner);
+    super.dispose();
+  }
+
+  themeListner() {
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+        theme: darkTheme,
+      home: Home(),
+    );
+  }
+}
