@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 class PlayListItem extends StatelessWidget {
   final String text;
+  final String subText;
   Function()? onDelete;
 
   PlayListItem({
     super.key,
     required this.text,
+    this.subText = '',
     this.onDelete,
   });
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:team_player/pages/home.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:team_player/pages/PlaylistPage.dart';
-import 'package:team_player/pages/ProfilePage.dart';
+import 'package:team_player/pages/playlist_page.dart';
+import 'package:team_player/pages/profile_page.dart';
 import 'package:team_player/theme/theme_constants.dart';
 import 'package:team_player/theme/theme_manager.dart';
 
