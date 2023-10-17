@@ -17,23 +17,34 @@ class PlayListItem extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(2),
       decoration: BoxDecoration(
-          color: Colors.blue[600],
-          borderRadius: BorderRadius.circular(12),
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(2),
       ),
       child: Row(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(text,
-              style: TextStyle(color: Colors.white),
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(5,2,0,0),
+                child: Text(text,
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(5,0,0,0),
+                child: Text(subText,
+                  style: TextStyle(color: Colors.white38),
+                ),
+              ),
+            ],
           ),
           Expanded(
             child: IconButton(
               alignment: Alignment.centerRight,
                 onPressed: onDelete,
                 icon: Icon(
-                  Icons.dangerous_outlined,
+                  Icons.delete_forever,
                   color: Colors.red,
                   size: 30,
                 )

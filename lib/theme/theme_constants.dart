@@ -33,12 +33,13 @@ ThemeData lightTheme = ThemeData(
 // Theme Dark
 //---------------------------------------------------
 ThemeData darkTheme = ThemeData(
-  //useMaterial3: false,
+  useMaterial3: false,
   colorScheme: const ColorScheme.dark(
     primary: COLOR_DARK_PRIMARY,
     onPrimary: Colors.blue,
     brightness: Brightness.dark,
     background: COLOR_DARK_BACKGROUND,
+
   ),
   appBarTheme: const AppBarTheme(
     backgroundColor: COLOR_DARK_APPBAR,
