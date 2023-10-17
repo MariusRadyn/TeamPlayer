@@ -3,11 +3,11 @@ import 'package:rive/rive.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:circle_list/circle_list.dart';
-import 'package:team_player/pages/PlaylistPage.dart';
-import 'package:team_player/pages/ProfilePage.dart';
-import 'package:team_player/pages/SettingsPage.dart';
-import 'package:team_player/pages/SongsPage.dart';
-import 'package:team_player/pages/SyncPage.dart';
+import 'package:team_player/pages/playlist_page.dart';
+import 'package:team_player/pages/profile_page.dart';
+import 'package:team_player/pages/settings_page.dart';
+import 'package:team_player/pages/songs_page.dart';
+import 'package:team_player/pages/sync_page.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
