@@ -78,7 +78,9 @@ class _PlaylistPageState extends State<PlaylistPage> {
         text: _playList[index].songname,
         subText: _playList[index].writer,
         onDelete: (){
-          _playList.removeAt(index);
+          setState(() {
+            _playList.removeAt(index);
+          });
         },
       ),
     );
