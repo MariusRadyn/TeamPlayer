@@ -127,7 +127,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
 
            );
          },
-         //onReorder: (int oldIndex, int newIndex) => reorderItems(oldIndex, newIndex),
+         onReorder: (int oldIndex, int newIndex) => reorderItems(oldIndex, newIndex),
          // children: [
          //    for (final song in _playList)
          //      ListTile(
