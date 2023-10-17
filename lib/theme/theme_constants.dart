@@ -33,7 +33,7 @@ ThemeData lightTheme = ThemeData(
 // Theme Dark
 //---------------------------------------------------
 ThemeData darkTheme = ThemeData(
-  useMaterial3: false,
+  //useMaterial3: false,
   colorScheme: const ColorScheme.dark(
     primary: COLOR_DARK_PRIMARY,
     onPrimary: Colors.blue,
