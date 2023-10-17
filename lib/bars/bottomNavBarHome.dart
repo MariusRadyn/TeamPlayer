@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scrollable_reorderable_navbar/scrollable_reorderable_navbar.dart';
+import 'package:team_player/theme/theme_constants.dart';
 
 class BottomNavBarHome extends StatefulWidget {
   const BottomNavBarHome({super.key});
@@ -11,12 +12,14 @@ class BottomNavBarHome extends StatefulWidget {
 class _BottomNavBarHomeState extends State<BottomNavBarHome> {
   int _selectedIndex = 0;
   List<NavBarItem> _items = const [
-    NavBarItem(widget: Icon(Icons.home), name: "Home"),
-    NavBarItem(widget: Icon(Icons.group), name: "Social"),
-    NavBarItem(widget: Icon(Icons.call), name: "Calls"),
+    NavBarItem(
+        widget: Icon(Icons.music_note_outlined, color: COLOR_DARK_HEDDING,),
+        name: "Song"),
+    NavBarItem(widget: Icon(Icons.library_books, color: COLOR_DARK_HEDDING,), name: "Playlist"),
+    NavBarItem(widget: Icon(Icons.edit, color: COLOR_DARK_HEDDING,), name: "Edit"),
+    NavBarItem(widget: Icon(Icons.settings, color: COLOR_DARK_HEDDING,), name: "Settings"),
     NavBarItem(widget: Icon(Icons.image), name: "Pictures"),
     NavBarItem(widget: Icon(Icons.message), name: "Messages"),
-    NavBarItem(widget: Icon(Icons.settings), name: "Settings")
   ];
 
   @override
@@ -28,6 +31,7 @@ class _BottomNavBarHomeState extends State<BottomNavBarHome> {
           _selectedIndex = arg;
         });
       },
+      backgroundColor: Theme.of(context).cardColor,
       onReorder: (oldIndex, newIndex) {
         final currItem = _items[_selectedIndex];
         if (oldIndex < newIndex) newIndex -= 1;

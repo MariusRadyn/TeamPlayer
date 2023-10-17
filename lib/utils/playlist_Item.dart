@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:team_player/theme/theme_constants.dart';
 
 class PlayListItem extends StatelessWidget {
   final String text;
@@ -27,8 +28,11 @@ class PlayListItem extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(5,2,0,0),
-                child: Text(text,
-                  style: TextStyle(color: Colors.white),
+                child: Expanded(
+                  child: Text(text,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: COLOR_DARK_MAIN_TEXT),
+                  ),
                 ),
               ),
               Padding(

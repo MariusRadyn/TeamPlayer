@@ -7,8 +7,10 @@ const FONT_MAIN =   GoogleFonts.aBeeZee;
 
 const COLOR_DARK_PRIMARY = Colors.deepOrange;
 const COLOR_DARK_BACKGROUND = Colors.black12;
-const COLOR_DARK_APPBAR = Colors.black26;
+const COLOR_DARK_APPBAR = Colors.black12;
 const COLOR_DARK_BUTTON = Colors.black54;
+const COLOR_DARK_HEDDING = Colors.lightBlueAccent;
+const COLOR_DARK_MAIN_TEXT = Colors.lightBlueAccent;
 
 // Define your seed colors.
 // const Color primarySeedColor = Color(0xFF6750A4);
@@ -43,7 +45,15 @@ ThemeData darkTheme = ThemeData(
   ),
   appBarTheme: const AppBarTheme(
     backgroundColor: COLOR_DARK_APPBAR,
+    iconTheme: IconThemeData(
+      color: COLOR_DARK_HEDDING,
+    ),
+    titleTextStyle: TextStyle(
+      color: COLOR_DARK_MAIN_TEXT,
+      fontSize: 30,
+    ),
   ),
+
   textTheme: TextTheme(
     displayLarge: FONT_MAIN(
       fontSize: 40,
@@ -55,6 +65,7 @@ ThemeData darkTheme = ThemeData(
     displayMedium: FONT_MAIN(fontSize: 20),
     displaySmall: FONT_MAIN(fontSize: 10),
   ),
+
   floatingActionButtonTheme: FloatingActionButtonThemeData(
     backgroundColor: Colors.grey[700]
   ),

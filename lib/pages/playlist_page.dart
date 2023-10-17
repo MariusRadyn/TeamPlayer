@@ -5,6 +5,8 @@ import 'package:team_player/theme/theme_constants.dart';
 import 'package:team_player/utils/playlist_Item.dart';
 import 'package:team_player/utils/playlist_Item.dart';
 
+import '../bars/bottomNavBarHome.dart';
+
 class PlaylistPage extends StatefulWidget {
   const PlaylistPage({super.key});
 
@@ -129,11 +131,11 @@ class _PlaylistPageState extends State<PlaylistPage> {
     TextTheme _textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: const CupertinoNavigationBar(
-        middle: Text('Playlist'),
+      appBar: AppBar(
+        title: Text('Playlist'),
       ),
-
-     body: ReorderableListView.builder(
+      bottomNavigationBar: BottomNavBarHome(),
+      body: ReorderableListView.builder(
        onReorder: (int oldIndex, int newIndex) => reorderItems(oldIndex, newIndex),
        itemCount: _playList.length,
        itemBuilder: (BuildContext context, int index) {

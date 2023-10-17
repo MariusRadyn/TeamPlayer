@@ -33,8 +33,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Team Player',
-          style: _textTheme.titleLarge,
-          ),
+        ),
         centerTitle: true,
       ),
       //bottomNavigationBar: BottomNavBarHome(),
