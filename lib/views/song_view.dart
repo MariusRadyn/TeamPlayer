@@ -16,7 +16,7 @@ class SongContainer extends StatelessWidget {
         //height: MediaQuery.of(context).size.height,
         //width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
-          color: Colors.amber,
+          color: Theme.of(context).colorScheme.background,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(text,

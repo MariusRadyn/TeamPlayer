@@ -5,12 +5,13 @@ import 'package:flex_seed_scheme/flex_seed_scheme.dart';
 
 const FONT_MAIN =   GoogleFonts.aBeeZee;
 
-const COLOR_DARK_PRIMARY = Colors.deepOrange;
+const COLOR_DARK_PRIMARY = Colors.grey;
+const COLOR_DARK_ONPRIMARY = Colors.lightBlueAccent;
+const COLOR_DARK_ONSECONDARY = Colors.deepOrange;
 const COLOR_DARK_BACKGROUND = Colors.black12;
 const COLOR_DARK_APPBAR = Colors.black12;
 const COLOR_DARK_BUTTON = Colors.black54;
-const COLOR_DARK_HEDDING = Colors.lightBlueAccent;
-const COLOR_DARK_MAIN_TEXT = Colors.lightBlueAccent;
+const COLOR_DARK_HEDDING = Colors.blue;
 
 // Define your seed colors.
 // const Color primarySeedColor = Color(0xFF6750A4);
@@ -34,13 +35,15 @@ ThemeData lightTheme = ThemeData(
 //---------------------------------------------------
 // Theme Dark
 //---------------------------------------------------
+@override
 ThemeData darkTheme = ThemeData(
   useMaterial3: false,
   colorScheme: const ColorScheme.dark(
     primary: COLOR_DARK_PRIMARY,
-    onPrimary: Colors.blue,
+    onPrimary: COLOR_DARK_ONPRIMARY,
     brightness: Brightness.dark,
     background: COLOR_DARK_BACKGROUND,
+    onSecondary: COLOR_DARK_ONSECONDARY,
 
   ),
   appBarTheme: const AppBarTheme(
@@ -49,7 +52,7 @@ ThemeData darkTheme = ThemeData(
       color: COLOR_DARK_HEDDING,
     ),
     titleTextStyle: TextStyle(
-      color: COLOR_DARK_MAIN_TEXT,
+      color: COLOR_DARK_ONPRIMARY,
       fontSize: 30,
     ),
   ),

@@ -31,7 +31,7 @@ class PlayListItem extends StatelessWidget {
                 child: Expanded(
                   child: Text(text,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: COLOR_DARK_MAIN_TEXT),
+                    style: TextStyle(color: COLOR_DARK_ONPRIMARY),
                   ),
                 ),
               ),

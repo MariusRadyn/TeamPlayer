@@ -15,32 +15,40 @@ class _SongPageState extends State<SongPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 10, 10, 50),
-        child: SafeArea(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(2, 10, 2, 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-               Container(
-                 height: MediaQuery.of(context).size.height-100,
-                 child: PageView(
-                   controller: _controller,
-                   scrollDirection: Axis.horizontal,
-                   children: [
-                     SongContainer(text: 'Song 1'),
-                     SongContainer(text: 'Song 2'),
-                   ],
+               Expanded(
+                 child: Container(
+                   height: MediaQuery.of(context).size.height-100,
+                   child: PageView(
+                     controller: _controller,
+                     scrollDirection: Axis.horizontal,
+                     children: [
+                       SongContainer(text: 'Song 1'),
+                       SongContainer(text: 'Song 2'),
+                     ],
+                   ),
                  ),
                ),
-            const SizedBox(height: 25),
 
-            SmoothPageIndicator(
+              const SizedBox(height: 15),
+
+              SmoothPageIndicator(
                 controller: _controller,
-                count: 2)
+                count: 2,
+                effect: WormEffect(
+                  dotColor: Theme.of(context).colorScheme.primary,
+                  activeDotColor: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
             ],
           ),
         ),
-     ),
+      ),
     );
   }
 }

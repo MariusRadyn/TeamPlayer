@@ -32,9 +32,9 @@ class _HomeState extends State<Home> {
     TextTheme _textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
+      //backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        title: Text('Team Player',
-        ),
+        title: Text('Team Player'),
         centerTitle: true,
       ),
       //bottomNavigationBar: BottomNavBarHome(),

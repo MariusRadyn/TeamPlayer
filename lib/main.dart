@@ -5,6 +5,7 @@ import 'package:team_player/pages/playlist_page.dart';
 import 'package:team_player/pages/profile_page.dart';
 import 'package:team_player/theme/theme_constants.dart';
 import 'package:team_player/theme/theme_manager.dart';
+import 'package:team_player/utils/helpers.dart';
 
 ThemeManager _themeManager = ThemeManager();
 
@@ -40,6 +41,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
         theme: darkTheme,
+      //home: ShowAllThemeColors(context),
       home: Home(),
     );
   }
