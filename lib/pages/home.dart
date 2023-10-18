@@ -6,7 +6,8 @@ import 'package:circle_list/circle_list.dart';
 import 'package:team_player/pages/playlist_page.dart';
 import 'package:team_player/pages/profile_page.dart';
 import 'package:team_player/pages/settings_page.dart';
-import 'package:team_player/pages/songs_page.dart';
+import 'package:team_player/pages/library_page.dart';
+import 'package:team_player/pages/song_page.dart';
 import 'package:team_player/pages/sync_page.dart';
 
 class Home extends StatefulWidget {
@@ -18,7 +19,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   final Map<String, Widget> icons = {
-    'images/add.png' : PlaylistPage(),
+    'images/add.png' : SongPage(),
     'images/sync.png' : SyncPage(),
     'images/settings.png' : SettingsPage(),
     'images/profile2.png' : ProfilePage(),
@@ -51,8 +52,7 @@ class _HomeState extends State<Home> {
             children: icons.keys.map((item) {
               return GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
+                  Navigator.push(context,
                     MaterialPageRoute(builder: (context) => icons[item]!),
                   );
                 },
