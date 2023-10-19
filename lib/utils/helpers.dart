@@ -37,6 +37,7 @@ TextField MyTextField(String text, TextEditingController _cntr){
     controller: _cntr,
     decoration: InputDecoration(
       hintText: text,
+      labelText: 'label',
       border: UnderlineInputBorder(),
       suffixIcon: IconButton(
         onPressed: (){
@@ -48,16 +49,12 @@ TextField MyTextField(String text, TextEditingController _cntr){
   );
 }
 
-MaterialButton MyButton(TextEditingController _cntr) {
+MaterialButton MyButton(String text, Function()? onPressed) {
   return MaterialButton(
-    onPressed: (){
-      //setState(() {
-      //  txtUserName = _cntr.text;
-      //},
-    },
+    onPressed: onPressed,
     color: Colors.blue,
-    child: Text('Save',
-        style: TextStyle(
+    child: Text(text,
+        style: const TextStyle(
             color: Colors.white)),
   );
 }
