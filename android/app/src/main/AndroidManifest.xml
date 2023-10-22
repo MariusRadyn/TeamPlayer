@@ -22,7 +22,19 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+
+				<!-- Change this to be db- followed by your app key -->
+				<data android:scheme="db-vin6yi2slkfpp1e" />
+
+				<action android:name="android.intent.action.VIEW" />
+
+				<category android:name="android.intent.category.BROWSABLE" />
+				<category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+			
+			android:name="com.dropbox.core.android.AuthActivity"
+			android:configChanges="orientation|keyboard"
+			android:launchMode="singleTask">
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:team_player/pages/home.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:team_player/pages/playlist_page.dart';
 import 'package:team_player/pages/profile_page.dart';
 import 'package:team_player/theme/theme_constants.dart';
 import 'package:team_player/theme/theme_manager.dart';
+import 'package:team_player/utils/dropbox.dart';
 import 'package:team_player/utils/helpers.dart';
+
+
+// Gradle = 7.5
+// SDK = 30
+
 
 ThemeManager _themeManager = ThemeManager();
 
@@ -14,13 +19,16 @@ void main(){
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+   MyApp({
+    super.key,
+});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+
   @override
   void initState() {
     _themeManager.addListener(themeListner);
@@ -42,7 +50,17 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
         theme: darkTheme,
       //home: ShowAllThemeColors(context),
-      home: Home(),
+      home: dropHome(),
     );
   }
+}
+
+class UserSettings{
+  String userName;
+  bool themeDark;
+
+    UserSettings(
+      this.userName,
+      this.themeDark,
+  );
 }

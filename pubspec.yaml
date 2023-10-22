@@ -32,17 +32,20 @@ dependencies:
     sdk: flutter
   scrollable_reorderable_navbar: ^0.0.1
   cupertino_icons: ^1.0.2
-  google_fonts: ^6.1.0
+  #google_fonts: ^6.1.0
   flex_seed_scheme: ^1.4.0
   flutter_slidable: ^1.3.0
   smooth_page_indicator: ^1.0.0+2
   shared_preferences: ^2.0.6
+  dropbox_client: ^1.0.0
+  path_provider: ^2.1.1
+  sqflite: ^2.3.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   circle_list: ^1.0.2
-  rive: 0.11.11
+  #rive: 0.11.11
   flutter_lints: ^2.0.0
 
 
@@ -77,10 +80,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: aBeeZee
+      fonts:
+       - asset: fonts/ABeeZee-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

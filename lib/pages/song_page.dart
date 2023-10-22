@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:team_player/views/song_view.dart';
+import 'package:sqflite/sqflite.dart';
 
 class SongPage extends StatefulWidget {
   const SongPage({super.key});
@@ -11,6 +12,16 @@ class SongPage extends StatefulWidget {
 
 class _SongPageState extends State<SongPage> {
   final _controller = PageController();
+
+  @override
+  void initState() {
+    initDB();
+    super.initState();
+  }
+
+  Future initDB() async {
+    var db = await openDatabase('assets/db.db');
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,15 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:team_player/main.dart';
 
-Widget AddVericalSpace(double height){
-  return SizedBox(
-    height: height,
-  );
+UserSettings userSettings = UserSettings('',false);
+const String USER_NAME = 'username';
+const String DARK_THEME = 'darktheme';
 
-}Widget AddHorisontalSpace(double width){
-  return SizedBox(
-    width: width,
-  );
+saveUserSettings() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString(USER_NAME, userSettings.userName);
+  prefs.setBool(DARK_THEME, userSettings.themeDark);
+}
+
+getUserSettings() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  userSettings.userName = prefs.getString(USER_NAME) ?? '';
+  userSettings.themeDark = prefs.getBool(DARK_THEME) ?? false;
+}
+
+removePreference(String propertyName) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.remove(propertyName);
 }
 
 Container ShowAllThemeColors(BuildContext context){
@@ -77,3 +89,14 @@ MaterialButton MyButton(String text, Function()? onPressed) {
     ),
   );
  }
+
+// Future<Database> _db;
+//
+// Future<Database> getDataBase() async {
+//   _db = _db ?? openDatabase(join(await getDatabasesPath(), 'data.db');
+//       return _db;
+//   }
+// getData() async {
+//   final Database db = await getDataBase();
+// }
+

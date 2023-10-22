@@ -26,10 +26,9 @@ android {
     namespace "com.example.team_player"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
-  
     ndkVersion = '25.1.8937393'
-
-    compileOptions {
+	
+	compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -49,8 +48,10 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
+		minSdkVersion = '21'
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+		multiDexEnabled = true
     }
 
     buildTypes {
@@ -66,4 +67,9 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    def multidex_version = "2.0.1"
+    implementation "androidx.multidex:multidex:$multidex_version"
+    //implementation 'com.dropbox.core:dropbox-core-sdk:5.4.5' // needs gradle 7.6.2
+    implementation 'com.dropbox.core:dropbox-core-sdk:5.4.0'
+}

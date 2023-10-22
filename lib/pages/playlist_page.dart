@@ -146,14 +146,12 @@ class _PlaylistPageState extends State<PlaylistPage> {
   }
 }
 
-
-
 class PlayListData {
   final String songname;
   final String writer;
 
   PlayListData({
     required this.songname,
-    required this.writer,}
-  );
+    required this.writer,
+  });
 }

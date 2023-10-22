@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:team_player/utils/helpers.dart';
+
 
 class SyncPage extends StatefulWidget {
   const SyncPage({super.key});
@@ -24,6 +26,7 @@ class _SyncPageState extends State<SyncPage> {
               color: Theme.of(context).colorScheme.primary,
               height: 30,
               width: 300,
+              child: Text(''),
 
             ),
           ),

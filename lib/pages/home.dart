@@ -1,5 +1,5 @@
-import 'package:team_player/bars/bottomNavBarHome.dart';
-import 'package:rive/rive.dart';
+//import 'package:team_player/bars/bottomNavBarHome.dart';
+//import 'package:rive/rive.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:circle_list/circle_list.dart';

@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flex_seed_scheme/flex_seed_scheme.dart';
 
-const FONT_MAIN =   GoogleFonts.aBeeZee;
 
 const COLOR_DARK_PRIMARY = Colors.grey;
 const COLOR_DARK_ONPRIMARY = Colors.lightBlueAccent;
@@ -57,16 +55,24 @@ ThemeData darkTheme = ThemeData(
     ),
   ),
 
-  textTheme: TextTheme(
-    displayLarge: FONT_MAIN(
+  textTheme: const TextTheme(
+    displayLarge: TextStyle(
+      fontFamily: 'aBeeZee',
       fontSize: 40,
       fontWeight: FontWeight.bold,
     ),
-    titleLarge: FONT_MAIN(
+    titleLarge: TextStyle(
+      fontFamily: 'aBeeZee',
       fontSize: 30,
     ),
-    displayMedium: FONT_MAIN(fontSize: 20),
-    displaySmall: FONT_MAIN(fontSize: 10),
+    displayMedium: TextStyle(
+        fontFamily: 'aBeeZee',
+        fontSize: 20
+    ),
+    displaySmall: TextStyle(
+        fontFamily: 'aBeeZee',
+        fontSize: 10
+    ),
   ),
 
   floatingActionButtonTheme: FloatingActionButtonThemeData(
