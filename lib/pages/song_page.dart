@@ -1,7 +1,11 @@
+import 'dart:io';
+import 'package:path/path.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:team_player/views/song_view.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:team_player/views/song_view.dart';
+import 'package:team_player/utils/database_manager.dart';
 
 class SongPage extends StatefulWidget {
   const SongPage({super.key});
@@ -20,7 +24,9 @@ class _SongPageState extends State<SongPage> {
   }
 
   Future initDB() async {
-    var db = await openDatabase('assets/db.db');
+    Directory directory = await getApplicationDocumentsDirectory();
+    String dbPath = join(directory.path, 'LocalDB.db');
+    Database db = await DatabaseHelper().db;
   }
 
   @override

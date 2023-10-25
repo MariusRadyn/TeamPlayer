@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
         theme: darkTheme,
       //home: ShowAllThemeColors(context),
-      home: dropHome(),
+      home: Home(),
     );
   }
 }

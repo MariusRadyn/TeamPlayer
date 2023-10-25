@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
 
 class DB_LocalLibrary {
   @required
@@ -35,41 +36,46 @@ class DB_LocalLibrary {
   }
 }
 
-class CarDatabase {
-  static final CarDatabase _instance = CarDatabase._();
-  static Database _database;
-  CarDatabase._();
+class DatabaseHelper {
+  // Make it a Singleton Class
+  DatabaseHelper._();
+  static final DatabaseHelper _instance = DatabaseHelper._();
 
-  factory CarDatabase() {
+  factory DatabaseHelper() {
     return _instance;
   }
 
-  Future<Database> get db async {
-    if (_database != null) {
-      return _database;
-    }
-    _database = await init();
-    return _database;
+  //static Database _database;
+  // Future<Database> get db async {
+  //   if (_database != null) {
+  //     return _database;
+  //   }
+  //   _database = await init();
+  //   return _database;
+  // }
+  Future<Database> get db async{
+  return await init();
   }
 
   Future<Database> init() async {
     Directory directory = await getApplicationDocumentsDirectory();
-    String dbPath = join(directory.path, 'database.db');
+    String dbPath = join(directory.path, 'LocalDB.db');
     Future<Database> database = openDatabase(dbPath, version: 1, onCreate: _onCreate, onUpgrade: _onUpgrade);
     return database;
   }
 
   void _onCreate(Database db, int version) {
     db.execute('''
-    CREATE TABLE car(
+    CREATE TABLE SongsTable(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      model TEXT,
-      power INTEGER,
-      top_speed INTEGER,
-      is_electro INTEGER)
+      songname TEXT,
+      author TEXT,
+      genre TEXT,
+      dateModified TEXT)
   ''');
     print("Database was created!");
   }
+
   void _onUpgrade(Database db, int oldVersion, int newVersion) {
     // Run migration according database versions
   }
