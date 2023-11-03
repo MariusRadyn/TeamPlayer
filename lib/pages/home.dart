@@ -6,7 +6,7 @@ import 'package:circle_list/circle_list.dart';
 import 'package:team_player/pages/playlist_page.dart';
 import 'package:team_player/pages/profile_page.dart';
 import 'package:team_player/pages/settings_page.dart';
-import 'package:team_player/pages/library_page.dart';
+import 'package:team_player/pages/Songslibrary_page.dart';
 import 'package:team_player/pages/song_page.dart';
 import 'package:team_player/pages/sync_page.dart';
 

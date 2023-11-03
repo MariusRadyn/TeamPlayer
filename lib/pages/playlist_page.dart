@@ -29,8 +29,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
   // Database
   List<Map<String, dynamic>> _playList = [];
   bool _isLoading = true;
-  void _getPlayList() async {
-    final data = await SQLHelper.readTable(DB_LOCAL_SONGS_TABLE);
+  void getPlayList() async {
+    final data = await SQLHelperPlaylistLibrary.readTable();
     setState(() {
       _playList = data;
       _isLoading = false;
@@ -38,10 +38,23 @@ class _PlaylistPageState extends State<PlaylistPage> {
     print(_playList);
   }
 
+  void loadDummyData() {
+    LocalPlaylistLibrary data = LocalPlaylistLibrary(
+      id: 0,
+      description: 'My New Playlist',
+      nrOfItems: 0,
+      dateCreated: DateTime.now().toString(),
+      dateModified: DateTime.now().toString(),
+    );
+
+    SQLHelperPlaylistLibrary.insert(data);
+  }
+
   @override
   void initState() {
-    _getPlayList();
-
+    //deleteLocalDB();
+    //loadDummyData();
+    getPlayList();
     super.initState();
   }
 
@@ -58,8 +71,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
     return ListTile(
       key: Key('$index'),
       title: MyPlayListItem(
-        text: _playList[index]['songName'],
-        subText: _playList[index]['author'],
+        text: _playList[index]['description'],
+        subText: 'Items: ' + _playList[index]['nrOfItems'],
         onDelete: (){
           setState(() {
             _playList.removeAt(index);

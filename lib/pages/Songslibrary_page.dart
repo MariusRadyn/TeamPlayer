@@ -24,28 +24,56 @@ class _SongsPageState extends State<SongsPage> {
     return ListTile(
       key: Key('$index'),
       title: MyPlayListItem(
-        text: _songList[index]['songName'],
-        subText: _songList[index]['author'],
+        text: _songsLibrary[index]['songName'],
+        subText: _songsLibrary[index]['author'],
         onDelete: (){
           setState(() {
-            _songList.removeAt(index);
+            _songsLibrary.removeAt(index);
           });
         },
       ),
     );
   }
-  // Database
-  List<Map<String, dynamic>> _songList = [];
-  bool _isLoading = true;
-  void _getPlayList() async {
-    final data = await SQLHelper.readTable(DB_LOCAL_SONGS_TABLE);
+
+  void reorderItems(int oldIndex, int newIndex){
     setState(() {
-      _songList = data;
-      _isLoading = false;
+      // Fix error when moving down
+      if(oldIndex < newIndex) newIndex--;
+      final tile = myPlayList.removeAt(oldIndex);
+      myPlayList.insert(newIndex, tile);
     });
-    print(_songList);
   }
 
+  // Read Database
+  List<Map<String, dynamic>> _songsLibrary = [];
+  bool _isLoading = true;
+  void getSongLibrary() async
+  {
+    final data = await SQLHelperSongsLibrary.readTable();
+    setState(() {
+      _songsLibrary = data;
+      _isLoading = false;
+    });
+    print(_songsLibrary);
+  }
+
+  void loadDummyData() {
+     LocalSongsLibrary data = LocalSongsLibrary(
+        id: 0,
+        songName: 'How great is our God',
+        author: 'Chris Tomlin',
+        genre: 'Christian',
+        dateCreated: DateTime.now().toString());
+
+     SQLHelperSongsLibrary.insert(data);
+  }
+  @override
+  void initState() {
+    //deleteLocalDB();
+    loadDummyData();
+    getSongLibrary();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,13 +85,12 @@ class _SongsPageState extends State<SongsPage> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
-      body: Column(
-        children: [
-          Container(
-            height: 50,
-            color: Colors.white,
-          ),
-        ],
+      body: ReorderableListView.builder(
+        onReorder: (int oldIndex, int newIndex) => reorderItems(oldIndex, newIndex),
+        itemCount: _songsLibrary.length,
+        itemBuilder: (BuildContext context, int index) {
+          return PlayListTile(index);
+        },
       ),
     );
   }
