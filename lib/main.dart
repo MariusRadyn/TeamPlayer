@@ -14,6 +14,7 @@ import 'package:team_player/utils/helpers.dart';
 
 ThemeManager _themeManager = ThemeManager();
 
+
 void main(){
   runApp(MyApp());
 }
@@ -28,6 +29,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
 
   @override
   void initState() {
@@ -55,12 +57,3 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class UserSettings{
-  String userName;
-  bool themeDark;
-
-    UserSettings(
-      this.userName,
-      this.themeDark,
-  );
-}

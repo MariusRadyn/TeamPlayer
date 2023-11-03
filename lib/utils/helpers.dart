@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:team_player/main.dart';
+import 'package:team_player/utils/global_data.dart';
 
-UserSettings userSettings = UserSettings('',false);
-const String USER_NAME = 'username';
-const String DARK_THEME = 'darktheme';
+
 
 saveUserSettings() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -89,6 +87,7 @@ MaterialButton MyButton(String text, Function()? onPressed) {
     ),
   );
  }
+
 
 // Future<Database> _db;
 //

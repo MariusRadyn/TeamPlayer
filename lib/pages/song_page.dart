@@ -1,11 +1,11 @@
-import 'dart:io';
-import 'package:path/path.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:team_player/utils/global_data.dart';
 import 'package:team_player/views/song_view.dart';
 import 'package:team_player/utils/database_manager.dart';
+
+SQLHelper myDB = SQLHelper();
 
 class SongPage extends StatefulWidget {
   const SongPage({super.key});
@@ -17,16 +17,27 @@ class SongPage extends StatefulWidget {
 class _SongPageState extends State<SongPage> {
   final _controller = PageController();
 
+
   @override
   void initState() {
-    initDB();
+    //initDB();
     super.initState();
   }
 
+
   Future initDB() async {
-    Directory directory = await getApplicationDocumentsDirectory();
-    String dbPath = join(directory.path, 'LocalDB.db');
-    Database db = await DatabaseHelper().db;
+    Database db = await myDB.database;
+    var data = const LocalSongsLibrary(
+      id: 1,
+      songName: 'How great is our God',
+      author: 'Chris Tomlin',
+      genre: 'Cristian',
+      dateModified: '10/10/2002',
+      isActive: 0,
+    );
+
+    await myDB.Insert(data);
+    List<Map> list = await db.rawQuery('SELECT * FROM $DB_LOCAL_SONGS_TABLE');
   }
 
   @override

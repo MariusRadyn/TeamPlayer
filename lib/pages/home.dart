@@ -18,7 +18,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  final Map<String, Widget> icons = {
+  final Map<String, Widget> myPageRoutes = {
     'images/add.png' : SongPage(),
     'images/sync.png' : SyncPage(),
     'images/settings.png' : SettingsPage(),
@@ -29,7 +29,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    TextTheme _textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       //backgroundColor: Theme.of(context).colorScheme.background,
@@ -49,11 +48,11 @@ class _HomeState extends State<Home> {
               child: Image.asset('images/power2.png'),
               ),
             ),
-            children: icons.keys.map((item) {
+            children: myPageRoutes.keys.map((item) {
               return GestureDetector(
                 onTap: () {
                   Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => icons[item]!),
+                    MaterialPageRoute(builder: (context) => myPageRoutes[item]!),
                   );
                 },
                 child: Image.asset(item,width: 70,height: 70),

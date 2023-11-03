@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:team_player/theme/theme_constants.dart';
+import 'package:team_player/utils/global_data.dart';
 import 'package:team_player/utils/playlist_Item.dart';
-import 'package:team_player/utils/playlist_Item.dart';
-
 import '../bars/bottomNavBarHome.dart';
+import 'package:team_player/utils/database_manager.dart';
 
 class PlaylistPage extends StatefulWidget {
   const PlaylistPage({super.key});
@@ -17,68 +16,50 @@ enum Actions{share,delete,archive}
 
 class _PlaylistPageState extends State<PlaylistPage> {
 
-  final List<PlayListData> _playList = [
-    PlayListData(
-        songname: 'How great is our God',
-        writer: 'Chris Tomlin'),
-  ];
-
   void reorderItems(int oldIndex, int newIndex){
     setState(() {
       // Fix error when moving down
       if(oldIndex < newIndex) newIndex--;
 
-      final tile = _playList.removeAt(oldIndex);
-      _playList.insert(newIndex, tile);
+      final tile = myPlayList.removeAt(oldIndex);
+      myPlayList.insert(newIndex, tile);
     });
+  }
+
+  // Database
+  List<Map<String, dynamic>> _playList = [];
+  bool _isLoading = true;
+  void _getPlayList() async {
+    final data = await SQLHelper.readTable(DB_LOCAL_SONGS_TABLE);
+    setState(() {
+      _playList = data;
+      _isLoading = false;
+    });
+    print(_playList);
   }
 
   @override
   void initState() {
-    _playList.add(PlayListData(
-      songname: 'Rain',
-      writer: 'Leeland')
-    );
+    _getPlayList();
 
-    _playList.add(PlayListData(
-      songname: 'Indescribible',
-      writer: 'Chris Tomlin')
-    );
     super.initState();
   }
 
   void _onDismissed(int index, Actions action){
-    final song = _playList[index].songname;
+    final song = myPlayList[index].songName;
     if(action == Actions.delete){
      setState(() => {
-       _playList.removeAt(index)
+       myPlayList.removeAt(index)
      });
     }
   }
 
-  ListTile tileList1(int index){
+  ListTile PlayListTile(int index){
     return ListTile(
       key: Key('$index'),
-      title: Text(
-        _playList[index].songname,
-        style: TextStyle(color: Colors.white),
-      ),
-      subtitle: Text(_playList[index].writer,
-        style: const TextStyle(
-          color: Colors.white38,
-          fontStyle: FontStyle.italic,
-          fontSize: 15.0,
-        ),
-      ),
-    );
-  }
-
-  ListTile tileList2(int index){
-    return ListTile(
-      key: Key('$index'),
-      title: PlayListItem(
-        text: _playList[index].songname,
-        subText: _playList[index].writer,
+      title: MyPlayListItem(
+        text: _playList[index]['songName'],
+        subText: _playList[index]['author'],
         onDelete: (){
           setState(() {
             _playList.removeAt(index);
@@ -119,7 +100,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
         ),
       ],
     ) ,
-    child: PlayListItem(text: _playList[index].songname)
+    child: MyPlayListItem(text: myPlayList[index].songName)
     );
   }
 
@@ -139,19 +120,9 @@ class _PlaylistPageState extends State<PlaylistPage> {
        onReorder: (int oldIndex, int newIndex) => reorderItems(oldIndex, newIndex),
        itemCount: _playList.length,
        itemBuilder: (BuildContext context, int index) {
-         return tileList2(index);
+         return PlayListTile(index);
        },
      ),
     );
   }
-}
-
-class PlayListData {
-  final String songname;
-  final String writer;
-
-  PlayListData({
-    required this.songname,
-    required this.writer,
-  });
 }

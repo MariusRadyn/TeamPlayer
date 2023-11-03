@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:team_player/theme/theme_constants.dart';
 
-class PlayListItem extends StatelessWidget {
+class MyPlayListItem extends StatelessWidget {
   final String text;
   final String subText;
   Function()? onDelete;
 
-  PlayListItem({
+  MyPlayListItem({
     super.key,
     required this.text,
     this.subText = '',
@@ -28,17 +28,15 @@ class PlayListItem extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(5,2,0,0),
-                child: Expanded(
-                  child: Text(text,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: COLOR_DARK_ONPRIMARY),
-                  ),
+                child: Text(text,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: COLOR_DARK_ONPRIMARY),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(5,0,0,0),
                 child: Text(subText,
-                  style: TextStyle(color: Colors.white38),
+                  style: const TextStyle(color: Colors.white38),
                 ),
               ),
             ],
@@ -47,7 +45,7 @@ class PlayListItem extends StatelessWidget {
             child: IconButton(
               alignment: Alignment.centerRight,
                 onPressed: onDelete,
-                icon: Icon(
+                icon: const Icon(
                   Icons.delete_forever,
                   color: Colors.red,
                   size: 30,

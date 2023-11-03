@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flex_seed_scheme/flex_seed_scheme.dart';
 
-
 const COLOR_DARK_PRIMARY = Colors.grey;
 const COLOR_DARK_ONPRIMARY = Colors.lightBlueAccent;
 const COLOR_DARK_ONSECONDARY = Colors.deepOrange;
@@ -10,11 +9,6 @@ const COLOR_DARK_BACKGROUND = Colors.black12;
 const COLOR_DARK_APPBAR = Colors.black12;
 const COLOR_DARK_BUTTON = Colors.black54;
 const COLOR_DARK_HEDDING = Colors.blue;
-
-// Define your seed colors.
-// const Color primarySeedColor = Color(0xFF6750A4);
-// const Color secondarySeedColor = Color(0xFF3871BB);
-// const Color tertiarySeedColor = Color(0xFF6CA450);
 
 //---------------------------------------------------
 // Theme Light
@@ -43,6 +37,12 @@ ThemeData darkTheme = ThemeData(
     background: COLOR_DARK_BACKGROUND,
     onSecondary: COLOR_DARK_ONSECONDARY,
 
+  ),
+  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+    backgroundColor: COLOR_DARK_PRIMARY,
+    showUnselectedLabels: true,
+    selectedItemColor: COLOR_DARK_ONPRIMARY ,
+    unselectedItemColor: COLOR_DARK_ONPRIMARY ,
   ),
   appBarTheme: const AppBarTheme(
     backgroundColor: COLOR_DARK_APPBAR,
