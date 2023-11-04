@@ -20,7 +20,7 @@ class _SongPageState extends State<SongPage> {
 
   @override
   void initState() {
-    //initDB();
+    initDB();
     super.initState();
   }
 
