@@ -3,7 +3,48 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:team_player/utils/global_data.dart';
 
+Future<void> MySimpleDialog(BuildContext context) {
+  return
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text("Title"),
+          children: <Widget>[
+            SimpleDialogOption(child: Text("Option1"), onPressed: () {}),
+            SimpleDialogOption(child: Text("Option2"), onPressed: () {}),
+            SimpleDialogOption(child: Text("Option3"), onPressed: () {})
+          ],
+        );
+      },
+    );
+}
 
+
+Future<void> MyAlertDialog(BuildContext context, String heading, String msg) {
+  return showDialog (
+    context: context,
+    builder: (context) {
+      return AlertDialog (
+        title: Text(heading),
+        content: Text(msg),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Yes'),
+            onPressed: () {
+
+            },
+          ),
+          TextButton(
+            child: const Text('No'),
+            onPressed: () {
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
 
 saveUserSettings() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();

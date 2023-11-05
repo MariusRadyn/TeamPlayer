@@ -12,7 +12,7 @@ import 'package:team_player/utils/helpers.dart';
 // SDK = 30
 
 
-ThemeManager _themeManager = ThemeManager();
+ThemeManager themeManager = ThemeManager();
 
 
 void main(){
@@ -29,28 +29,33 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-
   @override
   void initState() {
-    _themeManager.addListener(themeListner);
+    themeManager.addListener(themeListner);
     super.initState();
   }
 
   @override
   void dispose() {
-    _themeManager.removeListener(themeListner);
+    themeManager.removeListener(themeListner);
     super.dispose();
   }
 
   themeListner() {
+    if (mounted) {
+      setState(() {
+
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-        theme: darkTheme,
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: themeManager.themeMode,
       //home: ShowAllThemeColors(context),
       home: Home(),
     );

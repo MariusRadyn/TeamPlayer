@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../utils/database_manager.dart';
 import '../utils/global_data.dart';
 import '../utils/playlist_Item.dart';
-
+import 'package:team_player/utils/helpers.dart';
 class SongsPage extends StatefulWidget {
   const SongsPage({super.key});
 
@@ -19,6 +19,14 @@ class _SongsPageState extends State<SongsPage> {
   ];
 
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    dbDeleteDatabase();
+    loadDummyData();
+    getSongLibrary();
+    super.initState();
+  }
 
   ListTile PlayListTile(int index){
     return ListTile(
@@ -49,7 +57,7 @@ class _SongsPageState extends State<SongsPage> {
   bool _isLoading = true;
   void getSongLibrary() async
   {
-    final data = await SQLHelperSongsLibrary.readTable();
+    final data = await dbReadTable(DB_TABLE_SONGS_LIB);
     setState(() {
       _songsLibrary = data;
       _isLoading = false;
@@ -65,15 +73,9 @@ class _SongsPageState extends State<SongsPage> {
         genre: 'Christian',
         dateCreated: DateTime.now().toString());
 
-     SQLHelperSongsLibrary.insert(data);
+     dbInsert(DB_TABLE_SONGS_LIB, data);
   }
-  @override
-  void initState() {
-    //deleteLocalDB();
-    loadDummyData();
-    getSongLibrary();
-    super.initState();
-  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

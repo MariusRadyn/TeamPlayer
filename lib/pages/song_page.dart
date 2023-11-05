@@ -5,7 +5,7 @@ import 'package:team_player/utils/global_data.dart';
 import 'package:team_player/views/song_view.dart';
 import 'package:team_player/utils/database_manager.dart';
 
-SQLHelperSongsLibrary myDB = SQLHelperSongsLibrary();
+SQLHelper myDB = SQLHelper();
 
 class SongPage extends StatefulWidget {
   const SongPage({super.key});
@@ -16,7 +16,6 @@ class SongPage extends StatefulWidget {
 
 class _SongPageState extends State<SongPage> {
   final _controller = PageController();
-
 
   @override
   void initState() {
@@ -37,7 +36,7 @@ class _SongPageState extends State<SongPage> {
       isActive: 0,
     );
 
-    await SQLHelperSongsLibrary.insert(data);
+    await dbInsert(DB_TABLE_SONGS_LIB, data);
     List<Map> list = await db.rawQuery('SELECT * FROM $DB_TABLE_SONGS_LIB');
   }
 

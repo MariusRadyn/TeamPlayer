@@ -30,7 +30,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
   List<Map<String, dynamic>> _playList = [];
   bool _isLoading = true;
   void getPlayList() async {
-    final data = await SQLHelperPlaylistLibrary.readTable();
+    final data = await dbReadTable(DB_TABLE_PLAYLIST_ITEMS);
     setState(() {
       _playList = data;
       _isLoading = false;
@@ -47,7 +47,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
       dateModified: DateTime.now().toString(),
     );
 
-    SQLHelperPlaylistLibrary.insert(data);
+    dbInsert(DB_TABLE_PLAYLIST_ITEMS, data);
   }
 
   @override

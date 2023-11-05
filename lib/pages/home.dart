@@ -9,6 +9,7 @@ import 'package:team_player/pages/settings_page.dart';
 import 'package:team_player/pages/Songslibrary_page.dart';
 import 'package:team_player/pages/song_page.dart';
 import 'package:team_player/pages/sync_page.dart';
+import 'package:team_player/utils/helpers.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
