@@ -32,6 +32,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     themeManager.addListener(themeListner);
+    themeManager.toggleTheme(true);
     super.initState();
   }
 
@@ -43,9 +44,7 @@ class _MyAppState extends State<MyApp> {
 
   themeListner() {
     if (mounted) {
-      setState(() {
-
-      });
+      setState((){});
     }
   }
 
