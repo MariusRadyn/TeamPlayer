@@ -130,27 +130,45 @@ MaterialButton MyButton(String text, Function()? onPressed) {
  }
 
 
-class _MySwitchWithLabelState {
+ class MySwitchWithLabel extends StatefulWidget {
+   const MySwitchWithLabel({
+     Key? key,
+     this.onChanged,
+     required this.switchState,
+     required this.label,
+   }) : super(key: key);
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(10,10,10,0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text('Dark Theme',
-            style: TextStyle(fontSize: 18,),
-          ),
-          Switch(
-              value: themeManager.themeMode == ThemeMode.dark,
-              onChanged: (bool newVal) {
-                setState(() {
-                  themeManager.toggleTheme(newVal);
-                });
-              }),
-        ],
-      ),
-    );
-  }
+   final String label;
+   final Function(bool)? onChanged;
+   final bool switchState;
+
+   @override
+  State<MySwitchWithLabel> createState() => _MySwitchWithLabelState();
+}
+
+class _MySwitchWithLabelState extends State<MySwitchWithLabel> {
+
+   @override
+   Widget build(BuildContext context) {
+     return const Padding(
+       padding: const EdgeInsets.fromLTRB(10,10,10,0),
+       child: Row(
+         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+         children: [
+           Text(widget.label,
+             style: TextStyle(fontSize: 18,
+             ),
+           ),
+           Switch(
+             value: widget.switchState,
+             onChanged: widget.onChanged,
+           ),
+         ],
+       ),
+     );
+   }
+}
+
 
 // Future<Database> _db;
 //

@@ -22,7 +22,15 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: Column(
         children: [
-
+          MySwitchWithLabel(
+            switchState: themeManager.themeMode == ThemeMode.dark,
+            label: "Dark Theme",
+            onChanged: (bool newVal) {
+              setState(() {
+                themeManager.toggleTheme(newVal);
+              });
+            }
+          ),
           MyTextField('Dropbox', _cntrButton1),
           MaterialButton(onPressed: () {})
         ],
