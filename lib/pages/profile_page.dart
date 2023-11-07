@@ -29,10 +29,19 @@ class _ProfilePageState extends State<ProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            MyTextField('Name', _cntrUserName),
+            MyTextFieldWithIcon(
+              text: 'Name',
+              textController: _cntrUserName,
+              icon: Icon(Icons.delete_forever),
+            ),
+
             SizedBox(height: 10.0),
 
-            MyTextField('Surname', _cntrUserSurname),
+            MyTextFieldWithIcon(
+              text: 'Surname',
+              textController: _cntrUserSurname,
+              icon: Icon(Icons.delete_forever),
+            ),
 
             MaterialButton(
               onPressed: (){
@@ -41,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 });
               },
               color: Colors.blue,
-              child: Text('Save',
+              child: const Text('Save',
                   style: TextStyle(
                       color: Colors.white)),
             ),

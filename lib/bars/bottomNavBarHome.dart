@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scrollable_reorderable_navbar/scrollable_reorderable_navbar.dart';
-import 'package:team_player/theme/theme_constants.dart';
+import 'package:team_player/theme/theme_manager.dart';
 
 class BottomNavBarHome extends StatefulWidget {
   const BottomNavBarHome({super.key});

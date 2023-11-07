@@ -31,7 +31,11 @@ class _SettingsPageState extends State<SettingsPage> {
               });
             }
           ),
-          MyTextField('Dropbox', _cntrButton1),
+          MyTextFieldWithIcon(
+            text: 'Dropbox',
+            textController: _cntrButton1,
+            icon: Icon(Icons.delete_forever),
+          ),
           MaterialButton(onPressed: () {})
         ],
       ),

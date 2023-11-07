@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:team_player/pages/home.dart';
 import 'package:team_player/pages/playlist_page.dart';
 import 'package:team_player/pages/profile_page.dart';
-import 'package:team_player/theme/theme_constants.dart';
 import 'package:team_player/theme/theme_manager.dart';
 import 'package:team_player/utils/dropbox.dart';
 import 'package:team_player/utils/helpers.dart';

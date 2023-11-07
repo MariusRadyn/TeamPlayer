@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:team_player/utils/global_data.dart';
+import 'package:team_player/theme/theme_manager.dart';
+
 
 Future<void> MySimpleDialog(BuildContext context) {
   return
@@ -19,7 +21,6 @@ Future<void> MySimpleDialog(BuildContext context) {
       },
     );
 }
-
 
 Future<void> MyAlertDialog(BuildContext context, String heading, String msg) {
   return showDialog (
@@ -63,44 +64,7 @@ removePreference(String propertyName) async {
   prefs.remove(propertyName);
 }
 
-Container ShowAllThemeColors(BuildContext context){
-  return Container(
-    decoration: BoxDecoration(
-      color: Colors.white,
-    ),
-    child: SafeArea(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          MyTextTile('Primary', Theme.of(context).colorScheme.primary),
-          MyTextTile('OnPrimary', Theme.of(context).colorScheme.onPrimary),
-          MyTextTile('Secondary', Theme.of(context).colorScheme.secondary),
-          MyTextTile('OnSecondary', Theme.of(context).colorScheme.onSecondary),
-          MyTextTile('Background', Theme.of(context).colorScheme.background),
-        ],
-      ),
-    ),
-  );
-}
-
-TextField MyTextField(String text, TextEditingController _cntr){
-  return TextField(
-    controller: _cntr,
-    decoration: InputDecoration(
-      hintText: text,
-      labelText: 'label',
-      border: UnderlineInputBorder(),
-      suffixIcon: IconButton(
-        onPressed: (){
-          _cntr.clear();
-        },
-        icon: const Icon(Icons.clear),
-      ),
-    ),
-  );
-}
-
-MaterialButton MyButton(String text, Function()? onPressed) {
+MaterialButton myButton(String text, Function()? onPressed) {
   return MaterialButton(
     onPressed: onPressed,
     color: Colors.blue,
@@ -110,27 +74,131 @@ MaterialButton MyButton(String text, Function()? onPressed) {
   );
 }
 
- Padding MyTextTile(String txt, Color color){
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Container(
-      width: 400,
-      height: 50,
-      color: color,
-      child: Center(
-        child: Text(txt,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 20,
+class MyTextFieldWithIcon extends StatelessWidget {
+  final String text;
+  final String? hint;
+  final TextEditingController? textController;
+  final Function()? onPressed;
+  final Widget icon;
+
+  const MyTextFieldWithIcon({
+    super.key,
+    required this.textController,
+    required this.text,
+    this.onPressed,
+    required this.icon,
+    this.hint
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10,0,10,0),
+      child: TextField(
+        controller: textController,
+        decoration: InputDecoration(
+          hintText: hint,
+          labelText: text,
+          border: UnderlineInputBorder(),
+          suffixIcon: IconButton(
+            onPressed: onPressed,
+            icon: icon,
           ),
         ),
       ),
-    ),
-  );
- }
+    );
+  }
+}
 
+class MyTextTile extends StatelessWidget {
+  final Color? color;
+  final String text;
 
- class MySwitchWithLabel extends StatefulWidget {
+  const MyTextTile({
+    super.key,
+    this.color,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        width: 400,
+        height: 50,
+        color: color,
+        child: Center(
+          child: Text(text,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class MyPlayListItem extends StatelessWidget {
+  final String text;
+  final String subText;
+  Function()? onDelete;
+
+  MyPlayListItem({
+    super.key,
+    required this.text,
+    this.subText = '',
+    this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(2),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(2),
+      ),
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(5,2,0,0),
+                child: Text(text,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: COLOR_DARK_ONPRIMARY),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(5,0,0,0),
+                child: Text(subText,
+                  style: const TextStyle(color: Colors.white38),
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: IconButton(
+                alignment: Alignment.centerRight,
+                onPressed: onDelete,
+                icon: const Icon(
+                  Icons.delete_forever,
+                  color: Colors.red,
+                  size: 30,
+                )
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+ class MySwitchWithLabel extends StatelessWidget {
    const MySwitchWithLabel({
      Key? key,
      this.onChanged,
@@ -143,25 +211,20 @@ MaterialButton MyButton(String text, Function()? onPressed) {
    final bool switchState;
 
    @override
-  State<MySwitchWithLabel> createState() => _MySwitchWithLabelState();
-}
-
-class _MySwitchWithLabelState extends State<MySwitchWithLabel> {
-
-   @override
    Widget build(BuildContext context) {
-     return const Padding(
+     return Padding(
        padding: const EdgeInsets.fromLTRB(10,10,10,0),
        child: Row(
          mainAxisAlignment: MainAxisAlignment.spaceBetween,
          children: [
-           Text(widget.label,
-             style: TextStyle(fontSize: 18,
+           Text(label,
+             style: const TextStyle(fontSize: 18,
              ),
            ),
            Switch(
-             value: widget.switchState,
-             onChanged: widget.onChanged,
+             value: switchState,
+             onChanged: onChanged,
+             activeColor: Theme.of(context).primaryColor,
            ),
          ],
        ),
@@ -170,13 +233,5 @@ class _MySwitchWithLabelState extends State<MySwitchWithLabel> {
 }
 
 
-// Future<Database> _db;
-//
-// Future<Database> getDataBase() async {
-//   _db = _db ?? openDatabase(join(await getDatabasesPath(), 'data.db');
-//       return _db;
-//   }
-// getData() async {
-//   final Database db = await getDataBase();
-// }
+
 
