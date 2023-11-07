@@ -22,27 +22,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10,10,10,0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Dark Theme',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
 
-                ),
-                Switch(
-                  value: themeManager.themeMode == ThemeMode.dark,
-                  onChanged: (bool newVal) {
-                    setState(() {
-                      themeManager.toggleTheme(newVal);
-                    });
-                  }),
-              ],
-            ),
-          ),
           MyTextField('Dropbox', _cntrButton1),
           MaterialButton(onPressed: () {})
         ],

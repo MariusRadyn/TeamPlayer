@@ -130,6 +130,28 @@ MaterialButton MyButton(String text, Function()? onPressed) {
  }
 
 
+class _MySwitchWithLabelState {
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10,10,10,0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text('Dark Theme',
+            style: TextStyle(fontSize: 18,),
+          ),
+          Switch(
+              value: themeManager.themeMode == ThemeMode.dark,
+              onChanged: (bool newVal) {
+                setState(() {
+                  themeManager.toggleTheme(newVal);
+                });
+              }),
+        ],
+      ),
+    );
+  }
+
 // Future<Database> _db;
 //
 // Future<Database> getDataBase() async {
