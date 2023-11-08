@@ -48,17 +48,44 @@ class _SettingsPageState extends State<SettingsPage> {
           MyTextButton(
             text: "Delete local Database",
             onPressed: (){
-              MyAlertDialogBox(
-                heading: "WARNING!",
-                msg: "This will delete your local synched Database\nAre you sure?",
-                but1Text: "Yes",
-                but2Text: 'No',
-                onPressedBut1: (){
-                  dbDeleteDatabase();
-                },
-              );
-            }
+              new MyDialogbox(
+                  msg: 'WARNING',
+                  header: 'Your are about to delete your\n'
+                      'the local database\n'
+                      'Are you sure?'
+                  );
+              // AlertDialog(
+              // title: Text('You clicked on'),
+              //   content: SingleChildScrollView(
+              //     child: ListBody(
+              //       children: [
+              //         Text('This is a Dialog Box. Click OK to Close.'),
+              //       ],
+              //     ),
+              //   ),
+              //   actions: [
+              //     TextButton(
+              //       child: Text('Ok'),
+              //       onPressed: () {
+              //         Navigator.of(context).pop();
+              //       },
+              //     ),
+              //   ],
+              // );
+              // Navigator.of(context).pop();
+            },
           ),
+            //   MyAlertDialogBox(
+            //     heading: "WARNING!",
+            //     msg: "This will delete your local synched Database\nAre you sure?",
+            //     but1Text: "Yes",
+            //     but2Text: 'No',
+            //     onPressedBut1: (){
+            //       dbDeleteDatabase();
+            //     },
+            //   );
+             //}
+          //),
           MyTextFieldWithIcon(
             text: 'Dropbox',
             textController: _cntrButton1,

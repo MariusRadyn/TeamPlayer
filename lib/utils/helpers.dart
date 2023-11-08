@@ -255,7 +255,8 @@ class MyAlertDialogBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return
+      AlertDialog(
       title: Text(heading),
       content: Text(msg),
       actions: <Widget>[
@@ -271,6 +272,48 @@ class MyAlertDialogBox extends StatelessWidget {
     );
   }
 }
+
+ class MyDialogbox{
+   String msg;
+   String header;
+
+  MyDialogbox({
+    required this.msg,
+    required this.header,
+  });
+
+   Future<void> dialogBuilder(BuildContext context) {
+     return showDialog<void>(
+       context: context,
+       builder: (BuildContext context) {
+         return AlertDialog(
+           title: Text(header),
+           content: Text(msg),
+           actions: <Widget>[
+             TextButton(
+               style: TextButton.styleFrom(
+                 textStyle: Theme.of(context).textTheme.labelLarge,
+               ),
+               child: const Text('Disable'),
+               onPressed: () {
+                 Navigator.of(context).pop();
+               },
+             ),
+             TextButton(
+               style: TextButton.styleFrom(
+                 textStyle: Theme.of(context).textTheme.labelLarge,
+               ),
+               child: const Text('Enable'),
+               onPressed: () {
+                 Navigator.of(context).pop();
+               },
+             ),
+           ],
+         );
+       },
+     );
+   }
+ }
 
 
 
