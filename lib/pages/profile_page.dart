@@ -32,7 +32,8 @@ class _ProfilePageState extends State<ProfilePage> {
             MyTextFieldWithIcon(
               text: 'Name',
               textController: _cntrUserName,
-              icon: Icon(Icons.delete_forever),
+              icon: Icons.delete_forever,
+              iconColor: Theme.of(context).cardColor,
             ),
 
             SizedBox(height: 10.0),
@@ -40,7 +41,8 @@ class _ProfilePageState extends State<ProfilePage> {
             MyTextFieldWithIcon(
               text: 'Surname',
               textController: _cntrUserSurname,
-              icon: Icon(Icons.delete_forever),
+              icon: Icons.delete_forever,
+              iconColor: Theme.of(context).cardColor,
             ),
 
             MaterialButton(

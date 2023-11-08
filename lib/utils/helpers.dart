@@ -22,30 +22,7 @@ Future<void> MySimpleDialog(BuildContext context) {
     );
 }
 
-Future<void> MyAlertDialog(BuildContext context, String heading, String msg) {
-  return showDialog (
-    context: context,
-    builder: (context) {
-      return AlertDialog (
-        title: Text(heading),
-        content: Text(msg),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('Yes'),
-            onPressed: () {
 
-            },
-          ),
-          TextButton(
-            child: const Text('No'),
-            onPressed: () {
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
 
 saveUserSettings() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -79,7 +56,8 @@ class MyTextFieldWithIcon extends StatelessWidget {
   final String? hint;
   final TextEditingController? textController;
   final Function()? onPressed;
-  final Widget icon;
+  final IconData icon;
+  final Color? iconColor;
 
   const MyTextFieldWithIcon({
     super.key,
@@ -87,7 +65,8 @@ class MyTextFieldWithIcon extends StatelessWidget {
     required this.text,
     this.onPressed,
     required this.icon,
-    this.hint
+    this.hint,
+    this.iconColor,
   });
 
   @override
@@ -102,7 +81,10 @@ class MyTextFieldWithIcon extends StatelessWidget {
           border: UnderlineInputBorder(),
           suffixIcon: IconButton(
             onPressed: onPressed,
-            icon: icon,
+            icon: Icon(
+              icon,
+              color: iconColor
+            ),
           ),
         ),
       ),
@@ -198,7 +180,7 @@ class MyPlayListItem extends StatelessWidget {
   }
 }
 
- class MySwitchWithLabel extends StatelessWidget {
+class MySwitchWithLabel extends StatelessWidget {
    const MySwitchWithLabel({
      Key? key,
      this.onChanged,
@@ -218,18 +200,76 @@ class MyPlayListItem extends StatelessWidget {
          mainAxisAlignment: MainAxisAlignment.spaceBetween,
          children: [
            Text(label,
-             style: const TextStyle(fontSize: 18,
+             style: const TextStyle(fontSize: 16,
              ),
            ),
            Switch(
              value: switchState,
-             onChanged: onChanged,
-             activeColor: Theme.of(context).primaryColor,
+             onChanged: onChanged
            ),
          ],
        ),
      );
    }
+}
+
+class MyTextButton extends StatelessWidget {
+  final Function()? onPressed;
+  final String text;
+
+  const MyTextButton({
+    super.key,
+    this.onPressed,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+        onPressed: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10,10,10,10),
+          child: Text(text),
+        ),
+    );
+  }
+}
+
+class MyAlertDialogBox extends StatelessWidget {
+  final String heading;
+  final String msg;
+  final String but1Text;
+  final String but2Text;
+  final Function()? onPressedBut1;
+  final Function()? onPressedBut2;
+
+  const MyAlertDialogBox({
+    super.key,
+    required this.heading,
+    required this.msg,
+    this.onPressedBut1,
+    this.onPressedBut2,
+    this.but1Text = "",
+    this.but2Text = "",
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(heading),
+      content: Text(msg),
+      actions: <Widget>[
+        TextButton(
+          child: Text(but1Text),
+          onPressed: onPressedBut1,
+        ),
+        TextButton(
+          child: Text(but2Text),
+          onPressed: onPressedBut2,
+        ),
+      ],
+    );
+  }
 }
 
 

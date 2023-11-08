@@ -28,6 +28,11 @@ ThemeData lightTheme = ThemeData(
 //---------------------------------------------------
 @override
 ThemeData darkTheme = ThemeData(
+  primaryColor: COLOR_DARK_PRIMARY,
+  cardColor: COLOR_DARK_BACKGROUND,
+  disabledColor: COLOR_DARK_PRIMARY.withOpacity(.48),
+  highlightColor: COLOR_DARK_ONPRIMARY,
+
   useMaterial3: false,
   colorScheme: const ColorScheme.dark(
     primary: COLOR_DARK_PRIMARY,
@@ -73,8 +78,20 @@ ThemeData darkTheme = ThemeData(
         fontSize: 10
     ),
   ),
+  switchTheme: SwitchThemeData(
+    thumbColor: MaterialStateProperty.resolveWith ((Set  states) {
+      if (states.contains(MaterialState.disabled)) {
+        return COLOR_DARK_ONPRIMARY.withOpacity(.48);
+      }
+      return COLOR_DARK_ONPRIMARY;
+    }),
+    overlayColor: MaterialStateProperty.resolveWith ((Set  states) {
+      return COLOR_DARK_PRIMARY;
+    }),
+  ),
+
   floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: Colors.grey[700]
+    backgroundColor: Colors.grey[700]
   ),
 );
 
