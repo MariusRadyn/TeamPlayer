@@ -9,6 +9,7 @@ import 'package:team_player/pages/settings_page.dart';
 import 'package:team_player/pages/Songslibrary_page.dart';
 import 'package:team_player/pages/song_page.dart';
 import 'package:team_player/pages/sync_page.dart';
+import 'package:team_player/utils/dropbox.dart';
 import 'package:team_player/utils/helpers.dart';
 
 class Home extends StatefulWidget {
@@ -20,7 +21,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   final Map<String, Widget> myPageRoutes = {
-    'images/add.png' : SongPage(),
+    'images/add.png' : dropBoxTest(),
     'images/sync.png' : SyncPage(),
     'images/settings.png' : SettingsPage(),
     'images/profile2.png' : ProfilePage(),

@@ -58,6 +58,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - images/warning.png
     - images/add.png
     - images/power2.png
     - images/sync.png

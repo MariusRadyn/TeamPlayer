@@ -48,44 +48,26 @@ class _SettingsPageState extends State<SettingsPage> {
           MyTextButton(
             text: "Delete local Database",
             onPressed: (){
-              new MyDialogbox(
-                  msg: 'WARNING',
-                  header: 'Your are about to delete your\n'
-                      'the local database\n'
-                      'Are you sure?'
-                  );
-              // AlertDialog(
-              // title: Text('You clicked on'),
-              //   content: SingleChildScrollView(
-              //     child: ListBody(
-              //       children: [
-              //         Text('This is a Dialog Box. Click OK to Close.'),
-              //       ],
-              //     ),
-              //   ),
-              //   actions: [
-              //     TextButton(
-              //       child: Text('Ok'),
-              //       onPressed: () {
-              //         Navigator.of(context).pop();
-              //       },
-              //     ),
-              //   ],
-              // );
-              // Navigator.of(context).pop();
+              MyDialogBox box = MyDialogBox(
+                  header: 'WARNING',
+                  message: 'This will delete the local Database '
+                      'Nothing will be deleted from the cloud '
+                      'All local data that was not pushed to cloud will be lost '
+                      'Do a new "SYNC" to restore cloud to local library\n\n'
+                      'Are you sure?',
+                but1Text: "YES",
+                but2Text: "Cancel",
+                image: 'images/warning.png',
+                onPressedbut1:(){
+                    dbDeleteDatabase();
+                    Navigator.of(context).pop();
+                    var msg = new MyMessageBox(message: "Database deleted" );
+                    msg.dialogBuilder(context);
+                },
+              );
+              box.dialogBuilder(context);
             },
           ),
-            //   MyAlertDialogBox(
-            //     heading: "WARNING!",
-            //     msg: "This will delete your local synched Database\nAre you sure?",
-            //     but1Text: "Yes",
-            //     but2Text: 'No',
-            //     onPressedBut1: (){
-            //       dbDeleteDatabase();
-            //     },
-            //   );
-             //}
-          //),
           MyTextFieldWithIcon(
             text: 'Dropbox',
             textController: _cntrButton1,

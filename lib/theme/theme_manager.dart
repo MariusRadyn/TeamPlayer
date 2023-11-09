@@ -13,9 +13,9 @@ const COLOR_DARK_HEDDING = Colors.blue;
 // Theme Light
 //---------------------------------------------------
 ThemeData lightTheme = ThemeData(
-  colorSchemeSeed: const Color(0xff6750a4),
-  useMaterial3: true,
-  brightness: Brightness.light,
+  colorSchemeSeed: Color(Colors.lightBlueAccent.value),
+  useMaterial3: false,
+  //brightness: Brightness.light,
   // primaryColor: Colors.blue[900],
   // textTheme: const TextTheme(
   //   displayLarge: TextStyle(

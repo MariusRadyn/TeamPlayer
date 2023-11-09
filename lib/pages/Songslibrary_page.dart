@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../utils/database_manager.dart';
 import '../utils/global_data.dart';
 import 'package:team_player/utils/helpers.dart';
+import 'package:dropbox_client/dropbox_client.dart';
 
 class SongsPage extends StatefulWidget {
   const SongsPage({super.key});
@@ -19,6 +20,10 @@ class _SongsPageState extends State<SongsPage> {
   ];
 
   int _selectedIndex = 0;
+
+  Future initDropbox() async{
+    await Dropbox.init('Team_Player' , 'ilzt9kfjbiv4ofw', 'd0swgoachzofagc');
+  }
 
   @override
   void initState() {

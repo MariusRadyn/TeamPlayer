@@ -8,14 +8,12 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const String dropbox_clientId = 'TeamPlayer4Jesus';
-const String dropbox_key = 'vin6yi2slkfpp1e';
-const String dropbox_secret = 'hu2k0ee675tsooa';
+const String dropbox_clientId = 'ilzt9kfjbiv4ofw';
+const String dropbox_key = 'ilzt9kfjbiv4ofw';
+const String dropbox_secret = 'd0swgoachzofagc';
 
 //TeamPlayer4Jesus
 //https://www.dropbox.com/developers
-const String token = 'sl.BoaxkjEdy4_0QdXBlF3GgKWC5rt5qeF7mTzCpUqC30kgKxXl0p5DreflFAg25tHpIo-I2cCXvBCI5RcdevyOUT28dSV3xnYb451vLlza2IkokTAfaumJHdG7G0vccTJomelmYrS4muIxZQD6FFW8TAs';
-
 
 class dropBoxTest extends StatelessWidget {
   @override
@@ -41,10 +39,10 @@ class _HomeState extends State<dropHome> {
   }
 
   Future initDropbox() async {
-    if (dropbox_key == 'dropbox_key') {
-      showInstruction = true;
-      return;
-    }
+    // if (dropbox_key == 'dropbox_key') {
+    //   showInstruction = true;
+    //   return;
+    // }
 
     await Dropbox.init(dropbox_clientId, dropbox_key, dropbox_secret);
 
@@ -52,9 +50,10 @@ class _HomeState extends State<dropHome> {
     accessToken = prefs.getString('dropboxAccessToken');
     credentials = prefs.getString('dropboxCredentials');
 
-    accessToken = token;
+    //accessToken = token;
 
     setState(() {});
+    print('Dropbox - Initialised\n AccessToken: $accessToken\ncredentials: $credentials');
   }
 
   Future<bool> checkAuthorized(bool authorize) async {

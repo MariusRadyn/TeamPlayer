@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:team_player/utils/global_data.dart';
 import 'package:team_player/theme/theme_manager.dart';
 
+import 'database_manager.dart';
+
 
 Future<void> MySimpleDialog(BuildContext context) {
   return
@@ -273,40 +275,55 @@ class MyAlertDialogBox extends StatelessWidget {
   }
 }
 
- class MyDialogbox{
-   String msg;
-   String header;
+class MyDialogBox{
+  final String message;
+  final String header;
+  final String but1Text;
+  final String but2Text;
+  final VoidCallback? onPressedbut1;
+  final VoidCallback? onPressedbut2;
+  String image;
 
-  MyDialogbox({
-    required this.msg,
+  MyDialogBox({
+    required this.message,
     required this.header,
+    required this.but1Text,
+    required this.but2Text,
+    this.onPressedbut1,
+    this.onPressedbut2,
+    this.image = "",
   });
 
    Future<void> dialogBuilder(BuildContext context) {
      return showDialog<void>(
        context: context,
        builder: (BuildContext context) {
-         return AlertDialog(
-           title: Text(header),
-           content: Text(msg),
+         return CupertinoAlertDialog(
+           title: Row(
+             children: [
+               Image.asset(image,
+                 height: 40,
+                 width: 40,
+               ),
+               SizedBox(width: 20),
+               Text(header),
+             ],
+           ),
+           content: Text(message),
            actions: <Widget>[
              TextButton(
                style: TextButton.styleFrom(
                  textStyle: Theme.of(context).textTheme.labelLarge,
                ),
-               child: const Text('Disable'),
-               onPressed: () {
-                 Navigator.of(context).pop();
-               },
+               child: Text(but1Text),
+               onPressed: onPressedbut1,
              ),
              TextButton(
                style: TextButton.styleFrom(
                  textStyle: Theme.of(context).textTheme.labelLarge,
                ),
-               child: const Text('Enable'),
-               onPressed: () {
-                 Navigator.of(context).pop();
-               },
+               child: Text(but2Text),
+               onPressed: onPressedbut2,
              ),
            ],
          );
@@ -315,6 +332,37 @@ class MyAlertDialogBox extends StatelessWidget {
    }
  }
 
+class MyMessageBox{
+  final String message;
+  String image;
+
+  MyMessageBox({
+    required this.message,
+    this.image = "",
+  });
+
+  Future<void> dialogBuilder(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: Text("OK"),
+              onPressed: (){
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
 
 
 
