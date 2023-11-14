@@ -1,5 +1,0 @@
- https://www.dropbox.com/developers
-Team_Player
-id: ilzt9kfjbiv4ofw
-appSecret: d0swgoachzofagc
-https://www.dropbox.com/oauth2/authorize?client_id=vin6yi2slkfpp1e&response_type=code

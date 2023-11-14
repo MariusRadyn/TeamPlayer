@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:team_player/utils/global_data.dart';
 import 'package:team_player/utils/helpers.dart';
-import '../bars/bottomNavBarHome.dart';
 import 'package:team_player/utils/database_manager.dart';
 
 class PlaylistPage extends StatefulWidget {
@@ -128,7 +127,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
       appBar: AppBar(
         title: Text('Playlist'),
       ),
-      bottomNavigationBar: BottomNavBarHome(),
+      
       body: ReorderableListView.builder(
        onReorder: (int oldIndex, int newIndex) => reorderItems(oldIndex, newIndex),
        itemCount: _playList.length,

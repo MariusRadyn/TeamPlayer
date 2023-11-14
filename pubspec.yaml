@@ -30,7 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  scrollable_reorderable_navbar: ^0.0.1
+  #scrollable_reorderable_navbar: ^0.0.1
   cupertino_icons: ^1.0.2
   #google_fonts: ^6.1.0
   flex_seed_scheme: ^1.4.0
@@ -40,6 +40,8 @@ dependencies:
   dropbox_client: ^1.0.0
   path_provider: ^2.1.1
   sqflite: ^2.3.0
+  #flutter_onedrive: ^1.6.1
+  ftpconnect: 2.0.5
 
 dev_dependencies:
   flutter_test:
