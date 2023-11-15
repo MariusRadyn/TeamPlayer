@@ -1,9 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:team_player/utils/helpers.dart';
 import 'package:ftpconnect/ftpconnect.dart';
-
+import 'package:firebase_core/firebase_core.dart';
 
 class SyncPage extends StatefulWidget {
   const SyncPage({super.key});
@@ -16,7 +15,14 @@ class _SyncPageState extends State<SyncPage> {
   @override
   void initState() {
     super.initState();
-    ftpConnect();
+    //ftpConnect();
+    fireConnect();
+  }
+
+  fireConnect() async{
+    //WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    print('Started firebase');
   }
 
     ftpConnect() async{

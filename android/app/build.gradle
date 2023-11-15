@@ -22,8 +22,10 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+apply plugin: 'com.google.gms.google-services'
+
 android {
-    namespace "com.example.team_player"
+    namespace "com.team_player.jesus"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
     ndkVersion = '25.1.8937393'
@@ -43,12 +45,12 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.team_player"
+        applicationId "com.team_player.jesus"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
-		minSdkVersion = '21'
+		minSdkVersion 21
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
 		multiDexEnabled = true

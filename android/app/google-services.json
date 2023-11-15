@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "27899544694",
+    "project_id": "teamplayer-9ef3c",
+    "storage_bucket": "teamplayer-9ef3c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27899544694:android:4effee6bc5434423a68b57",
+        "android_client_info": {
+          "package_name": "com.team_player.jesus"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhl_1h_cGmv_wfpBLudDLme2X6Yfz6sec"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

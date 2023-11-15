@@ -42,6 +42,7 @@ dependencies:
   sqflite: ^2.3.0
   #flutter_onedrive: ^1.6.1
   ftpconnect: 2.0.5
+  firebase_core: ^2.22.0
 
 dev_dependencies:
   flutter_test:
