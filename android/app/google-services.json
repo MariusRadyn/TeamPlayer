@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:27899544694:android:4effee6bc5434423a68b57",
+        "mobilesdk_app_id": "1:27899544694:android:ef9dc6c9fc4e6abba68b57",
         "android_client_info": {
-          "package_name": "com.team_player.jesus"
+          "package_name": "com.example.team_player"
         }
       },
       "oauth_client": [],
