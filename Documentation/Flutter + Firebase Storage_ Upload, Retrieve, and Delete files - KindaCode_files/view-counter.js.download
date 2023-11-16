@@ -1,0 +1,1 @@
+(()=>{const t=async t=>{const e=document.getElementById("single-post-id");if(e){const n=e.dataset.id;if(n){const e={action:t,post_id:parseInt(n)},a=new URL(phpData.ajax_url);a.search=new URLSearchParams(e).toString();try{await fetch(a)}catch(t){console.log("Something went wrong")}}}};t("post_view"),t("week_view")})();

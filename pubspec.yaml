@@ -43,6 +43,9 @@ dependencies:
   #flutter_onedrive: ^1.6.1
   ftpconnect: 2.0.5
   firebase_core: ^2.22.0
+  firebase_storage: ^11.5.1
+  image_picker: ^1.0.4
+  path: ^1.8.3
 
 dev_dependencies:
   flutter_test:

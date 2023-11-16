@@ -16,13 +16,6 @@ class _SyncPageState extends State<SyncPage> {
   void initState() {
     super.initState();
     //ftpConnect();
-    fireConnect();
-  }
-
-  fireConnect() async{
-    //WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
-    print('Started firebase');
   }
 
     ftpConnect() async{

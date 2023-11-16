@@ -1,10 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:team_player/pages/home.dart';
-import 'package:team_player/pages/playlist_page.dart';
-import 'package:team_player/pages/profile_page.dart';
 import 'package:team_player/theme/theme_manager.dart';
 import 'package:team_player/utils/dropbox.dart';
-import 'package:team_player/utils/helpers.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 
 // Gradle = 7.5
@@ -14,14 +13,14 @@ import 'package:team_player/utils/helpers.dart';
 ThemeManager themeManager = ThemeManager();
 
 
-void main(){
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
-   MyApp({
-    super.key,
-});
+   MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
