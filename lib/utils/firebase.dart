@@ -58,6 +58,10 @@ Future<List<Map<String, dynamic>>> fireLoadFiles() async {
   return files;
 }
 
+Future<void> fireGetFilesList(String path) async {
+  final ListResult result = await fireStorage.ref().list();
+}
+
 Future<void> fireDeleteFile(String ref) async {
   await fireStorage.ref(ref).delete();
 }

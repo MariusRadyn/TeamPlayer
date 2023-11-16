@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:team_player/utils/helpers.dart';
 import 'package:ftpconnect/ftpconnect.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:team_player/utils/firebase.dart';
 
 class SyncPage extends StatefulWidget {
   const SyncPage({super.key});
@@ -15,6 +15,7 @@ class _SyncPageState extends State<SyncPage> {
   @override
   void initState() {
     super.initState();
+    //fireLoadFiles();
     //ftpConnect();
   }
 

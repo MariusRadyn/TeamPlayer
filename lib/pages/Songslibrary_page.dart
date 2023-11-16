@@ -3,6 +3,7 @@ import '../utils/database_manager.dart';
 import '../utils/global_data.dart';
 import 'package:team_player/utils/helpers.dart';
 import 'package:dropbox_client/dropbox_client.dart';
+import 'package:team_player/utils/firebase.dart';
 
 class SongsPage extends StatefulWidget {
   const SongsPage({super.key});
@@ -27,10 +28,11 @@ class _SongsPageState extends State<SongsPage> {
 
   @override
   void initState() {
-    dbDeleteDatabase();
-    loadDummyData();
-    getSongLibrary();
     super.initState();
+    //dbDeleteDatabase();
+    //loadDummyData();
+    //getSongLibrary();
+    fireGetFilesList("path");
   }
 
   ListTile PlayListTile(int index){
