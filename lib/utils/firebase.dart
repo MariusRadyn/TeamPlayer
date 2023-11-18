@@ -1,11 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as path;
 import 'package:image_picker/image_picker.dart';
 
-FirebaseStorage fireStorage = FirebaseStorage.instance;
+FirebaseStorage fireStorageRef = FirebaseStorage.instance;
+List<Reference> fireAllSongsRef = [];
 
 // Select an image from the gallery or take a picture with the camera
 Future<void> fireUploadImage(String inputSource) async {
@@ -23,7 +26,7 @@ Future<void> fireUploadImage(String inputSource) async {
 
     try {
       // Uploading the selected image with some custom meta data
-      await fireStorage.ref(fileName).putFile(
+      await fireStorageRef.ref(fileName).putFile(
           imageFile,
           SettableMetadata(customMetadata: {
             'uploaded_by': 'A bad guy',
@@ -40,7 +43,7 @@ Future<void> fireUploadImage(String inputSource) async {
 Future<List<Map<String, dynamic>>> fireLoadFiles() async {
   List<Map<String, dynamic>> files = [];
 
-  final ListResult result = await fireStorage.ref().list();
+  final ListResult result = await fireStorageRef.ref().list();
   final List<Reference> allFiles = result.items;
 
   await Future.forEach<Reference>(allFiles, (file) async {
@@ -59,9 +62,43 @@ Future<List<Map<String, dynamic>>> fireLoadFiles() async {
 }
 
 Future<void> fireGetFilesList(String path) async {
-  final ListResult result = await fireStorage.ref().list();
+  final storageRef = fireStorageRef.ref().child(path);
+  final listResult = await storageRef.listAll();
+  List<Reference> files  = [];
+  fireAllSongsRef.clear();
+
+  for (var item in listResult.items){
+    fireAllSongsRef.add(item);
+  }
+}
+Future<String> fireReadFile(int index) async{
+  final _storageRef = fireStorageRef.ref().child(fireAllSongsRef[index].fullPath);
+  Uint8List? downloadedData =  await _storageRef.getData();
+  String text = utf8.decode(downloadedData as List<int>);
+  return text;
+}
+
+Future<void> fireWriteFile(String text, int index) async{
+  final _storageRef = fireStorageRef.ref().child(fireAllSongsRef[index].fullPath);
+  _storageRef.putString(
+      text,
+      metadata: SettableMetadata(
+        contentLanguage: 'en',
+      )
+  );
+}
+
+
+Future<List<Reference>> fireGetDirectoryList(String path) async {
+  final storageRef = fireStorageRef.ref().child(path);
+  final listResult = await storageRef.listAll();
+  List<Reference> dir  = [];
+
+  for (var prefix in listResult.prefixes) dir.add(prefix);
+  return dir;
 }
 
 Future<void> fireDeleteFile(String ref) async {
-  await fireStorage.ref(ref).delete();
+  await fireStorageRef.ref(ref).delete();
 }
+

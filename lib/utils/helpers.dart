@@ -129,12 +129,14 @@ class MyPlayListItem extends StatelessWidget {
   final String text;
   final String subText;
   Function()? onDelete;
+  Function()? onTap;
 
   MyPlayListItem({
     super.key,
     required this.text,
     this.subText = '',
     this.onDelete,
+    this.onTap,
   });
 
   @override
@@ -145,28 +147,29 @@ class MyPlayListItem extends StatelessWidget {
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(2),
       ),
-      child: Row(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(5,2,0,0),
-                child: Text(text,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: COLOR_DARK_ONPRIMARY),
+      child: InkWell(
+        onTap: onTap,
+        child: Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(5,2,50,0),
+                  child: Text(text,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: COLOR_DARK_ONPRIMARY),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(5,0,0,0),
-                child: Text(subText,
-                  style: const TextStyle(color: Colors.white38),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(5,0,50,0),
+                  child: Text(subText,
+                    style: const TextStyle(color: Colors.white38),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: IconButton(
+              ],
+            ),
+            IconButton(
                 alignment: Alignment.centerRight,
                 onPressed: onDelete,
                 icon: const Icon(
@@ -174,9 +177,9 @@ class MyPlayListItem extends StatelessWidget {
                   color: Colors.red,
                   size: 30,
                 )
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -364,5 +367,28 @@ class MyMessageBox{
   }
 }
 
+class MyShowSongScreen extends StatelessWidget {
+  final String text;
+  final String heading;
 
+  MyShowSongScreen({
+    required this.text,
+    required this.heading,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(heading)),
+      body: Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Text(text,
+            style: TextStyle(fontSize: 16.0),
+          ),
+        ),
+      ),
+    );
+  }
+}
 

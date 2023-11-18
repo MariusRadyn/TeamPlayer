@@ -4,6 +4,7 @@ import 'package:team_player/pages/home.dart';
 import 'package:team_player/theme/theme_manager.dart';
 import 'package:team_player/utils/dropbox.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:team_player/utils/firebase.dart';
 
 
 // Gradle = 7.5
@@ -16,6 +17,7 @@ ThemeManager themeManager = ThemeManager();
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await fireGetFilesList("/user1");
   runApp(MyApp());
 }
 

@@ -1,3 +1,7 @@
+
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../utils/database_manager.dart';
 import '../utils/global_data.dart';
@@ -22,6 +26,7 @@ class _SongsPageState extends State<SongsPage> {
 
   int _selectedIndex = 0;
 
+
   Future initDropbox() async{
     await Dropbox.init('Team_Player' , 'ilzt9kfjbiv4ofw', 'd0swgoachzofagc');
   }
@@ -32,18 +37,23 @@ class _SongsPageState extends State<SongsPage> {
     //dbDeleteDatabase();
     //loadDummyData();
     //getSongLibrary();
-    fireGetFilesList("path");
+    // WidgetsBinding.instance.addPostFrameCallback((_){
+    //   fireGetFilesList("/user1");
+    // });
   }
 
   ListTile PlayListTile(int index){
     return ListTile(
       key: Key('$index'),
       title: MyPlayListItem(
-        text: _songsLibrary[index]['songName'],
-        subText: _songsLibrary[index]['author'],
+        onTap: (){
+          _onTap(index);
+        },
+        text: fireAllSongsRef[index].name,
+        subText: fireAllSongsRef[index].fullPath,
         onDelete: (){
           setState(() {
-            _songsLibrary.removeAt(index);
+            fireAllSongsRef.removeAt(index);
           });
         },
       ),
@@ -92,18 +102,31 @@ class _SongsPageState extends State<SongsPage> {
       bottomNavigationBar: BottomNavigationBar(
         items: navBarItems,
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        onTap: _onNavBarTapped,
       ),
-      body: ReorderableListView.builder(
-        onReorder: (int oldIndex, int newIndex) => reorderItems(oldIndex, newIndex),
-        itemCount: _songsLibrary.length,
+      body: ListView.builder(
+        itemCount: fireAllSongsRef.length,
         itemBuilder: (BuildContext context, int index) {
           return PlayListTile(index);
         },
       ),
     );
   }
-  void _onItemTapped(int index) {
+
+  void _navigateToNextScreen(BuildContext context, String heading, String text) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyShowSongScreen (
+      text: text,
+      heading: heading,
+    )));
+  }
+
+  Future<void> _onTap(int index) async{
+    String text = await fireReadFile(index);
+    String heading = fireAllSongsRef[index].name;
+    _navigateToNextScreen(context, heading, text);
+  }
+
+  void _onNavBarTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
