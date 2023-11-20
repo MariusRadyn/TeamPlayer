@@ -125,6 +125,49 @@ class MyTextTile extends StatelessWidget {
   }
 }
 
+class TestTile extends StatelessWidget {
+  final String text;
+  final String subText;
+  Function()? onDelete;
+  Function()? onTap;
+
+  TestTile({
+    super.key,
+    required this.text,
+    this.subText = '',
+    this.onDelete,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: InkWell(
+        child: ListTile(
+          // Delete Icon
+          trailing: IconButton(
+            onPressed: onDelete,
+            icon: const Icon(
+            Icons.delete_forever,
+            color: Colors.red,
+            size: 30,
+            ),
+          ),
+          title: Text(text,
+            overflow: TextOverflow.ellipsis,
+          ),
+          subtitle: Text(subText,
+            overflow: TextOverflow.ellipsis,
+          ),
+          onTap: onTap,
+          
+        ),
+      ),
+    );
+  }
+}
+
+
 class MyPlayListItem extends StatelessWidget {
   final String text;
   final String subText;
@@ -149,36 +192,41 @@ class MyPlayListItem extends StatelessWidget {
       ),
       child: InkWell(
         onTap: onTap,
-        child: Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(5,2,50,0),
-                  child: Text(text,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: COLOR_DARK_ONPRIMARY),
+        child: Padding(
+          padding: const EdgeInsets.all(50.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5,2,50,0),
+                    child: Text(text,
+                      overflow: TextOverflow.clip,
+                      style: const TextStyle(color: COLOR_DARK_ONPRIMARY),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(5,0,50,0),
-                  child: Text(subText,
-                    style: const TextStyle(color: Colors.white38),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5,0,50,0),
+                    child: Text(subText,
+                      overflow: TextOverflow.clip,
+                      style: const TextStyle(color: Colors.white38),
+                    ),
                   ),
-                ),
-              ],
-            ),
-            IconButton(
-                alignment: Alignment.centerRight,
-                onPressed: onDelete,
-                icon: const Icon(
-                  Icons.delete_forever,
-                  color: Colors.red,
-                  size: 30,
-                )
-            )
-          ],
+                ],
+              ),
+              IconButton(
+                  alignment: Alignment.centerRight,
+                  onPressed: onDelete,
+                  icon: const Icon(
+                    Icons.delete_forever,
+                    color: Colors.red,
+                    size: 30,
+                  )
+              )
+            ],
+          ),
         ),
       ),
     );

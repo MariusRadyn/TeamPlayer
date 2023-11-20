@@ -37,7 +37,7 @@ dependencies:
   flutter_slidable: ^1.3.0
   smooth_page_indicator: ^1.0.0+2
   shared_preferences: ^2.0.6
-  dropbox_client: ^1.0.0
+  #dropbox_client: ^1.0.0
   path_provider: ^2.1.1
   sqflite: ^2.3.0
   #flutter_onedrive: ^1.6.1

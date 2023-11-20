@@ -21,7 +21,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   final Map<String, Widget> myPageRoutes = {
-    'images/add.png' : dropBoxTest(),
+    'images/add.png' : SongsPage(),
     'images/sync.png' : SyncPage(),
     'images/settings.png' : SettingsPage(),
     'images/profile2.png' : ProfilePage(),

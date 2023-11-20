@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../utils/database_manager.dart';
 import '../utils/global_data.dart';
 import 'package:team_player/utils/helpers.dart';
-import 'package:dropbox_client/dropbox_client.dart';
+//import 'package:dropbox_client/dropbox_client.dart';
 import 'package:team_player/utils/firebase.dart';
 
 class SongsPage extends StatefulWidget {
@@ -28,7 +28,7 @@ class _SongsPageState extends State<SongsPage> {
 
 
   Future initDropbox() async{
-    await Dropbox.init('Team_Player' , 'ilzt9kfjbiv4ofw', 'd0swgoachzofagc');
+    //await Dropbox.init('Team_Player' , 'ilzt9kfjbiv4ofw', 'd0swgoachzofagc');
   }
 
   @override
@@ -45,7 +45,7 @@ class _SongsPageState extends State<SongsPage> {
   ListTile PlayListTile(int index){
     return ListTile(
       key: Key('$index'),
-      title: MyPlayListItem(
+      title: TestTile(
         onTap: (){
           _onTap(index);
         },
@@ -53,6 +53,12 @@ class _SongsPageState extends State<SongsPage> {
         subText: fireAllSongsRef[index].fullPath,
         onDelete: (){
           setState(() {
+            MyAlertDialogBox(
+              heading: "Delete Song?",
+              msg: "Delete this snog from the cloud\nAre you Sure?",
+              but1Text: "Yes",
+              but2Text: "No",
+            );
             fireAllSongsRef.removeAt(index);
           });
         },

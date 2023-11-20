@@ -60,7 +60,16 @@ ThemeData darkTheme = ThemeData(
       fontSize: 30,
     ),
   ),
-
+  listTileTheme: const ListTileThemeData(
+    titleTextStyle: TextStyle(
+      fontSize: 20,
+      color: COLOR_DARK_ONPRIMARY,
+    ),
+    subtitleTextStyle: TextStyle(
+      fontSize: 12,
+      color: Colors.white38,
+    ),
+  ),
   textTheme: const TextTheme(
     displayLarge: TextStyle(
       fontFamily: 'aBeeZee',
