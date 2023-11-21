@@ -24,8 +24,6 @@ Future<void> MySimpleDialog(BuildContext context) {
     );
 }
 
-
-
 saveUserSettings() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString(USER_NAME, userSettings.userName);
@@ -125,13 +123,13 @@ class MyTextTile extends StatelessWidget {
   }
 }
 
-class TestTile extends StatelessWidget {
+class MyListTile extends StatelessWidget {
   final String text;
   final String subText;
   Function()? onDelete;
   Function()? onTap;
 
-  TestTile({
+  MyListTile({
     super.key,
     required this.text,
     this.subText = '',
@@ -144,6 +142,10 @@ class TestTile extends StatelessWidget {
     return Expanded(
       child: InkWell(
         child: ListTile(
+          shape: RoundedRectangleBorder(
+            side: const BorderSide(color: Colors.blueGrey, width: 1),
+            borderRadius: BorderRadius.circular(25),
+          ),
           // Delete Icon
           trailing: IconButton(
             onPressed: onDelete,
@@ -153,80 +155,10 @@ class TestTile extends StatelessWidget {
             size: 30,
             ),
           ),
-          title: Text(text,
-            overflow: TextOverflow.ellipsis,
-          ),
-          subtitle: Text(subText,
-            overflow: TextOverflow.ellipsis,
-          ),
+          title: Text(text, overflow: TextOverflow.ellipsis),
+          subtitle: Text(subText, overflow: TextOverflow.ellipsis),
           onTap: onTap,
-          
-        ),
-      ),
-    );
-  }
-}
 
-
-class MyPlayListItem extends StatelessWidget {
-  final String text;
-  final String subText;
-  Function()? onDelete;
-  Function()? onTap;
-
-  MyPlayListItem({
-    super.key,
-    required this.text,
-    this.subText = '',
-    this.onDelete,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(2),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(50.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(5,2,50,0),
-                    child: Text(text,
-                      overflow: TextOverflow.clip,
-                      style: const TextStyle(color: COLOR_DARK_ONPRIMARY),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(5,0,50,0),
-                    child: Text(subText,
-                      overflow: TextOverflow.clip,
-                      style: const TextStyle(color: Colors.white38),
-                    ),
-                  ),
-                ],
-              ),
-              IconButton(
-                  alignment: Alignment.centerRight,
-                  onPressed: onDelete,
-                  icon: const Icon(
-                    Icons.delete_forever,
-                    color: Colors.red,
-                    size: 30,
-                  )
-              )
-            ],
-          ),
         ),
       ),
     );
@@ -295,6 +227,7 @@ class MyAlertDialogBox extends StatelessWidget {
   final String but2Text;
   final Function()? onPressedBut1;
   final Function()? onPressedBut2;
+  final BuildContext context;
 
   const MyAlertDialogBox({
     super.key,
@@ -304,12 +237,11 @@ class MyAlertDialogBox extends StatelessWidget {
     this.onPressedBut2,
     this.but1Text = "",
     this.but2Text = "",
+    required this.context,
   });
 
-  @override
-  Widget build(BuildContext context) {
-    return
-      AlertDialog(
+  _alert(){
+    var v = AlertDialog(
       title: Text(heading),
       content: Text(msg),
       actions: <Widget>[
@@ -323,6 +255,16 @@ class MyAlertDialogBox extends StatelessWidget {
         ),
       ],
     );
+    return showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return v;
+        }
+    );
+  }
+  @override
+  Widget build(BuildContext context) {
+    return _alert();
   }
 }
 
@@ -331,8 +273,8 @@ class MyDialogBox{
   final String header;
   final String but1Text;
   final String but2Text;
-  final VoidCallback? onPressedbut1;
-  final VoidCallback? onPressedbut2;
+  final VoidCallback? onPressedBut1;
+  final VoidCallback? onPressedBut2;
   String image;
 
   MyDialogBox({
@@ -340,9 +282,9 @@ class MyDialogBox{
     required this.header,
     required this.but1Text,
     required this.but2Text,
-    this.onPressedbut1,
-    this.onPressedbut2,
-    this.image = "",
+    this.onPressedBut1,
+    this.onPressedBut2,
+    this.image = "images/warning.png",
   });
 
    Future<void> dialogBuilder(BuildContext context) {
@@ -352,29 +294,42 @@ class MyDialogBox{
          return CupertinoAlertDialog(
            title: Row(
              children: [
-               Image.asset(image,
-                 height: 40,
-                 width: 40,
+               Expanded(
+                 flex: 1,
+                 child: Image.asset(
+                   image,
+                   height: 30,
+                   width: 30,
+                 ),
                ),
                SizedBox(width: 20),
-               Text(header),
+               Expanded(
+                   flex: 4,
+                   child: Text (
+                     header,
+                     textAlign: TextAlign.start,
+                   )
+               ),
              ],
            ),
-           content: Text(message),
+           content: Text(
+             message,
+             textAlign: TextAlign.center,
+           ),
            actions: <Widget>[
              TextButton(
                style: TextButton.styleFrom(
                  textStyle: Theme.of(context).textTheme.labelLarge,
                ),
                child: Text(but1Text),
-               onPressed: onPressedbut1,
+               onPressed: onPressedBut1,
              ),
              TextButton(
                style: TextButton.styleFrom(
                  textStyle: Theme.of(context).textTheme.labelLarge,
                ),
                child: Text(but2Text),
-               onPressed: onPressedbut2,
+               onPressed: onPressedBut2,
              ),
            ],
          );

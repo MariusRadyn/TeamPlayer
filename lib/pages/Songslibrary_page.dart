@@ -45,7 +45,7 @@ class _SongsPageState extends State<SongsPage> {
   ListTile PlayListTile(int index){
     return ListTile(
       key: Key('$index'),
-      title: TestTile(
+      title: MyListTile(
         onTap: (){
           _onTap(index);
         },
@@ -53,13 +53,18 @@ class _SongsPageState extends State<SongsPage> {
         subText: fireAllSongsRef[index].fullPath,
         onDelete: (){
           setState(() {
-            MyAlertDialogBox(
-              heading: "Delete Song?",
-              msg: "Delete this snog from the cloud\nAre you Sure?",
+            String song = fireAllSongsRef[index].name;
+            MyDialogBox(
+              header: "Delete Song?",
+              message: "$song\n\n Delete this song permanently from the cloud\nAre you Sure?",
               but1Text: "Yes",
               but2Text: "No",
-            );
-            fireAllSongsRef.removeAt(index);
+              onPressedBut1: (){
+                fireAllSongsRef.removeAt(index);
+                Navigator.of(context).pop();
+                setState(() {});
+                },
+            ).dialogBuilder(context);
           });
         },
       ),
@@ -113,7 +118,20 @@ class _SongsPageState extends State<SongsPage> {
       body: ListView.builder(
         itemCount: fireAllSongsRef.length,
         itemBuilder: (BuildContext context, int index) {
-          return PlayListTile(index);
+          return Dismissible(
+            key: Key('$index'),
+            child: PlayListTile(index),
+            onDismissed: (direction) {
+              setState(() {
+                fireAllSongsRef.removeAt(index);
+              });
+
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(
+                      content: Text('item deleted')
+              ));
+            },
+          );
         },
       ),
     );
@@ -128,8 +146,21 @@ class _SongsPageState extends State<SongsPage> {
 
   Future<void> _onTap(int index) async{
     String text = await fireReadFile(index);
+    int posEnd = 0;
+
+    // Get Title
+    String title = getToken("{title:", text).trim();
+    String author = getToken("{subtitle:", text).trim();
+
     String heading = fireAllSongsRef[index].name;
     _navigateToNextScreen(context, heading, text);
+  }
+  
+  String getToken(String token, String text){
+    int posEnd = 0;
+    int posStart = text.indexOf(token);
+    if (posStart > -1) posEnd = text.indexOf("}", posStart + token.length);
+    return text.substring(posStart + token.length,posEnd);
   }
 
   void _onNavBarTapped(int index) {

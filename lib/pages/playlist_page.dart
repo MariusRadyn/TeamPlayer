@@ -69,7 +69,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
   ListTile PlayListTile(int index){
     return ListTile(
       key: Key('$index'),
-      title: MyPlayListItem(
+      title: MyListTile(
         text: _playList[index]['description'],
         subText: 'Items: ' + _playList[index]['nrOfItems'],
         onDelete: (){
@@ -112,7 +112,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
         ),
       ],
     ) ,
-    child: MyPlayListItem(text: myPlayList[index].songName)
+    child : MyListTile(text: myPlayList[index].songName)
     );
   }
 

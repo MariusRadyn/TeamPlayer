@@ -58,11 +58,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 but1Text: "YES",
                 but2Text: "Cancel",
                 image: 'images/warning.png',
-                onPressedbut1:(){
+                onPressedBut1:(){
                     dbDeleteDatabase();
                     Navigator.of(context).pop();
-                    var msg = new MyMessageBox(message: "Database deleted" );
-                    msg.dialogBuilder(context);
+                    MyMessageBox(message: "Database deleted" ).dialogBuilder(context);
                 },
               );
               box.dialogBuilder(context);
