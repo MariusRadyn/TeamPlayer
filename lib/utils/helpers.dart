@@ -7,6 +7,22 @@ import 'package:team_player/theme/theme_manager.dart';
 import 'database_manager.dart';
 
 
+List<String> getLinesFromTxtFile(String text) {
+  List<String> lines = [];
+  int startPos = 0;
+  int endPos = 0;
+  String line;
+
+  while (endPos < text.length) {
+    endPos = text.indexOf("\n",startPos+1);
+    if (endPos == -1) break;
+
+    line = text.substring(startPos, endPos).trim();
+    startPos = endPos;
+    lines.add(line);
+  }
+  return lines;
+}
 Future<void> MySimpleDialog(BuildContext context) {
   return
     showDialog(
@@ -393,5 +409,37 @@ class MyShowSongScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+const tokenTitle = "{title:";
+const tokenSubtitle = "{subtitle:";
+const tokenStartOfPart = "{start_of_part:";
+const tokenEndOfPart = "{end_of_part:";
+const tokenStartOfChorus = "{start_of_chorus:";
+const tokenEndOfChorus = "{end_of_chorus:";
+const tokenEndOfSong = "#";
+const tokenTranspose = "# transpose =";
+const tokenVersion = "# version =";
+
+class SongViewModel {
+  String title;
+  String author;
+  String version;
+  String transpose;
+  String originalChord;
+  List<String> songWords;
+  List<String> songChords;
+  List<String> songFormatted;
+
+  SongViewModel({
+    this.title = "",
+    this.author = "",
+    this.transpose = "",
+    this.originalChord = "",
+    this.version = "",
+    required this.songWords,
+    required this.songChords,
+    required this.songFormatted,
+  });
 }
 
