@@ -403,7 +403,7 @@ class MyShowSongScreen extends StatelessWidget {
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Text(text,
-            style: TextStyle(fontSize: 16.0),
+            style: TextStyle(fontSize: 16.0, fontFamily: 'Roboto'),
           ),
         ),
       ),

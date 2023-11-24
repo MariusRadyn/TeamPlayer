@@ -90,7 +90,11 @@ flutter:
   fonts:
     - family: aBeeZee
       fonts:
-       - asset: fonts/ABeeZee-Regular.ttf
+        - asset: fonts/ABeeZee-Regular.ttf
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto-Regular.ttf
+        - asset: fonts/Roboto-Black.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
