@@ -88,13 +88,16 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
+    - family: Ephesis
+      fonts:
+        - asset: fonts/Ephesis-Regular.ttf
     - family: aBeeZee
       fonts:
         - asset: fonts/ABeeZee-Regular.ttf
-    - family: Roboto
+    - family: SpaceMono
       fonts:
-        - asset: fonts/Roboto-Regular.ttf
-        - asset: fonts/Roboto-Black.ttf
+        - asset: fonts/SpaceMono-Regular.ttf
+        - asset: fonts/SpaceMono-Bold.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

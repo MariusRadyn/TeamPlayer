@@ -108,7 +108,12 @@ class _SongsPageState extends State<SongsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Library'),
+        title: const Text('Library',
+           // style: TextStyle(
+           //     fontFamily: 'SpaceMono',
+           //     fontWeight: FontWeight.normal
+           // ),
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: navBarItems,
@@ -146,106 +151,10 @@ class _SongsPageState extends State<SongsPage> {
   }
 
   Future<void> _onTap(int index) async{
-    List<String> _songWords = [];
-    List<String> _songChords = [];
-    List<String> _songFormatted = [];
-    SongViewModel _songView = SongViewModel(
-        songWords: _songWords,
-        songChords: _songChords,
-        songFormatted: _songFormatted,
-    );
-
-    String text = await fireReadFile(index);
-    List<String> _lines = getLinesFromTxtFile(text);
-
-    int startPos = 0;
-    int endPos = 0;
-    bool startOfChord = false;
-
-    for (String line in _lines)
-      {
-        if(line.indexOf(tokenTitle) != -1) _songView.title = getToken(tokenTitle, line);
-        else if(line.indexOf(tokenSubtitle) != -1) _songView.author = getToken(tokenSubtitle, line);
-        else if(line.indexOf(tokenEndOfSong) != -1) {
-          _songView.transpose = getToken(tokenTranspose, text);
-          _songView.version = getToken(tokenVersion, text);
-          break;
-        }
-        else {
-          // Format Song
-          // Start of Part
-          if(line.indexOf(tokenStartOfPart) != -1){
-            _songWords.add(getToken(tokenStartOfPart, line));
-            _songChords.add("");
-          }
-          // End of Part
-          else if(line.indexOf(tokenEndOfPart) != -1){
-            _songWords.add("");
-            _songChords.add("");
-          }
-          else if(line.indexOf(tokenStartOfChorus) != -1){
-            _songWords.add("Chorus");
-            _songChords.add("");
-          }
-          else if(line.indexOf(tokenEndOfChorus) != -1){
-            _songWords.add("");
-            _songChords.add("");
-          }
-          else{
-            var lineChords = StringBuffer();
-            var lineWords = StringBuffer();
-
-            for(int i = 0; i < line.length;i++){
-              if(line[i] == '[') {
-                startOfChord = true;
-                continue;
-              }
-              if(line[i] == ']') {
-                startOfChord = false;
-                continue;
-              }
-              if(startOfChord){
-                lineChords.write(line[i]);
-              }
-              else {
-                lineWords.write(line[i]);
-                lineChords.write(" ");
-              }
-            }
-
-            _songWords.add(lineWords.toString());
-            _songChords.add(lineChords.toString());
-          }
-        }
-      }
-
-    // Format Song
-    var _song = StringBuffer();
-    _song.write(_songView.title + "\n");
-    _song.write(_songView.author + "\n");
-
-    for(int i = 0;i < _songWords.length;i++){
-      _song.write(_songChords[i] + "\n");
-      _song.write(_songWords[i] + "\n");
-    }
-    _songFormatted.add(_song.toString());
-
-    _navigateToNextScreen(context, _songView);
+    SongViewModel _songview = await GetSongFromCloud(index);
+    _navigateToNextScreen(context, _songview);
   }
 
-  
-  String getToken(String token, String text){
-    int posEnd = 0;
-    int posStart = text.indexOf(token);
-    if (posStart == -1) return "";
-
-    posEnd = text.indexOf("}", posStart + token.length);
-    if(posEnd == -1) posEnd = text.indexOf("\n", posStart + token.length);
-    if(posEnd == -1) posEnd = text.indexOf("\r", posStart + token.length);
-
-    if(posEnd == -1) return text.substring(posStart + token.length).trim();
-    else return text.substring(posStart + token.length, posEnd).trim();
-  }
 
   void _onNavBarTapped(int index) {
     setState(() {

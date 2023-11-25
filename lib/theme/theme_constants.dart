@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 //import 'package:google_fonts/google_fonts.dart';
 import 'package:flex_seed_scheme/flex_seed_scheme.dart';
 
-const FONT_MAIN =   GoogleFonts.aBeeZee;
+const FONT_MAIN = 'SpaceMono';
 
 const COLOR_DARK_PRIMARY = Colors.deepOrange;
 const COLOR_DARK_BACKGROUND = Colors.black12;
@@ -33,7 +33,7 @@ ThemeData lightTheme = ThemeData(
 // Theme Dark
 //---------------------------------------------------
 ThemeData darkTheme = ThemeData(
-  useMaterial3: false,
+  useMaterial3: true,
   colorScheme: const ColorScheme.dark(
     primary: COLOR_DARK_PRIMARY,
     onPrimary: Colors.blue,
@@ -43,16 +43,23 @@ ThemeData darkTheme = ThemeData(
   appBarTheme: const AppBarTheme(
     backgroundColor: COLOR_DARK_APPBAR,
   ),
-  textTheme: TextTheme(
-    displayLarge: FONT_MAIN(
+  textTheme: const TextTheme(
+    displayLarge: TextStyle(
+      fontFamily: FONT_MAIN,
       fontSize: 40,
       fontWeight: FontWeight.bold,
     ),
-    titleLarge: FONT_MAIN(
+    titleLarge: TextStyle(
+      fontFamily: FONT_MAIN,
       fontSize: 30,
     ),
-    displayMedium: FONT_MAIN(fontSize: 20),
-    displaySmall: FONT_MAIN(fontSize: 10),
+    displayMedium: TextStyle(
+        fontFamily: FONT_MAIN,
+        fontSize: 20
+    ),
+    displaySmall: TextStyle(
+        fontFamily: FONT_MAIN,fontSize: 10
+    ),
   ),
   floatingActionButtonTheme: FloatingActionButtonThemeData(
     backgroundColor: Colors.grey[700]

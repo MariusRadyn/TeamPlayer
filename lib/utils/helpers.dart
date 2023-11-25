@@ -5,6 +5,7 @@ import 'package:team_player/utils/global_data.dart';
 import 'package:team_player/theme/theme_manager.dart';
 
 import 'database_manager.dart';
+import 'firebase.dart';
 
 
 List<String> getLinesFromTxtFile(String text) {
@@ -403,7 +404,10 @@ class MyShowSongScreen extends StatelessWidget {
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Text(text,
-            style: TextStyle(fontSize: 16.0, fontFamily: 'Roboto'),
+            style: const TextStyle(
+                 fontFamily: 'MonoSpace',
+                 fontWeight: FontWeight.normal
+            ),
           ),
         ),
       ),
@@ -413,10 +417,11 @@ class MyShowSongScreen extends StatelessWidget {
 
 const tokenTitle = "{title:";
 const tokenSubtitle = "{subtitle:";
+const tokenComment = "{comment:";
 const tokenStartOfPart = "{start_of_part:";
-const tokenEndOfPart = "{end_of_part:";
-const tokenStartOfChorus = "{start_of_chorus:";
-const tokenEndOfChorus = "{end_of_chorus:";
+const tokenEndOfPart = "{end_of_part}";
+const tokenStartOfChorus = "{start_of_chorus}";
+const tokenEndOfChorus = "{end_of_chorus}";
 const tokenEndOfSong = "#";
 const tokenTranspose = "# transpose =";
 const tokenVersion = "# version =";
@@ -443,3 +448,116 @@ class SongViewModel {
   });
 }
 
+Future<SongViewModel> GetSongFromCloud(int index) async {
+  List<String> _songWords = [];
+  List<String> _songChords = [];
+  List<String> _songFormatted = [];
+
+  SongViewModel _songView = SongViewModel(
+    songWords: _songWords,
+    songChords: _songChords,
+    songFormatted: _songFormatted,
+  );
+
+  String text = await fireReadFile(index);
+  List<String> _lines = getLinesFromTxtFile(text);
+
+  int startPos = 0;
+  int endPos = 0;
+  bool startOfChord = false;
+
+  for (String line in _lines)
+  {
+    if(line.indexOf(tokenTitle) != -1) _songView.title = getToken(tokenTitle, line);
+    else if(line.indexOf(tokenSubtitle) != -1) _songView.author = getToken(tokenSubtitle, line);
+    else if(line.indexOf(tokenEndOfSong) != -1) {
+      _songView.transpose = getToken(tokenTranspose, text);
+      _songView.version = getToken(tokenVersion, text);
+      break;
+    }
+    else {
+      // Start of Part
+      if(line.indexOf(tokenStartOfPart) != -1){
+        _songWords.add(getToken(tokenStartOfPart, line));
+        _songChords.add("");
+      }
+
+      // End of Part
+      else if(line.indexOf(tokenEndOfPart) != -1){
+        _songWords.add("");
+        _songChords.add("");
+      }
+
+      // Comment
+      else if(line.indexOf(tokenComment) != -1){
+        _songWords.add(getToken(tokenComment, line));
+        _songChords.add("");
+      }
+
+      // Chorus
+      else if(line.indexOf(tokenStartOfChorus) != -1){
+        _songWords.add("Chorus");
+        _songChords.add("");
+      }
+
+      // Chorus End
+      else if(line.indexOf(tokenEndOfChorus) != -1){
+        _songWords.add("");
+        _songChords.add("");
+      }
+
+      // Words and Chords
+      else{
+        var lineChords = StringBuffer();
+        var lineWords = StringBuffer();
+
+        for(int i = 0; i < line.length;i++){
+          if(line[i] == '[') {
+            startOfChord = true;
+            continue;
+          }
+          if(line[i] == ']') {
+            startOfChord = false;
+            continue;
+          }
+          if(startOfChord){
+            lineChords.write(line[i]);
+          }
+          else {
+            lineWords.write(line[i]);
+            lineChords.write(" ");
+          }
+        }
+
+        _songWords.add(lineWords.toString());
+        _songChords.add(lineChords.toString());
+      }
+    }
+  }
+
+  // Format Song
+  var _song = StringBuffer();
+  _song.write("Title: " + _songView.title + "\n");
+  _song.write("Author: " + _songView.author + "\n");
+
+  for(int i = 0;i < _songWords.length;i++){
+    if(_songChords[i] != "") _song.write(_songChords[i] + "\n");
+    _song.write(_songWords[i] + "\n");
+  }
+  _songFormatted.add(_song.toString());
+
+  return _songView;
+}
+
+String getToken(String token, String text){
+  int posEnd = 0;
+  int posStart = text.indexOf(token);
+  if (posStart == -1) return "";
+
+  posEnd = text.indexOf("}", posStart + token.length);
+  if(posEnd == -1) posEnd = text.indexOf("\n", posStart + token.length);
+  if(posEnd == -1) posEnd = text.indexOf("\r", posStart + token.length);
+
+  if(posEnd == -1) return text.substring(posStart + token.length).trim();
+  else return text.substring(posStart + token.length, posEnd).trim();
+}
