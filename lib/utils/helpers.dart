@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:team_player/utils/global_data.dart';
-import 'package:team_player/theme/theme_manager.dart';
+import 'package:team_player/utils/constants.dart';
 
 import 'database_manager.dart';
 import 'firebase.dart';
@@ -99,12 +99,91 @@ class MyTextFieldWithIcon extends StatelessWidget {
           suffixIcon: IconButton(
             onPressed: onPressed,
             icon: Icon(
-              icon,
-              color: iconColor
+                icon,
+                color: iconColor
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class MyTextField extends StatelessWidget {
+  final String text;
+  final String? hint;
+  final TextEditingController? textController;
+
+  const MyTextField({
+    super.key,
+    required this.textController,
+    required this.text,
+    this.hint,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10,0,10,0),
+      child: TextField(
+        controller: textController,
+        decoration: InputDecoration(
+          hintText: hint,
+          labelText: text,
+          border: UnderlineInputBorder(),
+        ),
+      ),
+    );
+  }
+}
+
+class MyDropdownButton extends StatelessWidget{
+  List<String> lstValues;
+  String dropdownValue;
+  String label;
+  IconData icon;
+  Function(String?)? onChange;
+
+  MyDropdownButton({
+   required this.lstValues,
+   this.label = "",
+   this.dropdownValue = "",
+   this.icon = Icons.arrow_drop_down_sharp,
+   this.onChange,
+});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10,0,10,0),
+      child: Row(
+          children: [
+            Text(label,
+              style: const TextStyle(
+                fontSize: normalTextFontSize,
+              ),
+            ),
+            SizedBox(width: 20),
+            DropdownButton<String>(
+              value: dropdownValue,
+              icon: Icon(icon),
+              iconSize: 15,
+              elevation: 16,
+              style: const TextStyle(color: Colors.deepPurple),
+              underline: Container(
+                height: 2,
+                color: Colors.deepPurpleAccent,
+              ),
+               onChanged: onChange,
+              items: lstValues.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
     );
   }
 }
@@ -122,7 +201,7 @@ class MyTextTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.fromLTRB(10,0,10,0),
       child: Container(
         width: 400,
         height: 50,
@@ -197,12 +276,12 @@ class MySwitchWithLabel extends StatelessWidget {
    @override
    Widget build(BuildContext context) {
      return Padding(
-       padding: const EdgeInsets.fromLTRB(10,10,10,0),
+       padding: const EdgeInsets.fromLTRB(10,0,10,0),
        child: Row(
          mainAxisAlignment: MainAxisAlignment.spaceBetween,
          children: [
            Text(label,
-             style: const TextStyle(fontSize: 16,
+             style: const TextStyle(fontSize: normalTextFontSize,
              ),
            ),
            Switch(
@@ -230,8 +309,12 @@ class MyTextButton extends StatelessWidget {
     return TextButton(
         onPressed: onPressed,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(10,10,10,10),
-          child: Text(text),
+          padding: const EdgeInsets.fromLTRB(10,5,10,0),
+          child: Text(text,
+            style: const TextStyle(
+              fontSize: normalTextFontSize,
+            ),
+          ),
         ),
     );
   }
@@ -388,11 +471,11 @@ class MyMessageBox{
 }
 
 class MyShowSongScreen extends StatelessWidget {
-  final String text;
+  final List<Widget> lstText;
   final String heading;
 
   MyShowSongScreen({
-    required this.text,
+    required this.lstText,
     required this.heading,
   });
 
@@ -401,30 +484,14 @@ class MyShowSongScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(heading)),
       body: Center(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Text(text,
-            style: const TextStyle(
-                 fontFamily: 'MonoSpace',
-                 fontWeight: FontWeight.normal
-            ),
-          ),
+        child: ListView(
+          physics: NeverScrollableScrollPhysics(),
+          children: lstText
         ),
       ),
     );
   }
 }
-
-const tokenTitle = "{title:";
-const tokenSubtitle = "{subtitle:";
-const tokenComment = "{comment:";
-const tokenStartOfPart = "{start_of_part:";
-const tokenEndOfPart = "{end_of_part}";
-const tokenStartOfChorus = "{start_of_chorus}";
-const tokenEndOfChorus = "{end_of_chorus}";
-const tokenEndOfSong = "#";
-const tokenTranspose = "# transpose =";
-const tokenVersion = "# version =";
 
 class SongViewModel {
   String title;
@@ -434,7 +501,7 @@ class SongViewModel {
   String originalChord;
   List<String> songWords;
   List<String> songChords;
-  List<String> songFormatted;
+  List<Widget> lstText;
 
   SongViewModel({
     this.title = "",
@@ -444,66 +511,78 @@ class SongViewModel {
     this.version = "",
     required this.songWords,
     required this.songChords,
-    required this.songFormatted,
+    required this.lstText,
   });
 }
 
 Future<SongViewModel> GetSongFromCloud(int index) async {
   List<String> _songWords = [];
   List<String> _songChords = [];
-  List<String> _songFormatted = [];
+  List<Widget> _lstText = [];
 
   SongViewModel _songView = SongViewModel(
     songWords: _songWords,
     songChords: _songChords,
-    songFormatted: _songFormatted,
+    lstText: _lstText,
   );
 
   String text = await fireReadFile(index);
   List<String> _lines = getLinesFromTxtFile(text);
-
-  int startPos = 0;
-  int endPos = 0;
   bool startOfChord = false;
+  bool startOfChorus = false;
 
   for (String line in _lines)
   {
-    if(line.indexOf(tokenTitle) != -1) _songView.title = getToken(tokenTitle, line);
-    else if(line.indexOf(tokenSubtitle) != -1) _songView.author = getToken(tokenSubtitle, line);
+    // Title
+    if(line.indexOf(tokenTitle) != -1){
+      _songView.title = getToken(tokenTitle, line);
+      _lstText.add(WriteSongLine(getToken(tokenTitle, line), songNameFontSize, Colors.white));
+    }
+
+    // Author
+    else if(line.indexOf(tokenSubtitle) != -1) {
+      _songView.author = getToken(tokenSubtitle, line);
+      _lstText.add(WriteSongLine(getToken(tokenSubtitle, line), songAuthorFontSize, Colors.white24));
+    }
+
+    // Transpose, Version
     else if(line.indexOf(tokenEndOfSong) != -1) {
       _songView.transpose = getToken(tokenTranspose, text);
       _songView.version = getToken(tokenVersion, text);
       break;
     }
+
+    // Song words and chords
     else {
-      // Start of Part
+      // {Start of Part}
       if(line.indexOf(tokenStartOfPart) != -1){
         _songWords.add(getToken(tokenStartOfPart, line));
         _songChords.add("");
+        _lstText.add(WriteSongLine(getToken(tokenStartOfPart, line), songPartFontSize, Colors.white));
       }
 
-      // End of Part
+      // {End of Part}
       else if(line.indexOf(tokenEndOfPart) != -1){
-        _songWords.add("");
-        _songChords.add("");
       }
 
-      // Comment
+      // {Comment}
       else if(line.indexOf(tokenComment) != -1){
         _songWords.add(getToken(tokenComment, line));
         _songChords.add("");
+        _lstText.add(WriteSongLine(getToken(tokenComment, line), songWordFontSize, Colors.grey));
       }
 
-      // Chorus
+      // {Start of Chorus}
       else if(line.indexOf(tokenStartOfChorus) != -1){
+        startOfChorus = true;
         _songWords.add("Chorus");
         _songChords.add("");
+        _lstText.add(WriteSongLine("Chorus", songPartFontSize, Colors.red));
       }
 
-      // Chorus End
+      // {End of Chorus}
       else if(line.indexOf(tokenEndOfChorus) != -1){
-        _songWords.add("");
-        _songChords.add("");
+        startOfChorus = false;
       }
 
       // Words and Chords
@@ -529,24 +608,41 @@ Future<SongViewModel> GetSongFromCloud(int index) async {
           }
         }
 
-        _songWords.add(lineWords.toString());
         _songChords.add(lineChords.toString());
+        _songWords.add(lineWords.toString());
+
+        // Chords
+        String _str = lineChords.toString();
+        if(lineChords.toString() != "") {
+         if(startOfChorus) _str = "  " + _str; // Indent Chorus
+         _lstText.add(WriteSongLine(_str,songWordFontSize, Colors.deepOrangeAccent));
+       }
+        // Words
+        _str = lineWords.toString();
+        if(startOfChorus) _str = "  " + _str; // Indent Chorus
+        _lstText.add(WriteSongLine(_str,songWordFontSize, Colors.white));
       }
     }
   }
 
   // Format Song
-  var _song = StringBuffer();
-  _song.write("Title: " + _songView.title + "\n");
-  _song.write("Author: " + _songView.author + "\n");
-
-  for(int i = 0;i < _songWords.length;i++){
-    if(_songChords[i] != "") _song.write(_songChords[i] + "\n");
-    _song.write(_songWords[i] + "\n");
-  }
-  _songFormatted.add(_song.toString());
-
+  //var _song = StringBuffer();
+  // for(int i = 0;i < _songWords.length;i++){
+  //   if(_songChords[i] != "") _song.write(_songChords[i] + "\n");
+  //   _song.write(_songWords[i] + "\n");
+  // }
   return _songView;
+}
+
+
+Text WriteSongLine(String text, double fontsize, Color color){
+  return Text(text,
+    style: TextStyle(
+      fontFamily: 'SpaceMono',
+      fontSize: fontsize,
+      color: color
+    )
+  );
 }
 
 String getToken(String token, String text){

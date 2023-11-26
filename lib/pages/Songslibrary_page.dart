@@ -145,7 +145,7 @@ class _SongsPageState extends State<SongsPage> {
   void _navigateToNextScreen(BuildContext context, SongViewModel view) {
 
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyShowSongScreen (
-      text: view.songFormatted.toString(),
+      lstText: view.lstText,
       heading: view.title,
     )));
   }
