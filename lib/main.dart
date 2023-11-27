@@ -2,8 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:team_player/pages/home.dart';
 import 'package:team_player/theme/theme_manager.dart';
-import 'package:team_player/utils/dropbox.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:team_player/utils/helpers.dart';
+import 'package:team_player/utils/global_data.dart';
 import 'package:team_player/utils/firebase.dart';
 
 
@@ -11,11 +11,9 @@ import 'package:team_player/utils/firebase.dart';
 // SDK = 30
 
 
-ThemeManager themeManager = ThemeManager();
-
-
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  await getAppSettings();
   await Firebase.initializeApp();
   await fireGetFilesList("/user1");
   runApp(MyApp());
@@ -31,6 +29,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
+    getAppSettings();
     themeManager.addListener(themeListner);
     themeManager.toggleTheme(true);
     super.initState();

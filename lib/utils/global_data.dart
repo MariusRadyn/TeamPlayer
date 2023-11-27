@@ -1,27 +1,30 @@
-
-
-import 'package:flutter/material.dart';
+import '../theme/theme_manager.dart';
 
 const String USER_NAME = 'username';
 const String DARK_THEME = 'darktheme';
+const String NR_OF_COLUMNS = 'nrofcolumns';
 const String DB_LOCAL = 'LocalDB.db';
 const String DB_TABLE_SONGS_LIB = 'SongsTable';
 const String DB_TABLE_PLAYLIST_LIB = 'PlaylistsTable';
 const String DB_TABLE_PLAYLIST_ITEMS = 'PlaylistItemsTable';
 
-UserSettings userSettings = UserSettings('',false);
-List<PlayListData> myPlayList = [];
-List<LocalSongsLibrary> mySongsLibrary = [];
+AppSettings appSettings = AppSettings();
+ThemeManager themeManager = ThemeManager();
 
-// Classes
-class UserSettings{
+List<PlayListData> myPlayList = <PlayListData>[];
+List<LocalSongsLibrary> mySongsLibrary = <LocalSongsLibrary>[];
+
+// App Settings
+class AppSettings{
   String userName;
   bool themeDark;
+  int nrOfColumns;
 
-  UserSettings(
-    this.userName,
-    this.themeDark,
-  );
+  AppSettings({
+    this.userName = "",
+    this.themeDark = true,
+    this.nrOfColumns = 2,
+  });
 }
 
 class PlayListData {

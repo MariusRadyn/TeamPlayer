@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:team_player/main.dart';
 import 'package:team_player/utils/constants.dart';
-import 'package:team_player/utils/constants.dart';
+import 'package:team_player/utils/global_data.dart';
 import 'package:team_player/utils/database_manager.dart';
 import 'package:team_player/utils/helpers.dart';
 
@@ -15,8 +15,6 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   final _cntrButton1 = TextEditingController();
   final textCntrNrOfColumns = TextEditingController();
-  bool isDarkTheme = false;
-  String NrOfColums = '2';
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +38,11 @@ class _SettingsPageState extends State<SettingsPage> {
           MyDropdownButton(
             label: 'Number of Columns',
             lstValues: ['1','2','3'],
-            dropdownValue: NrOfColums,
+            dropdownValue: appSettings.nrOfColumns.toString(),
             onChange: (String? value){
               setState(() {
-                NrOfColums = value!;
+                appSettings.nrOfColumns = int.parse(value!);
+                saveAppSettings();
                 });
               },
           ),
