@@ -36,7 +36,8 @@ class _SettingsPageState extends State<SettingsPage> {
             }
           ),
           MyDropdownButton(
-            label: 'Number of Columns',
+            text: 'Number of Columns',
+            label: 'Columns',
             lstValues: ['1','2','3'],
             dropdownValue: appSettings.nrOfColumns.toString(),
             onChange: (String? value){

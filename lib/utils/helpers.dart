@@ -295,6 +295,7 @@ class MyDropdownButton extends StatelessWidget{
   String dropdownValue;
   String label;
   IconData icon;
+  String text;
   Function(String?)? onChange;
 
   MyDropdownButton({
@@ -303,38 +304,47 @@ class MyDropdownButton extends StatelessWidget{
    this.dropdownValue = "",
    this.icon = Icons.arrow_drop_down_sharp,
    this.onChange,
+   required this.text,
 });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(10,0,10,0),
-      child: Expanded(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(label,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Text(text,
                 style: const TextStyle(
                   fontSize: normalTextFontSize,
                 ),
               ),
-              DropdownMenu<String>(
-                initialSelection: dropdownValue,
-                menuStyle: MenuStyle(
-                  shadowColor: MaterialStateColor Colors.deepOrangeAccent,
+            ),
+
+            Container(
+              height: 30,
+              width: 100,
+              child: DropdownMenu<String>(
+                label: Text(label),
+                menuStyle: const MenuStyle(
+                  backgroundColor: MaterialStatePropertyAll<Color>(Colors.blueGrey),
                 ),
-                 onSelected: onChange,
-                 dropdownMenuEntries: lstValues.map<DropdownMenuEntry<String>>((String value) {
-                   return DropdownMenuEntry<String>(
-                     value: value,
-                     label: value,
-                   );
-                 }).toList(),
+                expandedInsets: EdgeInsets.fromLTRB(10,0,10,0),
+                initialSelection: dropdownValue,
+                onSelected: onChange,
+                dropdownMenuEntries: lstValues.map<DropdownMenuEntry<String>>((String value) {
+                  return DropdownMenuEntry<String>(
+                    value: value,
+                    label: value,
+                  );
+                }).toList(),
               ),
-            ],
-          ),
-      ),
+            ),
+          ],
+        ),
     );
   }
 }
