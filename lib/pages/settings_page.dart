@@ -27,32 +27,31 @@ class _SettingsPageState extends State<SettingsPage> {
         children: [
           SettingsHeader("General", Theme.of(context).highlightColor),
           MySwitchWithLabel(
-            switchState: themeManager.themeMode == ThemeMode.dark,
-            label: "Dark Theme",
-            onChanged: (bool newVal) {
-              setState(() {
-                themeManager.toggleTheme(newVal);
-              });
-            }
-          ),
+              switchState: themeManager.themeMode == ThemeMode.dark,
+              label: "Dark Theme",
+              onChanged: (bool newVal) {
+                setState(() {
+                  themeManager.toggleTheme(newVal);
+                });
+              }),
           MyDropdownButton(
             text: 'Number of Columns',
             label: 'Columns',
-            lstValues: ['1','2','3'],
+            lstValues: ['1', '2', '3'],
             dropdownValue: appSettings.nrOfColumns.toString(),
-            onChange: (String? value){
+            onChange: (String? value) {
               setState(() {
                 appSettings.nrOfColumns = int.parse(value!);
                 saveAppSettings();
-                });
-              },
+              });
+            },
           ),
           const SizedBox(height: 20),
           SettingsHeader("Database Settings", Theme.of(context).highlightColor),
           // Delete  Database?
           MyTextButton(
             text: "Delete local Database",
-            onPressed: (){
+            onPressed: () {
               MyDialogBox box = MyDialogBox(
                   header: 'WARNING',
                   message: 'This will delete the local Database '
@@ -60,22 +59,22 @@ class _SettingsPageState extends State<SettingsPage> {
                       'All local data that was not pushed to cloud will be lost '
                       'Do a new "SYNC" to restore cloud to local library\n\n'
                       'Are you sure?',
-                but1Text: "YES",
-                but2Text: "NO",
-                image: 'images/warning.png',
-                onPressedBut1:(){
+                  but1Text: "YES",
+                  but2Text: "NO",
+                  image: 'images/warning.png',
+                  onPressedBut1: () {
                     dbDeleteDatabase();
                     Navigator.of(context).pop();
-                    MyMessageBox(message: "Database deleted" ).dialogBuilder(context);
-                },
-                onPressedBut2: (){
+                    MyMessageBox(message: "Database deleted")
+                        .dialogBuilder(context);
+                  },
+                  onPressedBut2: () {
                     Navigator.of(context).pop();
-                }
-              );
+                  });
               box.dialogBuilder(context);
             },
           ),
-           //MyTextFieldWithIcon(
+          //MyTextFieldWithIcon(
           //   text: 'Dropbox',
           //   textController: _cntrButton1,
           //   icon: Icons.delete_forever,
@@ -87,10 +86,11 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 }
 
-Padding SettingsHeader(String header, Color color){
+Padding SettingsHeader(String header, Color color) {
   return Padding(
-    padding: EdgeInsets.fromLTRB(5,10,10,0),
-    child: Text(header,
+    padding: EdgeInsets.fromLTRB(5, 10, 10, 0),
+    child: Text(
+      header,
       style: TextStyle(
         color: color,
         fontSize: headerTextFontSize,
@@ -99,15 +99,12 @@ Padding SettingsHeader(String header, Color color){
   );
 }
 
-bool hasTextOverflow(
-    String text,
-    TextStyle style,
-    {double minWidth = 0,
-      double maxWidth = double.infinity,
-      int maxLines = 2
-    }) {
+bool hasTextOverflow(String text, TextStyle style, {double minWidth = 0, double maxWidth = double.infinity, int maxLines = 2}) {
   final TextPainter textPainter = TextPainter(
-    text: TextSpan(text: text, style: style),
+    text: TextSpan(
+        text: text,
+        style: style
+    ),
     maxLines: maxLines,
     textDirection: TextDirection.ltr,
   )..layout(minWidth: minWidth, maxWidth: maxWidth);
