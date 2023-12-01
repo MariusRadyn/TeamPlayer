@@ -8,7 +8,10 @@ import 'package:team_player/utils/database_manager.dart';
 SQLHelper myDB = SQLHelper();
 
 class SongPage extends StatefulWidget {
-  const SongPage({super.key});
+
+  const SongPage({
+    super.key,
+  });
 
   @override
   State<SongPage> createState() => _SongPageState();
@@ -19,9 +22,8 @@ class _SongPageState extends State<SongPage> {
 
   @override
   void initState() {
-    //Changes on test branch
-    initDB();
     super.initState();
+    //initDB();
   }
 
 
