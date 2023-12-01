@@ -109,10 +109,6 @@ class _SongsPageState extends State<SongsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Library',
-           // style: TextStyle(
-           //     fontFamily: 'SpaceMono',
-           //     fontWeight: FontWeight.normal
-           // ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(

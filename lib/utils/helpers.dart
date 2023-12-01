@@ -86,13 +86,15 @@ Future<SongViewModel> GetSongFromCloud(int index) async {
     // Title
     if(line.indexOf(tokenTitle) != -1){
       _songView.title = getToken(tokenTitle, line);
-      _lstText.add(WriteSongLine(getToken(tokenTitle, line), songNameFontSize, Colors.white));
+      //_lstText.add(WriteSongLine(getToken(tokenTitle, line), songNameFontSize, Colors.white));
+      _lstText.add(WriteSongLine(getToken(tokenTitle, line), Colors.white));
     }
 
     // Author
     else if(line.indexOf(tokenSubtitle) != -1) {
       _songView.author = getToken(tokenSubtitle, line);
-      _lstText.add(WriteSongLine(getToken(tokenSubtitle, line), songAuthorFontSize, Colors.white24));
+      //_lstText.add(WriteSongLine(getToken(tokenSubtitle, line), songAuthorFontSize, Colors.white24));
+      _lstText.add(WriteSongLine(getToken(tokenSubtitle, line), Colors.white24));
     }
 
     // Transpose, Version
@@ -108,7 +110,8 @@ Future<SongViewModel> GetSongFromCloud(int index) async {
       if(line.indexOf(tokenStartOfPart) != -1){
         _songWords.add(getToken(tokenStartOfPart, line));
         _songChords.add("");
-        _lstText.add(WriteSongLine(getToken(tokenStartOfPart, line), songPartFontSize, Colors.white));
+        //_lstText.add(WriteSongLine(getToken(tokenStartOfPart, line), songPartFontSize, Colors.white));
+        _lstText.add(WriteSongLine(getToken(tokenStartOfPart, line), Colors.white));
       }
 
       // {End of Part}
@@ -119,7 +122,8 @@ Future<SongViewModel> GetSongFromCloud(int index) async {
       else if(line.indexOf(tokenComment) != -1){
         _songWords.add(getToken(tokenComment, line));
         _songChords.add("");
-        _lstText.add(WriteSongLine(getToken(tokenComment, line), songWordFontSize, Colors.grey));
+        //_lstText.add(WriteSongLine(getToken(tokenComment, line), songWordFontSize, Colors.grey));
+        _lstText.add(WriteSongLine(getToken(tokenComment, line), Colors.grey));
       }
 
       // {Start of Chorus}
@@ -127,7 +131,8 @@ Future<SongViewModel> GetSongFromCloud(int index) async {
         startOfChorus = true;
         _songWords.add("Chorus");
         _songChords.add("");
-        _lstText.add(WriteSongLine("Chorus", songPartFontSize, Colors.red));
+        //_lstText.add(WriteSongLine("Chorus", songPartFontSize, Colors.red));
+        _lstText.add(WriteSongLine("Chorus", Colors.red));
       }
 
       // {End of Chorus}
@@ -165,12 +170,14 @@ Future<SongViewModel> GetSongFromCloud(int index) async {
         String _str = lineChords.toString();
         if(lineChords.toString() != "") {
           if(startOfChorus) _str = "  " + _str; // Indent Chorus
-          _lstText.add(WriteSongLine(_str,songWordFontSize, Colors.deepOrangeAccent));
+          //_lstText.add(WriteSongLine(_str,songWordFontSize, Colors.deepOrangeAccent));
+          _lstText.add(WriteSongLine(_str,Colors.deepOrangeAccent));
         }
         // Words
         _str = lineWords.toString();
         if(startOfChorus) _str = "  " + _str; // Indent Chorus
-        _lstText.add(WriteSongLine(_str,songWordFontSize, Colors.white));
+        //_lstText.add(WriteSongLine(_str,songWordFontSize, Colors.white));
+        _lstText.add(WriteSongLine(_str, Colors.white));
       }
     }
   }
@@ -184,13 +191,23 @@ Future<SongViewModel> GetSongFromCloud(int index) async {
   return _songView;
 }
 
-Text WriteSongLine(String text, double fontsize, Color color){
+
+TextStyle songWordsTextStyle(){
+  return const TextStyle(
+    fontFamily: songWordsFont,
+    fontSize: songWordFontSize,
+    color: songWordsColor,
+  );
+}
+
+
+Text WriteSongLine(String text, Color color){
   return Text(text,
-      style: TextStyle(
-          fontFamily: 'SpaceMono',
-          fontSize: fontsize,
-          color: color
-      )
+    style: TextStyle(
+      fontFamily: songWordsFont,
+      fontSize: songWordFontSize,
+      color: color,
+    ),
   );
 }
 
@@ -631,27 +648,76 @@ class MyMessageBox{
   }
 }
 
-class MyShowSongScreen extends StatelessWidget {
+class MyShowSongScreen extends StatefulWidget {
   final List<Widget> lstText;
   final String heading;
 
-  MyShowSongScreen({
+  const MyShowSongScreen({
+    Key? key,
     required this.lstText,
     required this.heading,
-  });
+    })  : super(key: key);
+
+  @override
+  _myShowSongScreen createState() => _myShowSongScreen();
+}
+
+class _myShowSongScreen extends State<MyShowSongScreen> {
+  int _currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(heading)),
+      //appBar: AppBar(title: Text(heading)),
       body: Center(
-        child: ListView(
-          physics: NeverScrollableScrollPhysics(),
-          children: lstText
+        child: LayoutBuilder(
+          builder: (context, constraints){
+            final textPainter = TextPainter(
+              text: TextSpan(text: widget.lstText.toString(), style: songWordsTextStyle()),
+              textDirection: TextDirection.ltr,
+            );
+            textPainter.layout(maxWidth: constraints.maxWidth);
+            final numPages = (textPainter.size.height / constraints.maxHeight).ceil();
+
+
+              return PageView.builder(
+                //controller: _controller,
+                itemCount: numPages,
+                onPageChanged: (page) {
+                  setState(() {
+                    _currentPage = page;
+                  });
+                },
+                itemBuilder: (context, index) {
+                  return ListView(
+                    children: widget.lstText.,
+
+                  );
+                  // return Text(
+                  //   widget.lstText.toString(),
+                  //   style: songWordsTextStyle(),
+                  //   // Only show the part of the text that fits in the current page
+                  //   overflow: TextOverflow.clip,
+                  //   maxLines: ((_currentPage + 1) * constraints.maxHeight) ~/
+                  //       songWordsTextStyle().fontSize!,
+                  // );
+                },
+              );
+           },
         ),
       ),
     );
   }
+}
+
+List<Widget> getLines(List<Widget> lst, int nrOfPages, int currentPage)
+{
+  List<Widget> _lst = [];
+  int pageSize = 10;
+
+ if(lst.length > nrOfPages)
+  for(int i = currentPage; i < 10;i++) lst.add(lst[i]);
+  return _lst;
 }
 
 class SongViewModel {
