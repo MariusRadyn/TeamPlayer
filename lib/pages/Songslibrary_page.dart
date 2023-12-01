@@ -139,11 +139,12 @@ class _SongsPageState extends State<SongsPage> {
   }
 
   void _navigateToNextScreen(BuildContext context, SongViewModel view) {
-
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyShowSongScreen (
-      lstText: view.lstText,
-      heading: view.title,
-    )));
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => MyShowSongScreen (
+          lstText: view.lstText,
+          heading: view.title,
+        )
+    ));
   }
 
   Future<void> _onTap(int index) async{

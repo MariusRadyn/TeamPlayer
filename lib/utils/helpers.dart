@@ -8,7 +8,185 @@ import 'package:team_player/utils/constants.dart';
 import 'database_manager.dart';
 import 'firebase.dart';
 
+// Functions
+saveAppSettings() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString(USER_NAME, appSettings.userName);
+  prefs.setBool(DARK_THEME, appSettings.themeDark);
+  prefs.setInt(NR_OF_COLUMNS, appSettings.nrOfColumns);
+}
+getAppSettings() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  appSettings.userName = prefs.getString(USER_NAME) ?? '';
+  appSettings.themeDark = prefs.getBool(DARK_THEME) ?? false;
+  appSettings.nrOfColumns = prefs.getInt(NR_OF_COLUMNS) ?? 2;
+}
+removeSharedPreference(String propertyName) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.remove(propertyName);
+}
+Future<SongViewModel> GetSongFromCloud(int index) async {
+  List<String> _songWords = [];
+  List<String> _songChords = [];
+  List<Text> _lstText = [];
 
+  SongViewModel _songView = SongViewModel(
+    songWords: _songWords,
+    songChords: _songChords,
+    lstText: _lstText,
+  );
+
+  String text = await fireReadFile(index);
+  List<String> _lines = getLinesFromTxtFile(text);
+  bool startOfChord = false;
+  bool startOfChorus = false;
+
+  for (String line in _lines)
+  {
+    // Title
+    if(line.indexOf(tokenTitle) != -1){
+      _songView.title = getToken(tokenTitle, line);
+      _lstText.add(WriteSongLine(getToken(tokenTitle, line), songNameFontSize, Colors.white));
+    }
+
+    // Author
+    else if(line.indexOf(tokenSubtitle) != -1) {
+      _songView.author = getToken(tokenSubtitle, line);
+      _lstText.add(WriteSongLine(getToken(tokenSubtitle, line), songAuthorFontSize, Colors.white24));
+    }
+
+    // Transpose, Version
+    else if(line.indexOf(tokenEndOfSong) != -1) {
+      _songView.transpose = getToken(tokenTranspose, text);
+      _songView.version = getToken(tokenVersion, text);
+      break;
+    }
+
+    // Song words and chords
+    else {
+      // {Start of Part}
+      if(line.indexOf(tokenStartOfPart) != -1){
+        _songWords.add(getToken(tokenStartOfPart, line));
+        _songChords.add("");
+        _lstText.add(WriteSongLine(getToken(tokenStartOfPart, line), songPartFontSize, Colors.white));
+      }
+
+      // {End of Part}
+      else if(line.indexOf(tokenEndOfPart) != -1){
+      }
+
+      // {Comment}
+      else if(line.indexOf(tokenComment) != -1){
+        if(appSettings.showComments){
+          _songWords.add(getToken(tokenComment, line));
+          _songChords.add("");
+          _lstText.add(WriteSongLine(getToken(tokenComment, line), songWordFontSize, Colors.grey));
+        }
+      }
+
+      // {Start of Chorus}
+      else if(line.indexOf(tokenStartOfChorus) != -1){
+        startOfChorus = true;
+        _songWords.add("Chorus");
+        _songChords.add("");
+        _lstText.add(WriteSongLine("Chorus", songPartFontSize, Colors.red));
+      }
+
+      // {End of Chorus}
+      else if(line.indexOf(tokenEndOfChorus) != -1){
+        startOfChorus = false;
+      }
+
+      // Words and Chords
+      else{
+        var lineChords = StringBuffer();
+        var lineWords = StringBuffer();
+        bool chordEntry = false;
+        lineChords.write("#"); // Mark chord line with # token
+
+        for(int i = 0; i < line.length;i++){
+          if(line[i] == '[') {
+            startOfChord = true;
+            chordEntry = true;
+            continue;
+          }
+          if(line[i] == ']') {
+            startOfChord = false;
+            continue;
+          }
+          if(startOfChord){
+            // Chord
+            lineChords.write(line[i]);
+          }
+          else {
+            // Words
+            lineWords.write(line[i]);
+            lineChords.write(" ");
+          }
+        }
+
+        // If a chord line has any chords, the line gets a "#" prefix
+        // This # is used to determine what line contains chords
+        // When splitting over multiple pages, the last line on a page
+        // can not be a line containing chords. The # tells us that
+        // line cant be last on a page
+        if(chordEntry)chordEntry = false;
+        else lineChords.clear();
+
+        _songChords.add(lineChords.toString());
+        _songWords.add(lineWords.toString());
+
+        // Chords
+        String _str = lineChords.toString();
+        if(lineChords.toString() != "") {
+          if(startOfChorus) _str = "  " + _str; // Indent Chorus
+          _lstText.add(WriteSongLine(_str,songWordFontSize, Colors.deepOrangeAccent));
+          //_lstText.add(WriteSongLine(_str,Colors.deepOrangeAccent));
+        }
+        // Words
+        _str = lineWords.toString();
+        if(startOfChorus) _str = "  " + _str; // Indent Chorus
+        _lstText.add(WriteSongLine(_str,songWordFontSize, Colors.white));
+      }
+    }
+  }
+
+  // Format Song
+  //var _song = StringBuffer();
+  // for(int i = 0;i < _songWords.length;i++){
+  //   if(_songChords[i] != "") _song.write(_songChords[i] + "\n");
+  //   _song.write(_songWords[i] + "\n");
+  // }
+  return _songView;
+}
+TextStyle songWordsTextStyle(){
+  return const TextStyle(
+    fontFamily: songWordsFont,
+    fontSize: songWordFontSize,
+    color: songWordsColor,
+  );
+}
+Text WriteSongLine(String text, double fontsize, Color color){
+  return Text(text,
+    style: TextStyle(
+      fontFamily: songWordsFont,
+      fontSize: fontsize,
+      color: color,
+    ),
+  );
+}
+String getToken(String token, String text){
+  int posEnd = 0;
+  int posStart = text.indexOf(token);
+  if (posStart == -1) return "";
+
+  posEnd = text.indexOf("}", posStart + token.length);
+  if(posEnd == -1) posEnd = text.indexOf("\n", posStart + token.length);
+  if(posEnd == -1) posEnd = text.indexOf("\r", posStart + token.length);
+
+  if(posEnd == -1) return text.substring(posStart + token.length).trim();
+  else return text.substring(posStart + token.length, posEnd).trim();
+}
 List<String> getLinesFromTxtFile(String text) {
   List<String> lines = [];
   int startPos = 0;
@@ -42,192 +220,7 @@ Future<void> MySimpleDialog(BuildContext context) {
     );
 }
 
-// -----------------------------------------------------------------------------
-// Functions
-// -----------------------------------------------------------------------------
-
-saveAppSettings() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString(USER_NAME, appSettings.userName);
-  prefs.setBool(DARK_THEME, appSettings.themeDark);
-  prefs.setInt(NR_OF_COLUMNS, appSettings.nrOfColumns);
-}
-
-getAppSettings() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  appSettings.userName = prefs.getString(USER_NAME) ?? '';
-  appSettings.themeDark = prefs.getBool(DARK_THEME) ?? false;
-  appSettings.nrOfColumns = prefs.getInt(NR_OF_COLUMNS) ?? 2;
-}
-
-removeSharedPreference(String propertyName) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.remove(propertyName);
-}
-
-Future<SongViewModel> GetSongFromCloud(int index) async {
-  List<String> _songWords = [];
-  List<String> _songChords = [];
-  List<Widget> _lstText = [];
-
-  SongViewModel _songView = SongViewModel(
-    songWords: _songWords,
-    songChords: _songChords,
-    lstText: _lstText,
-  );
-
-  String text = await fireReadFile(index);
-  List<String> _lines = getLinesFromTxtFile(text);
-  bool startOfChord = false;
-  bool startOfChorus = false;
-
-  for (String line in _lines)
-  {
-    // Title
-    if(line.indexOf(tokenTitle) != -1){
-      _songView.title = getToken(tokenTitle, line);
-      //_lstText.add(WriteSongLine(getToken(tokenTitle, line), songNameFontSize, Colors.white));
-      _lstText.add(WriteSongLine(getToken(tokenTitle, line), Colors.white));
-    }
-
-    // Author
-    else if(line.indexOf(tokenSubtitle) != -1) {
-      _songView.author = getToken(tokenSubtitle, line);
-      //_lstText.add(WriteSongLine(getToken(tokenSubtitle, line), songAuthorFontSize, Colors.white24));
-      _lstText.add(WriteSongLine(getToken(tokenSubtitle, line), Colors.white24));
-    }
-
-    // Transpose, Version
-    else if(line.indexOf(tokenEndOfSong) != -1) {
-      _songView.transpose = getToken(tokenTranspose, text);
-      _songView.version = getToken(tokenVersion, text);
-      break;
-    }
-
-    // Song words and chords
-    else {
-      // {Start of Part}
-      if(line.indexOf(tokenStartOfPart) != -1){
-        _songWords.add(getToken(tokenStartOfPart, line));
-        _songChords.add("");
-        //_lstText.add(WriteSongLine(getToken(tokenStartOfPart, line), songPartFontSize, Colors.white));
-        _lstText.add(WriteSongLine(getToken(tokenStartOfPart, line), Colors.white));
-      }
-
-      // {End of Part}
-      else if(line.indexOf(tokenEndOfPart) != -1){
-      }
-
-      // {Comment}
-      else if(line.indexOf(tokenComment) != -1){
-        _songWords.add(getToken(tokenComment, line));
-        _songChords.add("");
-        //_lstText.add(WriteSongLine(getToken(tokenComment, line), songWordFontSize, Colors.grey));
-        _lstText.add(WriteSongLine(getToken(tokenComment, line), Colors.grey));
-      }
-
-      // {Start of Chorus}
-      else if(line.indexOf(tokenStartOfChorus) != -1){
-        startOfChorus = true;
-        _songWords.add("Chorus");
-        _songChords.add("");
-        //_lstText.add(WriteSongLine("Chorus", songPartFontSize, Colors.red));
-        _lstText.add(WriteSongLine("Chorus", Colors.red));
-      }
-
-      // {End of Chorus}
-      else if(line.indexOf(tokenEndOfChorus) != -1){
-        startOfChorus = false;
-      }
-
-      // Words and Chords
-      else{
-        var lineChords = StringBuffer();
-        var lineWords = StringBuffer();
-
-        for(int i = 0; i < line.length;i++){
-          if(line[i] == '[') {
-            startOfChord = true;
-            continue;
-          }
-          if(line[i] == ']') {
-            startOfChord = false;
-            continue;
-          }
-          if(startOfChord){
-            lineChords.write(line[i]);
-          }
-          else {
-            lineWords.write(line[i]);
-            lineChords.write(" ");
-          }
-        }
-
-        _songChords.add(lineChords.toString());
-        _songWords.add(lineWords.toString());
-
-        // Chords
-        String _str = lineChords.toString();
-        if(lineChords.toString() != "") {
-          if(startOfChorus) _str = "  " + _str; // Indent Chorus
-          //_lstText.add(WriteSongLine(_str,songWordFontSize, Colors.deepOrangeAccent));
-          _lstText.add(WriteSongLine(_str,Colors.deepOrangeAccent));
-        }
-        // Words
-        _str = lineWords.toString();
-        if(startOfChorus) _str = "  " + _str; // Indent Chorus
-        //_lstText.add(WriteSongLine(_str,songWordFontSize, Colors.white));
-        _lstText.add(WriteSongLine(_str, Colors.white));
-      }
-    }
-  }
-
-  // Format Song
-  //var _song = StringBuffer();
-  // for(int i = 0;i < _songWords.length;i++){
-  //   if(_songChords[i] != "") _song.write(_songChords[i] + "\n");
-  //   _song.write(_songWords[i] + "\n");
-  // }
-  return _songView;
-}
-
-
-TextStyle songWordsTextStyle(){
-  return const TextStyle(
-    fontFamily: songWordsFont,
-    fontSize: songWordFontSize,
-    color: songWordsColor,
-  );
-}
-
-
-Text WriteSongLine(String text, Color color){
-  return Text(text,
-    style: TextStyle(
-      fontFamily: songWordsFont,
-      fontSize: songWordFontSize,
-      color: color,
-    ),
-  );
-}
-
-String getToken(String token, String text){
-  int posEnd = 0;
-  int posStart = text.indexOf(token);
-  if (posStart == -1) return "";
-
-  posEnd = text.indexOf("}", posStart + token.length);
-  if(posEnd == -1) posEnd = text.indexOf("\n", posStart + token.length);
-  if(posEnd == -1) posEnd = text.indexOf("\r", posStart + token.length);
-
-  if(posEnd == -1) return text.substring(posStart + token.length).trim();
-  else return text.substring(posStart + token.length, posEnd).trim();
-}
-
-// -----------------------------------------------------------------------------
-// Widgets
-// -----------------------------------------------------------------------------
-
+// Stateless Widgets
 MaterialButton myButton(String text, Function()? onPressed) {
   return MaterialButton(
     onPressed: onPressed,
@@ -237,7 +230,6 @@ MaterialButton myButton(String text, Function()? onPressed) {
             color: Colors.white)),
   );
 }
-
 class MyTextFieldWithIcon extends StatelessWidget {
   final String text;
   final String? hint;
@@ -278,7 +270,6 @@ class MyTextFieldWithIcon extends StatelessWidget {
     );
   }
 }
-
 class MyTextField extends StatelessWidget {
   final String text;
   final String? hint;
@@ -306,7 +297,6 @@ class MyTextField extends StatelessWidget {
     );
   }
 }
-
 class MyDropdownButton extends StatelessWidget{
   List<String> lstValues;
   String dropdownValue;
@@ -365,7 +355,6 @@ class MyDropdownButton extends StatelessWidget{
     );
   }
 }
-
 class MyTextTile extends StatelessWidget {
   final Color? color;
   final String text;
@@ -396,7 +385,6 @@ class MyTextTile extends StatelessWidget {
     );
   }
 }
-
 class MyListTile extends StatelessWidget {
   final String text;
   final String subText;
@@ -438,7 +426,6 @@ class MyListTile extends StatelessWidget {
     );
   }
 }
-
 class MySwitchWithLabel extends StatelessWidget {
    const MySwitchWithLabel({
      Key? key,
@@ -471,7 +458,6 @@ class MySwitchWithLabel extends StatelessWidget {
      );
    }
 }
-
 class MyTextButton extends StatelessWidget {
   final Function()? onPressed;
   final String text;
@@ -497,7 +483,6 @@ class MyTextButton extends StatelessWidget {
     );
   }
 }
-
 class MyAlertDialogBox extends StatelessWidget {
   final String heading;
   final String msg;
@@ -545,7 +530,6 @@ class MyAlertDialogBox extends StatelessWidget {
     return _alert();
   }
 }
-
 class MyDialogBox{
   final String message;
   final String header;
@@ -615,7 +599,6 @@ class MyDialogBox{
      );
    }
  }
-
 class MyMessageBox{
   final String message;
   String image;
@@ -647,9 +630,8 @@ class MyMessageBox{
     );
   }
 }
-
 class MyShowSongScreen extends StatefulWidget {
-  final List<Widget> lstText;
+  final List<Text> lstText;
   final String heading;
 
   const MyShowSongScreen({
@@ -661,65 +643,101 @@ class MyShowSongScreen extends StatefulWidget {
   @override
   _myShowSongScreen createState() => _myShowSongScreen();
 }
-
 class _myShowSongScreen extends State<MyShowSongScreen> {
+  final PageController _pageController = PageController();
   int _currentPage = 0;
+  int _totalPages = 0;
+  List<Size> _textSizes = [];
+  double _screenWidth = 0;
+  double _screenHeight = 0;
+  double _padding = 16.0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    _screenWidth = MediaQuery.of(context).size.width;
+    _screenHeight = MediaQuery.of(context).size.height;
+    _textSizes = widget.lstText.map((text) => _calcTextSize(text)).toList();
+    _totalPages = _calcTotalPages();
+
     return Scaffold(
-      //appBar: AppBar(title: Text(heading)),
-      body: Center(
-        child: LayoutBuilder(
-          builder: (context, constraints){
-            final textPainter = TextPainter(
-              text: TextSpan(text: widget.lstText.toString(), style: songWordsTextStyle()),
-              textDirection: TextDirection.ltr,
-            );
-            textPainter.layout(maxWidth: constraints.maxWidth);
-            final numPages = (textPainter.size.height / constraints.maxHeight).ceil();
-
-
-              return PageView.builder(
-                //controller: _controller,
-                itemCount: numPages,
-                onPageChanged: (page) {
-                  setState(() {
-                    _currentPage = page;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  return ListView(
-                    children: widget.lstText.,
-
-                  );
-                  // return Text(
-                  //   widget.lstText.toString(),
-                  //   style: songWordsTextStyle(),
-                  //   // Only show the part of the text that fits in the current page
-                  //   overflow: TextOverflow.clip,
-                  //   maxLines: ((_currentPage + 1) * constraints.maxHeight) ~/
-                  //       songWordsTextStyle().fontSize!,
-                  // );
-                },
-              );
-           },
-        ),
+      body: PageView.builder(
+        controller: _pageController,
+        itemCount: _totalPages,
+        itemBuilder: (context, index) {
+          List<Text> texts = _getTextsForPage(index);
+          return Container(
+            padding: EdgeInsets.all(_padding),
+            child: ListView(
+              //crossAxisAlignment: CrossAxisAlignment.start,
+              children: texts,
+            ),
+          );
+        },
+        onPageChanged: (index) {
+          setState(() {
+            _currentPage = index;
+          });
+        },
       ),
     );
   }
+
+  Size _calcTextSize(Text text) {
+    final TextPainter textPainter = TextPainter(
+      textDirection: TextDirection.ltr,
+      textScaler: MediaQuery.of(context).textScaler,
+      text: TextSpan(
+          text: text.data,
+          style: text.style
+      ),
+    )..layout();
+    // Return the size of the text painter
+    return textPainter.size;
+  }
+  int _calcTotalPages() {
+    int totalPages = 1;
+    double currentPageHeight = 0;
+    for (Size textSize in _textSizes) {
+      currentPageHeight += textSize.height;
+      if (currentPageHeight > _screenHeight - 2 * _padding) {
+        totalPages++;
+        currentPageHeight = textSize.height;
+      }
+    }
+    return totalPages;
+  }
+  List<Text> _getTextsForPage(int pageIndex) {
+    List<Text> texts = [];
+    double currentPageHeight = 0;
+    int currentPage = 0;
+    for (int i = 0; i < widget.lstText.length; i++) {
+      Text text = widget.lstText[i];
+      Size textSize = _textSizes[i];
+      currentPageHeight += textSize.height;
+      if (currentPageHeight > _screenHeight - 50 - _padding) {
+        currentPage++;
+        currentPageHeight = textSize.height;
+      }
+      if (currentPage == pageIndex) {
+        texts.add(text);
+      }
+    }
+    return texts;
+  }
 }
 
-List<Widget> getLines(List<Widget> lst, int nrOfPages, int currentPage)
-{
-  List<Widget> _lst = [];
-  int pageSize = 10;
-
- if(lst.length > nrOfPages)
-  for(int i = currentPage; i < 10;i++) lst.add(lst[i]);
-  return _lst;
-}
-
+// View Models
 class SongViewModel {
   String title;
   String author;
@@ -728,7 +746,7 @@ class SongViewModel {
   String originalChord;
   List<String> songWords;
   List<String> songChords;
-  List<Widget> lstText;
+  List<Text> lstText;
 
   SongViewModel({
     this.title = "",

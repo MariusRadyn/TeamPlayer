@@ -18,12 +18,14 @@ List<LocalSongsLibrary> mySongsLibrary = <LocalSongsLibrary>[];
 class AppSettings{
   String userName;
   bool themeDark;
+  bool showComments;
   int nrOfColumns;
 
   AppSettings({
     this.userName = "",
     this.themeDark = true,
     this.nrOfColumns = 2,
+    this.showComments = false,
   });
 }
 
