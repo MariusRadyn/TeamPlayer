@@ -1,5 +1,24 @@
 import '../theme/theme_manager.dart';
+import 'package:flutter/material.dart';
 
+// Song Font Sizes
+const String songWordsFont = 'SpaceMono';
+const Color songWordsColor= Colors.white;
+const double songNameFontSize = 16;
+const double songAuthorFontSize = 14;
+const double songWordFontSize = 12;
+const double songPartFontSize = 14;
+
+const String songChordsFont = 'SpaceMono';
+const double songChordsFontSize = 12;
+const Color songChordsColor= Colors.red;
+const songChordsStyle = TextStyle(fontFamily: 'SpaceMono', fontSize: 12,color: Colors.red);
+
+// Widget Font Sizes
+const double normalTextFontSize = 12;
+const double headerTextFontSize = 14;
+
+// Theme data
 const String USER_NAME = 'username';
 const String DARK_THEME = 'darktheme';
 const String NR_OF_COLUMNS = 'nrofcolumns';
@@ -28,7 +47,6 @@ class AppSettings{
     this.showComments = false,
   });
 }
-
 class PlayListData {
   final String songName;
   final String writer;
@@ -86,7 +104,6 @@ class LocalSongsLibrary {
         'isActive : $isActive}';
   }
 }
-
 class LocalPlaylistLibrary {
   final int id;
   final String description;
@@ -120,7 +137,6 @@ class LocalPlaylistLibrary {
     'dateModified: $dateModified';
   }
 }
-
 class LocalPlaylistItems {
   final int id;
   final String songName;

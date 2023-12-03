@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../utils/database_manager.dart';
 import '../utils/global_data.dart';
 import 'package:team_player/utils/helpers.dart';
-//import 'package:dropbox_client/dropbox_client.dart';
+import 'package:team_player/utils/song_view_model.dart';
 import 'package:team_player/utils/firebase.dart';
 
 class SongsPage extends StatefulWidget {
@@ -15,7 +15,6 @@ class SongsPage extends StatefulWidget {
   @override
   State<SongsPage> createState() => _SongsPageState();
 }
-
 class _SongsPageState extends State<SongsPage> {
   List<BottomNavigationBarItem> navBarItems = <BottomNavigationBarItem>[
     const BottomNavigationBarItem(label: 'Add', icon: Icon(Icons.add)),
@@ -140,7 +139,7 @@ class _SongsPageState extends State<SongsPage> {
 
   void _navigateToNextScreen(BuildContext context, SongViewModel view) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => MyShowSongScreen (
+        builder: (context) => ViewSong (
           lstText: view.lstText,
           heading: view.title,
         )
