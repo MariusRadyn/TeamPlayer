@@ -202,7 +202,7 @@ class _viewSong extends State<ViewSong> {
     double maxScreenHeight = _screenHeight - _padTop - _padBottom - 30;
     double maxColumnWidth = _screenWidth / appSettings.nrOfColumns - 10;
 
-    // Itterate Lines
+    // Itterate Words/Chords Lines
     for (int i = 0; i < widget.songView.songWords.length; i++) {
       String words = widget.songView.songWords[i];
       String chords = widget.songView.songChords[i];
@@ -210,50 +210,26 @@ class _viewSong extends State<ViewSong> {
       Size sizeChords = _calcTextSize(Text(chords));
 
       Size bigestSize = sizeWords;
-      if(sizeChords.width > sizeWords.width) bigestSize = sizeChords;
+      if(sizeChords.width > sizeWords.width)  bigestSize = sizeChords;
 
       // Calc Line span
       int span = (bigestSize.width/maxColumnWidth).ceil();
       if(span == 0) span = 1;
 
-      // Itterate Span
-      for(int cnt = 0; cnt < span; cnt++){
-        currentPageHeight += textSize.height;
-
-        // Check End of page
-        if (currentPageHeight > maxScreenHeight) {
-          String? lastline = widget.lstTextWords[lstText.length-1].data!;
-
-          // Check if last line was Chords
-          if(lastline.contains(tokenLineOfChords)){
-            Text lastText = widget.lstTextWords[i-1];
-            Size lastSize = _textSizes[i-1];
-            lstText.removeAt(i-1);
-            lstColumns.add([...lstText]); // Clone list
-
-            lstText.clear();
-            lstText.add(_stripLineTokens(lastText));
-            currentPageHeight = lastSize.height;
-          }
-          else {
-            currentPageHeight = textSize.height;
-            lstColumns.add([...lstText]); // Clone List
-            lstText.clear();
-          }
+        // Break up chunks
+        for(int cnt = 0; cnt < span; cnt++){
+          currentPageHeight += (sizeWords.height + sizeChords.height);
+          // Look for word cut off
+          List<String> lst = words.split(" ");
         }
-
         // This Page
+        //lstText.add(_stripLineTokens(widget.lstTextWords[i]));
 
-        lstText.add(_stripLineTokens(widget.lstTextWords[i]));
-      }
-
-
-
+      //lstColumns.add(lstText);
+      return lstColumns;
     }
-    lstColumns.add(lstText);
-    return lstColumns;
-  }
-  List<List<Text>> x_getSongColumns() {
+    }
+    List<List<Text>> x_getSongColumns() {
     List<List<Text>> lstColumns = [];
     List<Text> lstText = [];
     double currentPageHeight = 0;
@@ -299,8 +275,7 @@ class _viewSong extends State<ViewSong> {
     lstColumns.add(lstText);
     return lstColumns;
   }
-
-  Text _stripLineTokens(Text text) {
+    Text _stripLineTokens(Text text) {
     // # = Line of Chords
     if(text.data!.contains(tokenLineOfChords)){
       return Text(
