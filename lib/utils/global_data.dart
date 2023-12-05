@@ -38,6 +38,8 @@ class AppSettings{
   String userName;
   bool themeDark;
   bool showComments;
+  bool showDefine;
+  bool showTabs;
   int nrOfColumns;
 
   AppSettings({
@@ -45,6 +47,8 @@ class AppSettings{
     this.themeDark = true,
     this.nrOfColumns = 2,
     this.showComments = false,
+    this.showDefine = false,
+    this.showTabs = false,
   });
 }
 class PlayListData {

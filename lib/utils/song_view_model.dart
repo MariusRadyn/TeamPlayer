@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:team_player/utils/helpers.dart';
 import 'package:team_player/utils/firebase.dart';
 import 'package:team_player/utils/global_data.dart';
@@ -7,22 +8,24 @@ import 'package:team_player/utils/global_data.dart';
 const tokenTitle = "{title:";
 const tokenSubtitle = "{subtitle:";
 const tokenComment = "{comment:";
+const tokenDefine = "{define:";
 const tokenStartOfPart = "{start_of_part:";
 const tokenEndOfPart = "{end_of_part}";
 const tokenStartOfChorus = "{start_of_chorus}";
 const tokenEndOfChorus = "{end_of_chorus}";
+const tokenStartOfTab = "{start_of_tab}";
+const tokenEndOfTab = "{end_of_tab}";
+const tokenLineOfChords = "#C";
 const tokenEndOfSong = "#";
 const tokenTranspose = "# transpose =";
 const tokenVersion = "# version =";
 
 class ViewSong extends StatefulWidget {
-  final List<Text> lstText;
-  final String heading;
+  final SongViewModel songView;
 
   const ViewSong({
     Key? key,
-    required this.lstText,
-    required this.heading,
+    required this.songView,
   })  : super(key: key);
 
   @override
@@ -30,14 +33,12 @@ class ViewSong extends StatefulWidget {
 }
 class _viewSong extends State<ViewSong> {
   final PageController _pageController = PageController();
-  int _currentPage = 0;
-  int _totalPages = 0;
   List<Size> _textSizes = [];
-  List<List<Text>> _pages = [];
   double _screenWidth = 0;
   double _screenHeight = 0;
   double _padBottom = 50.0;
   double _padTop = 10.0;
+  double _maxScreenHeight = 0;
 
   @override
   void initState() {
@@ -54,33 +55,84 @@ class _viewSong extends State<ViewSong> {
   Widget build(BuildContext context) {
     _screenWidth = MediaQuery.of(context).size.width;
     _screenHeight = MediaQuery.of(context).size.height;
-    _textSizes = widget.lstText.map((text) => _calcTextSize(text)).toList();
-    _totalPages = _calcTotalPages();
-    List<List<Text>> _pages = _getSongPages();
+    _textSizes = widget.songView.lstTextWords.map((text) => _calcTextSize(text)).toList();
+    //_totalPages = _calcTotalPages();
+    _maxScreenHeight = _screenHeight - _padTop - _padBottom - 30;
+    List<List<Text>> columns = _getSongColumns();
+    int nrOfPages = 1;
 
     return Scaffold(
-      body: PageView.builder(
-        controller: _pageController,
-        itemCount: _totalPages,
-        itemBuilder: (context, index) {
-          //List<Text> texts = _getTextsForPage(index);
-          return Container(
-            padding: EdgeInsets.fromLTRB(5,_padTop,5,_padBottom),
-            child: ListView(
-              children: _pages[index],
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            widget.songView.title,
+            style: const TextStyle(
+                fontSize: 16,
+                color: Colors.blue
             ),
-          );
-        },
-        onPageChanged: (index) {
-          setState(() {
-            _currentPage = index;
-          });
-        },
+          ),
+          Text(
+            widget.songView.author,
+            style: const TextStyle(
+                fontSize: 12,
+                color: Colors.blueGrey
+            ),
+          ),
+          Expanded(
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return PageView.builder(
+                  itemBuilder: (BuildContext context, int pageIndex) {
+                    return GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: appSettings.nrOfColumns,
+                        crossAxisSpacing: 10,
+                        mainAxisExtent: _maxScreenHeight ,
+                      ),
+                      itemBuilder: (BuildContext context, int widgetIndex) {
+                        if ( widgetIndex < columns.length) {
+                          nrOfPages++;
+                          return Container(alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(15)),
+            
+                             //padding: EdgeInsets.fromLTRB(5,_padTop,5,_padBottom),
+                             child: ListView(
+                               children: columns[widgetIndex],
+                             ),
+                          );
+                        }
+                        else {
+                          return null;
+                        }
+                      }
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+
+          const SizedBox(height: 10),
+
+          SmoothPageIndicator(
+            controller: _pageController,
+            count: nrOfPages,
+            effect: WormEffect(
+              dotColor: Theme.of(context).colorScheme.primary,
+              activeDotColor: Theme.of(context).colorScheme.onPrimary,
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Size _calcTextSize(Text text) {
+    if(text.data == "") return const Size(0,0);
+
     final TextPainter textPainter = TextPainter(
       textDirection: TextDirection.ltr,
       textScaler: MediaQuery.of(context).textScaler,
@@ -104,50 +156,23 @@ class _viewSong extends State<ViewSong> {
     }
     return totalPages;
   }
-
-  List<Text> _getTextsForPage(int pageIndex) {
-    List<Text> texts = [];
-    double currentPageHeight = 0;
-    int currentPage = 0;
-    double maxScreenHeight = _screenHeight - _padTop - _padBottom - 30;
-
-    for (int i = 0; i < widget.lstText.length; i++) {
-      Text text = widget.lstText[i];
-      Size textSize = _textSizes[i];
-      currentPageHeight += textSize.height;
-
-      // Next page
-      if (currentPageHeight > maxScreenHeight) {
-        currentPage++;
-        currentPageHeight = textSize.height;
-      }
-
-      // This Page
-      if (currentPage == pageIndex) {
-        texts.add(text);
-      }
-    }
-    return texts;
-  }
-
   List<List<Text>> _getSongPages() {
     List<List<Text>> lstPages = [];
     List<Text> lstText = [];
     double currentPageHeight = 0;
-    double maxScreenHeight = _screenHeight - _padTop - _padBottom - 30;
 
-    for (int i = 0; i < widget.lstText.length; i++) {
-      Text text = widget.lstText[i];
+    for (int i = 0; i < widget.songView.lstTextWords.length; i++) {
+      Text txt = widget.songView.lstTextWords[i];
       Size textSize = _textSizes[i];
       currentPageHeight += textSize.height;
 
       // Check End of page
-      if (currentPageHeight > maxScreenHeight) {
-        String? lastline = lstText[lstText.length-1].data!;
+      if (currentPageHeight > _maxScreenHeight) {
+        String? lastline = widget.songView.lstTextWords[lstText.length-1].data!;
 
-        // Check is last line was Chords
+        // Check if last line was Chords
         if(lastline.contains('#')){
-          Text lastText = lstText[i-1];
+          Text lastText = widget.songView.lstTextWords[i-1];
           Size lastSize = _textSizes[i-1];
           lstText.removeAt(i-1);
           lstPages.add([...lstText]); // Clone list
@@ -158,38 +183,103 @@ class _viewSong extends State<ViewSong> {
         }
         else {
           currentPageHeight = textSize.height;
-          lstPages.add([...lstText]);
+          lstPages.add([...lstText]); // Clone List
           lstText.clear();
         }
       }
 
       // This Page
-      lstText.add(_stripLineTokens(text));
+
+      lstText.add(_stripLineTokens(widget.songView.lstTextWords[i]));
     }
     lstPages.add(lstText);
     return lstPages;
   }
-  List<List<Text>> x_getSongPages() {
-    List<List<Text>> lstPages = [];
+  List<List<Text>> _getSongColumns() {
+    List<List<Text>> lstColumns = [];
     List<Text> lstText = [];
     double currentPageHeight = 0;
     double maxScreenHeight = _screenHeight - _padTop - _padBottom - 30;
+    double maxColumnWidth = _screenWidth / appSettings.nrOfColumns - 10;
 
-    for (int i = 0; i < widget.lstText.length; i++) {
-      Text text = widget.lstText[i];
+    // Itterate Lines
+    for (int i = 0; i < widget.songView.songWords.length; i++) {
+      String words = widget.songView.songWords[i];
+      String chords = widget.songView.songChords[i];
+      Size sizeWords = _calcTextSize(Text(words));
+      Size sizeChords = _calcTextSize(Text(chords));
+
+      Size bigestSize = sizeWords;
+      if(sizeChords.width > sizeWords.width) bigestSize = sizeChords;
+
+      // Calc Line span
+      int span = (bigestSize.width/maxColumnWidth).ceil();
+      if(span == 0) span = 1;
+
+      // Itterate Span
+      for(int cnt = 0; cnt < span; cnt++){
+        currentPageHeight += textSize.height;
+
+        // Check End of page
+        if (currentPageHeight > maxScreenHeight) {
+          String? lastline = widget.lstTextWords[lstText.length-1].data!;
+
+          // Check if last line was Chords
+          if(lastline.contains(tokenLineOfChords)){
+            Text lastText = widget.lstTextWords[i-1];
+            Size lastSize = _textSizes[i-1];
+            lstText.removeAt(i-1);
+            lstColumns.add([...lstText]); // Clone list
+
+            lstText.clear();
+            lstText.add(_stripLineTokens(lastText));
+            currentPageHeight = lastSize.height;
+          }
+          else {
+            currentPageHeight = textSize.height;
+            lstColumns.add([...lstText]); // Clone List
+            lstText.clear();
+          }
+        }
+
+        // This Page
+
+        lstText.add(_stripLineTokens(widget.lstTextWords[i]));
+      }
+
+
+
+    }
+    lstColumns.add(lstText);
+    return lstColumns;
+  }
+  List<List<Text>> x_getSongColumns() {
+    List<List<Text>> lstColumns = [];
+    List<Text> lstText = [];
+    double currentPageHeight = 0;
+    double maxScreenHeight = _screenHeight - _padTop - _padBottom - 30;
+    double maxColumnWidth = _screenWidth / appSettings.nrOfColumns - 10;
+
+    for (int i = 0; i < widget.songView.lstTextWords.length; i++) {
+      Text txt = widget.songView.lstTextWords[i];
       Size textSize = _textSizes[i];
-      currentPageHeight += textSize.height;
 
-      // Check Next page
+      // Calc Height
+      int span = (textSize.width/maxColumnWidth).ceil();
+      if(span == 0) span = 1;
+      currentPageHeight += textSize.height * span;
+
+
+      // Check End of page
       if (currentPageHeight > maxScreenHeight) {
-        String? lastline = lstText[lstText.length-1].data!;
+        String? lastline = widget.songView.lstTextWords[lstText.length-1].data!;
 
-        // Check is last line was Chords
-        if(lastline.contains('#')){
-          Text lastText = lstText[i-1];
+        // Check if last line was Chords
+        if(lastline.contains(tokenLineOfChords)){
+          Text lastText = widget.songView.lstTextWords[i-1];
           Size lastSize = _textSizes[i-1];
           lstText.removeAt(i-1);
-          lstPages.add([...lstText]); // Clone list
+          lstColumns.add([...lstText]); // Clone list
 
           lstText.clear();
           lstText.add(_stripLineTokens(lastText));
@@ -197,23 +287,24 @@ class _viewSong extends State<ViewSong> {
         }
         else {
           currentPageHeight = textSize.height;
-          lstPages.add([...lstText]);
+          lstColumns.add([...lstText]); // Clone List
           lstText.clear();
         }
       }
 
       // This Page
-      lstText.add(_stripLineTokens(text));
+
+      lstText.add(_stripLineTokens(widget.songView.lstTextWords[i]));
     }
-    lstPages.add(lstText);
-    return lstPages;
+    lstColumns.add(lstText);
+    return lstColumns;
   }
 
-  Text _stripLineTokens(Text text)
-  {
-    if(text.data!.contains("#")){
+  Text _stripLineTokens(Text text) {
+    // # = Line of Chords
+    if(text.data!.contains(tokenLineOfChords)){
       return Text(
-        text.data!.substring(1),
+        text.data!.replaceAll(tokenLineOfChords, ""),
         style: songChordsStyle);
     }
     else return text;
@@ -224,12 +315,14 @@ class _viewSong extends State<ViewSong> {
 Future<SongViewModel> GetSongFromCloud(int index) async {
   List<String> _songWords = [];
   List<String> _songChords = [];
-  List<Text> _lstText = [];
+  List<Text> _lstTextWords = [];
+  List<Text> _lstTextChords = [];
 
   SongViewModel _songView = SongViewModel(
     songWords: _songWords,
     songChords: _songChords,
-    lstText: _lstText,
+    lstTextWords: _lstTextWords,
+    lstTextChords: _lstTextChords,
   );
 
   String text = await fireReadFile(index);
@@ -242,13 +335,13 @@ Future<SongViewModel> GetSongFromCloud(int index) async {
     // Title
     if(line.indexOf(tokenTitle) != -1){
       _songView.title = getToken(tokenTitle, line);
-      _lstText.add(WriteSongLine(getToken(tokenTitle, line), songNameFontSize, Colors.white));
+      //_lstTextWords.add(WriteSongLine(getToken(tokenTitle, line), songNameFontSize, Colors.white));
     }
 
     // Author
     else if(line.indexOf(tokenSubtitle) != -1) {
       _songView.author = getToken(tokenSubtitle, line);
-      _lstText.add(WriteSongLine(getToken(tokenSubtitle, line), songAuthorFontSize, Colors.white24));
+      //_lstTextWords.add(WriteSongLine(getToken(tokenSubtitle, line), songAuthorFontSize, Colors.white24));
     }
 
     // Transpose, Version
@@ -264,7 +357,9 @@ Future<SongViewModel> GetSongFromCloud(int index) async {
       if(line.indexOf(tokenStartOfPart) != -1){
         _songWords.add(getToken(tokenStartOfPart, line));
         _songChords.add("");
-        _lstText.add(WriteSongLine(getToken(tokenStartOfPart, line), songPartFontSize, Colors.white));
+
+        _lstTextChords.add(const Text(""));
+        _lstTextWords.add(WriteSongLine(getToken(tokenStartOfPart, line), songPartFontSize, Colors.white));
       }
 
       // {End of Part}
@@ -276,8 +371,36 @@ Future<SongViewModel> GetSongFromCloud(int index) async {
         if(appSettings.showComments){
           _songWords.add(getToken(tokenComment, line));
           _songChords.add("");
-          _lstText.add(WriteSongLine(getToken(tokenComment, line), songWordFontSize, Colors.grey));
+
+          _lstTextChords.add(const Text(""));
+          _lstTextWords.add(WriteSongLine(getToken(tokenComment, line), songWordFontSize, Colors.grey));
         }
+      }
+
+      // {define}
+      else if(line.indexOf(tokenDefine) != -1){
+        if(appSettings.showDefine){
+          _songWords.add(getToken(tokenDefine, line));
+          _songChords.add("");
+
+          _lstTextChords.add(const Text(""));
+          _lstTextWords.add(WriteSongLine(getToken(tokenDefine, line), songWordFontSize, Colors.grey));
+        }
+      }
+
+      // {Start of Tabs}
+      else if(line.indexOf(tokenStartOfTab) != -1){
+        if(appSettings.showTabs){
+          _songWords.add(getToken(tokenStartOfTab, line));
+          _songChords.add("");
+
+          _lstTextChords.add(const Text(""));
+          _lstTextWords.add(WriteSongLine(getToken(tokenStartOfTab, line), songWordFontSize, Colors.grey));
+        }
+      }
+
+      // {end of Tabs}
+      else if(line.indexOf(tokenEndOfTab) != -1){
       }
 
       // {Start of Chorus}
@@ -285,7 +408,9 @@ Future<SongViewModel> GetSongFromCloud(int index) async {
         startOfChorus = true;
         _songWords.add("Chorus");
         _songChords.add("");
-        _lstText.add(WriteSongLine("Chorus", songPartFontSize, Colors.red));
+
+        _lstTextChords.add(const Text(""));
+        _lstTextWords.add(WriteSongLine("Chorus", songPartFontSize, Colors.red));
       }
 
       // {End of Chorus}
@@ -295,10 +420,10 @@ Future<SongViewModel> GetSongFromCloud(int index) async {
 
       // Words and Chords
       else{
-        var lineChords = StringBuffer();
-        var lineWords = StringBuffer();
+        var sbChords = StringBuffer();
+        var sbWords = StringBuffer();
         bool chordEntry = false;
-        lineChords.write("#"); // Mark chord line with # token
+        //lineChords.write(tokenLineOfChords); // Mark chord line with #C token
 
         for(int i = 0; i < line.length;i++){
           if(line[i] == '[') {
@@ -312,12 +437,12 @@ Future<SongViewModel> GetSongFromCloud(int index) async {
           }
           if(startOfChord){
             // Chord
-            lineChords.write(line[i]);
+            sbChords.write(line[i]);
           }
           else {
             // Words
-            lineWords.write(line[i]);
-            lineChords.write(" ");
+            sbWords.write(line[i]);
+            sbChords.write(" ");
           }
         }
 
@@ -326,23 +451,24 @@ Future<SongViewModel> GetSongFromCloud(int index) async {
         // When splitting over multiple pages, the last line on a page
         // can not be a line containing chords. The # tells us that
         // line cant be last on a page
-        if(chordEntry)chordEntry = false;
-        else lineChords.clear();
+        //if(chordEntry)chordEntry = false;
+        //else lineChords.clear();
 
-        _songChords.add(lineChords.toString());
-        _songWords.add(lineWords.toString());
+        _songChords.add(sbChords.toString());
+        _songWords.add(sbWords.toString());
 
         // Chords
-        String _str = lineChords.toString();
-        if(lineChords.toString() != "") {
-          if(startOfChorus) _str = "  " + _str; // Indent Chorus
-          _lstText.add(WriteSongLine(_str,songWordFontSize, Colors.deepOrangeAccent));
-          //_lstText.add(WriteSongLine(_str,Colors.deepOrangeAccent));
+        String _str = sbChords.toString();
+        if(_str != "") {
+          if(startOfChorus) {
+            _str = "  " + _str; // Indent Chorus
+          }
+            _lstTextChords.add(WriteSongLine(_str,songWordFontSize, Colors.deepOrangeAccent));
         }
         // Words
-        _str = lineWords.toString();
+        _str = sbWords.toString();
         if(startOfChorus) _str = "  " + _str; // Indent Chorus
-        _lstText.add(WriteSongLine(_str,songWordFontSize, Colors.white));
+        _lstTextWords.add(WriteSongLine(_str,songWordFontSize, Colors.white));
       }
     }
   }
@@ -365,7 +491,8 @@ class SongViewModel {
   String originalChord;
   List<String> songWords;
   List<String> songChords;
-  List<Text> lstText;
+  List<Text> lstTextWords;
+  List<Text> lstTextChords;
 
   SongViewModel({
     this.title = "",
@@ -375,6 +502,7 @@ class SongViewModel {
     this.version = "",
     required this.songWords,
     required this.songChords,
-    required this.lstText,
+    required this.lstTextWords,
+    required this.lstTextChords,
   });
 }
