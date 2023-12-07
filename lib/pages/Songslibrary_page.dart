@@ -146,7 +146,7 @@ class _SongsPageState extends State<SongsPage> {
   }
 
   Future<void> _onTap(int index) async{
-    SongViewModel _songview = await GetSongFromCloud(index);
+    SongViewModel _songview = await getSongFromCloud(index);
     _navigateToNextScreen(context, _songview);
   }
 
