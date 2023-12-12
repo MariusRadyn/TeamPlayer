@@ -8,11 +8,18 @@ const double songNameFontSize = 16;
 const double songAuthorFontSize = 14;
 const double songWordFontSize = 12;
 const double songPartFontSize = 14;
+const songWordsStyle = TextStyle(
+    fontFamily: 'SpaceMono',
+    fontSize: 12,
+    color: Colors.white);
 
 const String songChordsFont = 'SpaceMono';
 const double songChordsFontSize = 12;
 const Color songChordsColor= Colors.red;
-const songChordsStyle = TextStyle(fontFamily: 'SpaceMono', fontSize: 12,color: Colors.red);
+const songChordsStyle = TextStyle(
+    fontFamily: 'SpaceMono',
+    fontSize: 12,
+    color: Colors.red);
 
 // Widget Font Sizes
 const double normalTextFontSize = 12;
