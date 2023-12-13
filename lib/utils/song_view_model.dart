@@ -148,7 +148,7 @@ class _viewSong extends State<ViewSong> {
   }
 
   Size _calcTextSize(String str, TextStyle style) {
-    if (str == "") return const Size(0, 0);
+    //if (str == "") return const Size(0, 0);
 
     Text myText = Text(
         str,
@@ -232,12 +232,14 @@ class _viewSong extends State<ViewSong> {
 
     // Itterate Words/Chords Lines
     for (int i = 0; i < widget.songView.songWords.length; i++) {
+      String tempWords = "";
+      String tempChords = "";
       String words = widget.songView.songWords[i];
       String chords = widget.songView.songChords[i];
       Size sizeWords = _calcTextSize(words, songWordsStyle);
-      Size sizeChords = _calcTextSize(chords, songChordsStyle);
-      String tempWords = "";
-      String tempChords = "";
+      Size sizeChords = Size(0,0);
+
+      if(chords != "") sizeChords = _calcTextSize(chords, songChordsStyle);
 
       // Assume words is the longest
       Size bigestSize = sizeWords;
@@ -251,8 +253,6 @@ class _viewSong extends State<ViewSong> {
 
       // Break line up in correct words
       if (span > 1) {
-
-        currentPageHeight += (sizeWords.height + sizeChords.height);
         List<String> lst = words.split(" ");
 
         // Look 1 word ahead and break the line
@@ -268,13 +268,17 @@ class _viewSong extends State<ViewSong> {
                 tempChords = chords.substring(0, tempWords.length);
                 lstText.add(Text(tempChords, style: songChordsStyle));
                 chords = chords.replaceFirst(tempChords,"");
+                currentPageHeight += sizeChords.height;
               }
               else {
                 lstText.add(Text(tempChords, style: songChordsStyle));
                 chords = chords.replaceFirst(tempChords,"");
+                currentPageHeight += sizeChords.height;
               }
 
               lstText.add(Text(tempWords, style: songWordsStyle));
+              currentPageHeight += sizeWords.height;
+
               words = words.replaceFirst(tempWords, "");
               tempWords = "";
               tempChords = "";
@@ -282,16 +286,26 @@ class _viewSong extends State<ViewSong> {
           }
           // Last word
           else {
-            lstText.add(Text(chords, style: songChordsStyle));
             lstText.add(Text(words, style: songWordsStyle));
+            currentPageHeight += sizeWords.height;
+
+            if(chords.length > 0) {
+              lstText.add(Text(chords, style: songChordsStyle));
+              currentPageHeight += sizeChords.height;
+            }
+
             break;
           }
         }
       }
       else {
-        currentPageHeight += (sizeWords.height + sizeChords.height);
-        lstText.add(Text(chords, style: songChordsStyle));
-        lstText.add(Text(words, style: songWordsStyle,));
+        lstText.add(Text(words, style: songWordsStyle));
+        currentPageHeight += sizeWords.height;
+
+        if(chords.length > 0){
+          lstText.add(Text(chords, style: songChordsStyle));
+          currentPageHeight += sizeChords.height;
+        }
       }
       //lstText.add(_stripLineTokens(widget.lstTextWords[i]));
 
@@ -301,6 +315,8 @@ class _viewSong extends State<ViewSong> {
         currentPageHeight = 0;
       }
     }
+
+    lstColumns.add([...lstText]);
     return lstColumns;
   }
 
