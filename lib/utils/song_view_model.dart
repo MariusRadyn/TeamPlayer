@@ -97,17 +97,18 @@ class _viewSong extends State<ViewSong> {
                   itemBuilder: (BuildContext context, int pageIndex) {
                     return GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: appSettings.nrOfColumns,
+                          crossAxisCount: 3,//appSettings.nrOfColumns,
                           crossAxisSpacing: 10,
-                          mainAxisExtent: _maxScreenHeight,
+                          mainAxisExtent: _maxScreenHeight-20,
                         ),
                         itemBuilder: (BuildContext context, int widgetIndex) {
                           if (widgetIndex < columns.length) {
                             nrOfPages++;
-                            return Container(alignment: Alignment.center,
+                            return Container(
+                              alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(15)),
+                                  color: Colors.black12,
+                                  borderRadius: BorderRadius.circular(1)),
 
                               //padding: EdgeInsets.fromLTRB(5,_padTop,5,_padBottom),
                               child: ListView(
@@ -227,8 +228,10 @@ class _viewSong extends State<ViewSong> {
   List<List<Text>> _getSongColumns() {
     List<List<Text>> lstColumns = [];
     List<Text> lstText = [];
-    double currentPageHeight = 0;
     double maxColumnWidth = _screenWidth / appSettings.nrOfColumns - 10;
+
+    double currentPageHeight = _calcTextSize(widget.songView.title,songTitleStyle).height;
+    currentPageHeight += _calcTextSize(widget.songView.author,songAuthorStyle).height;
 
     // Itterate Words/Chords Lines
     for (int i = 0; i < widget.songView.songWords.length; i++) {
@@ -286,26 +289,24 @@ class _viewSong extends State<ViewSong> {
           }
           // Last word
           else {
-            lstText.add(Text(words, style: songWordsStyle));
-            currentPageHeight += sizeWords.height;
-
             if(chords.length > 0) {
               lstText.add(Text(chords, style: songChordsStyle));
               currentPageHeight += sizeChords.height;
             }
 
+            lstText.add(Text(words, style: songWordsStyle));
+            currentPageHeight += sizeWords.height;
             break;
           }
         }
       }
       else {
-        lstText.add(Text(words, style: songWordsStyle));
-        currentPageHeight += sizeWords.height;
-
         if(chords.length > 0){
           lstText.add(Text(chords, style: songChordsStyle));
           currentPageHeight += sizeChords.height;
         }
+        lstText.add(Text(words, style: songWordsStyle));
+        currentPageHeight += sizeWords.height;
       }
       //lstText.add(_stripLineTokens(widget.lstTextWords[i]));
 

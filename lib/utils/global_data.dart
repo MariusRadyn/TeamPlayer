@@ -21,6 +21,16 @@ const songChordsStyle = TextStyle(
     fontSize: 12,
     color: Colors.red);
 
+const songTitleStyle = TextStyle(
+    fontFamily: 'SpaceMono',
+    fontSize: 16,
+    color: Colors.blue);
+
+const songAuthorStyle = TextStyle(
+    fontFamily: 'SpaceMono',
+    fontSize: 12,
+    color: Colors.grey);
+
 // Widget Font Sizes
 const double normalTextFontSize = 12;
 const double headerTextFontSize = 14;
@@ -52,7 +62,7 @@ class AppSettings{
   AppSettings({
     this.userName = "",
     this.themeDark = true,
-    this.nrOfColumns = 2,
+    this.nrOfColumns = 3,
     this.showComments = false,
     this.showDefine = false,
     this.showTabs = false,
