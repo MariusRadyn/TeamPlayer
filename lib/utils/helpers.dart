@@ -14,7 +14,7 @@ getAppSettings() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   appSettings.userName = prefs.getString(USER_NAME) ?? '';
   appSettings.themeDark = prefs.getBool(DARK_THEME) ?? false;
-  appSettings.nrOfColumns = prefs.getInt(NR_OF_COLUMNS) ?? 2;
+  appSettings.nrOfColumns = prefs.getInt(NR_OF_COLUMNS) ?? 1;
 }
 removeSharedPreference(String propertyName) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();

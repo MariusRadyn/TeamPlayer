@@ -4,6 +4,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:team_player/utils/helpers.dart';
 import 'package:team_player/utils/firebase.dart';
 import 'package:team_player/utils/global_data.dart';
+import 'package:string_validator/string_validator.dart';
 
 // Tokens
 const tokenTitle = "{title:";
@@ -63,65 +64,48 @@ class _viewSong extends State<ViewSong> {
         .of(context)
         .size
         .height;
-    //_textSizes = widget.songView.lstTextWords.map((text) => _calcTextSize(text))
-    //    .toList();
-    //_totalPages = _calcTotalPages();
+
     _maxScreenHeight = _screenHeight - _padTop - _padBottom - 30;
     List<List<Text>> columns = _getSongColumns();
-    int nrOfPages = 1;
 
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SafeArea(
-            child: Text(
-              widget.songView.title,
-              style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.blue
-              ),
-            ),
+            child: Text(widget.songView.title, style: songTitleStyle),
           ),
-          Text(
-            widget.songView.author,
-            style: const TextStyle(
-                fontSize: 12,
-                color: Colors.blueGrey
-            ),
-          ),
+          Text(widget.songView.author, style: songAuthorStyle ),
           Expanded(
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 return PageView.builder(
+                  itemCount: (columns.length / appSettings.nrOfColumns).ceil().toInt(),
+                  controller: _pageController,
                   itemBuilder: (BuildContext context, int pageIndex) {
-                    return GridView.builder(
+                    print("PageIndex = " + pageIndex.toString());
+                      return GridView.builder(
+                        itemCount: columns.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,//appSettings.nrOfColumns,
+                          crossAxisCount: appSettings.nrOfColumns,
                           crossAxisSpacing: 10,
-                          mainAxisExtent: _maxScreenHeight-20,
+                          mainAxisExtent: _maxScreenHeight,
                         ),
                         itemBuilder: (BuildContext context, int widgetIndex) {
-                          if (widgetIndex < columns.length) {
-                            nrOfPages++;
-                            return Container(
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  color: Colors.black12,
-                                  borderRadius: BorderRadius.circular(1)),
-
-                              //padding: EdgeInsets.fromLTRB(5,_padTop,5,_padBottom),
-                              child: ListView(
-                                children: columns[widgetIndex],
-                              ),
-                            );
-                          }
-                          else {
-                            return null;
-                          }
+                          int index = widgetIndex + (pageIndex * appSettings.nrOfColumns);
+                          print("Index = " + index.toString());
+                          if(index >= columns.length) return null;
+                          int i = 0;
+                          return Container(
+                             alignment: Alignment.center,
+                             decoration: BoxDecoration(color: Colors.black12),
+                             child: ListView(
+                               children: columns[index],
+                             ),
+                          );
                         }
-                    );
-                  },
+                      );
+                   },
                 );
               },
             ),
@@ -131,7 +115,7 @@ class _viewSong extends State<ViewSong> {
 
           SmoothPageIndicator(
             controller: _pageController,
-            count: nrOfPages,
+            count: (columns.length / appSettings.nrOfColumns).ceil().toInt(),
             effect: WormEffect(
               dotColor: Theme
                   .of(context)
@@ -143,6 +127,9 @@ class _viewSong extends State<ViewSong> {
                   .onPrimary,
             ),
           ),
+
+          const SizedBox(height: 10),
+
         ],
       ),
     );
@@ -229,6 +216,7 @@ class _viewSong extends State<ViewSong> {
     List<List<Text>> lstColumns = [];
     List<Text> lstText = [];
     double maxColumnWidth = _screenWidth / appSettings.nrOfColumns - 10;
+    bool foundAnyText= false;
 
     double currentPageHeight = _calcTextSize(widget.songView.title,songTitleStyle).height;
     currentPageHeight += _calcTextSize(widget.songView.author,songAuthorStyle).height;
@@ -242,82 +230,107 @@ class _viewSong extends State<ViewSong> {
       Size sizeWords = _calcTextSize(words, songWordsStyle);
       Size sizeChords = Size(0,0);
 
-      if(chords != "") sizeChords = _calcTextSize(chords, songChordsStyle);
+      if(isAlphanumeric(chords.replaceAll(" ", ""))) {
+        sizeChords = _calcTextSize(chords, songChordsStyle);
+      }
 
       // Assume words is the longest
       Size bigestSize = sizeWords;
-      if (sizeChords.width > sizeWords.width) {
-        bigestSize = sizeChords;
-      }
+      if (sizeChords.width > sizeWords.width) bigestSize = sizeChords;
 
       // Calc Line span
       int span = (bigestSize.width / maxColumnWidth).ceil();
-      if (span == 0) span = 1;
 
       // Break line up in correct words
-      if (span > 1) {
+      if (span >= 1) {
         List<String> lst = words.split(" ");
 
         // Look 1 word ahead and break the line
         // if the next word will not fit
         for (int i = 0; i < lst.length; i++) {
-          if (i < lst.length - 2) {
+          if (i + 2 <= lst.length) {
             tempWords += lst[i] + " ";
             double currentLen = _calcTextSize(tempWords + lst[i + 1],songWordsStyle).width;
             if (currentLen > maxColumnWidth) {
 
-              // Break Chords
+              // Break Chords / Words
               if(chords.length > tempWords.length){
+                // Break Chords according to Words Length
                 tempChords = chords.substring(0, tempWords.length);
                 lstText.add(Text(tempChords, style: songChordsStyle));
                 chords = chords.replaceFirst(tempChords,"");
                 currentPageHeight += sizeChords.height;
+                if(isAlphanumeric(tempChords.replaceAll(" ", "")))foundAnyText = true;
               }
               else {
+                // Chords fits
                 lstText.add(Text(tempChords, style: songChordsStyle));
                 chords = chords.replaceFirst(tempChords,"");
                 currentPageHeight += sizeChords.height;
+                if(isAlphanumeric(tempChords.replaceAll(" ", "")))foundAnyText = true;
               }
 
               lstText.add(Text(tempWords, style: songWordsStyle));
               currentPageHeight += sizeWords.height;
+              if(isAlphanumeric(tempWords.replaceAll(" ", "")))foundAnyText = true;
 
               words = words.replaceFirst(tempWords, "");
               tempWords = "";
               tempChords = "";
             }
           }
-          // Last word
           else {
-            if(chords.length > 0) {
+            // Last word
+            // Check Chords first, then write Words
+            if(isAlphanumeric(chords.replaceAll(" ", ""))) {
               lstText.add(Text(chords, style: songChordsStyle));
               currentPageHeight += sizeChords.height;
-            }
 
-            lstText.add(Text(words, style: songWordsStyle));
-            currentPageHeight += sizeWords.height;
+              // Now Check words
+              if (isAlphanumeric(words.replaceAll(" ", ""))) {
+                lstText.add(Text(words, style: songWordsStyle));
+                currentPageHeight += sizeWords.height;
+              }
+              foundAnyText = true;
+            }
+            // Write Words only
+            else if (isAlphanumeric(words.replaceAll(" ", ""))) {
+                foundAnyText = true;
+                lstText.add(Text(words, style: songWordsStyle));
+                currentPageHeight += sizeWords.height;
+            }
             break;
           }
         }
       }
       else {
+        // Whole line fits
         if(chords.length > 0){
           lstText.add(Text(chords, style: songChordsStyle));
           currentPageHeight += sizeChords.height;
         }
         lstText.add(Text(words, style: songWordsStyle));
         currentPageHeight += sizeWords.height;
-      }
-      //lstText.add(_stripLineTokens(widget.lstTextWords[i]));
 
-      if (currentPageHeight >= _maxScreenHeight) {
-        lstColumns.add([...lstText]);
-        lstText.clear();
-        currentPageHeight = 0;
+        if(isAlphanumeric(words.replaceAll(" ", ""))){
+          foundAnyText = true;
+        }
+        if(isAlphanumeric(chords.replaceAll(" ", ""))){
+          foundAnyText = true;
+        }
       }
     }
 
-    lstColumns.add([...lstText]);
+    if (currentPageHeight >= _maxScreenHeight-50) {
+      if(foundAnyText) {
+          lstColumns.add([...lstText]);
+          foundAnyText = false;
+      }
+      lstText.clear();
+      currentPageHeight = 0;
+    }
+
+    if(foundAnyText) lstColumns.add([...lstText]);
     return lstColumns;
   }
 
