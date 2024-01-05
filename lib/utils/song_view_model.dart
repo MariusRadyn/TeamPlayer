@@ -94,10 +94,11 @@ class _viewSong extends State<ViewSong> {
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 return PageView.builder(
+                  itemCount: (appSettings.nrOfColumns / columns.length).ceil().toInt(),
                   itemBuilder: (BuildContext context, int pageIndex) {
                     return GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,//appSettings.nrOfColumns,
+                          crossAxisCount: appSettings.nrOfColumns,
                           crossAxisSpacing: 10,
                           mainAxisExtent: _maxScreenHeight-20,
                         ),
@@ -228,9 +229,9 @@ class _viewSong extends State<ViewSong> {
   List<List<Text>> _getSongColumns() {
     List<List<Text>> lstColumns = [];
     List<Text> lstText = [];
-    double maxColumnWidth = _screenWidth / appSettings.nrOfColumns - 10;
-
-    double currentPageHeight = _calcTextSize(widget.songView.title,songTitleStyle).height;
+    int nr = appSettings.nrOfColumns;
+    double maxColumnWidth = (_screenWidth / appSettings.nrOfColumns) - 10;
+    double currentPageHeight = _calcTextSize(widget.songView.title,songTitleStyle).height + 20;
     currentPageHeight += _calcTextSize(widget.songView.author,songAuthorStyle).height;
 
     // Itterate Words/Chords Lines
