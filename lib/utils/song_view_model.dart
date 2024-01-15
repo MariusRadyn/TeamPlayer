@@ -80,7 +80,7 @@ class _viewSong extends State<ViewSong> {
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 return PageView.builder(
-                  itemCount: (appSettings.nrOfColumns / columns.length).ceil().toInt(),
+                  itemCount: (columns.length / appSettings.nrOfColumns).ceil().toInt(),
                   controller: _pageController,
                   itemBuilder: (BuildContext context, int pageIndex) {
                     print("PageIndex = " + pageIndex.toString());
@@ -213,12 +213,15 @@ class _viewSong extends State<ViewSong> {
   }
 
   List<List<Text>> _getSongColumns() {
+    bool foundAnyText = false;
     List<List<Text>> lstColumns = [];
     List<Text> lstText = [];
     int nr = appSettings.nrOfColumns;
     double maxColumnWidth = (_screenWidth / appSettings.nrOfColumns) - 10;
-    double currentPageHeight = _calcTextSize(widget.songView.title,songTitleStyle).height + 20;
-    currentPageHeight += _calcTextSize(widget.songView.author,songAuthorStyle).height;
+    double currentPageHeight = _calcTextSize(
+        widget.songView.title, songTitleStyle).height + 20;
+    currentPageHeight +=
+        _calcTextSize(widget.songView.author, songAuthorStyle).height;
 
     // Itterate Words/Chords Lines
     for (int i = 0; i < widget.songView.songWords.length; i++) {
@@ -227,9 +230,9 @@ class _viewSong extends State<ViewSong> {
       String words = widget.songView.songWords[i];
       String chords = widget.songView.songChords[i];
       Size sizeWords = _calcTextSize(words, songWordsStyle);
-      Size sizeChords = Size(0,0);
+      Size sizeChords = Size(0, 0);
 
-      if(isAlphanumeric(chords.replaceAll(" ", ""))) {
+      if (isAscii(chords.replaceAll(" ", ""))) {
         sizeChords = _calcTextSize(chords, songChordsStyle);
       }
 
@@ -240,38 +243,53 @@ class _viewSong extends State<ViewSong> {
       // Calc Line span
       int span = (bigestSize.width / maxColumnWidth).ceil();
 
-      // Break line up in correct words
       if (span >= 1) {
+
+        // Break line up in correct words
         List<String> lst = words.split(" ");
 
         // Look 1 word ahead and break the line
         // if the next word will not fit
         for (int i = 0; i < lst.length; i++) {
+          if(lstText.length > 22)
+          {
+            int c = i;
+          }
           if (i + 2 <= lst.length) {
             tempWords += lst[i] + " ";
-            double currentLen = _calcTextSize(tempWords + lst[i + 1],songWordsStyle).width;
+            double currentLen = _calcTextSize(
+                tempWords + lst[i + 1], songWordsStyle).width;
             if (currentLen > maxColumnWidth) {
-
               // Break Chords / Words
-              if(chords.length > tempWords.length){
+              if (chords.length > tempWords.length) {
                 // Break Chords according to Words Length
                 tempChords = chords.substring(0, tempWords.length);
-                lstText.add(Text(tempChords, style: songChordsStyle));
-                chords = chords.replaceFirst(tempChords,"");
-                currentPageHeight += sizeChords.height;
-                if(isAlphanumeric(tempChords.replaceAll(" ", "")))foundAnyText = true;
+
+                if(isAscii(tempChords.replaceAll(" ", ""))) {
+                  lstText.add(Text(tempChords, style: songChordsStyle));
+                  currentPageHeight += sizeChords.height;
+                  foundAnyText = true;
+                }
+                chords = chords.replaceFirst(tempChords, "");
+
+                //lstText.add(Text(tempChords, style: songChordsStyle));
+                //currentPageHeight += sizeChords.height;
+                //if (isAscii(tempChords.replaceAll(" ", "")))
+                //  foundAnyText = true;
               }
               else {
                 // Chords fits
                 lstText.add(Text(tempChords, style: songChordsStyle));
-                chords = chords.replaceFirst(tempChords,"");
+                chords = chords.replaceFirst(tempChords, "");
                 currentPageHeight += sizeChords.height;
-                if(isAlphanumeric(tempChords.replaceAll(" ", "")))foundAnyText = true;
+                if (isAscii(tempChords.replaceAll(" ", "")))
+                  foundAnyText = true;
               }
 
               lstText.add(Text(tempWords, style: songWordsStyle));
               currentPageHeight += sizeWords.height;
-              if(isAlphanumeric(tempWords.replaceAll(" ", "")))foundAnyText = true;
+              if (isAscii(tempWords.replaceAll(" ", "")))
+                foundAnyText = true;
 
               words = words.replaceFirst(tempWords, "");
               tempWords = "";
@@ -281,52 +299,39 @@ class _viewSong extends State<ViewSong> {
           else {
             // Last word
             // Check Chords first, then write Words
-            if(isAlphanumeric(chords.replaceAll(" ", ""))) {
+            if(isAscii(chords.replaceAll(" ", ""))) {
               lstText.add(Text(chords, style: songChordsStyle));
               currentPageHeight += sizeChords.height;
+            }
 
-              // Now Check words
-              if (isAlphanumeric(words.replaceAll(" ", ""))) {
-                lstText.add(Text(words, style: songWordsStyle));
-                currentPageHeight += sizeWords.height;
-              }
+            // Now Check words
+            if(isAscii(words.replaceAll(" ", ""))) {
+              lstText.add(Text(words, style: songWordsStyle));
+              currentPageHeight += sizeWords.height;
               foundAnyText = true;
             }
-            // Write Words only
-            else if (isAlphanumeric(words.replaceAll(" ", ""))) {
-                foundAnyText = true;
-                lstText.add(Text(words, style: songWordsStyle));
-                currentPageHeight += sizeWords.height;
-            }
-            break;
+            //break;
           }
         }
       }
       else {
         // Whole line fits
-        if(chords.length > 0){
+        if (chords.length > 0) {
           lstText.add(Text(chords, style: songChordsStyle));
           currentPageHeight += sizeChords.height;
         }
         lstText.add(Text(words, style: songWordsStyle));
         currentPageHeight += sizeWords.height;
-
-        if(isAlphanumeric(words.replaceAll(" ", ""))){
-          foundAnyText = true;
-        }
-        if(isAlphanumeric(chords.replaceAll(" ", ""))){
-          foundAnyText = true;
-        }
       }
-    }
 
-    if (currentPageHeight >= _maxScreenHeight-50) {
-      if(foundAnyText) {
-          lstColumns.add([...lstText]);
+      if (currentPageHeight >= _maxScreenHeight - 50) {
+        if (foundAnyText) {
+          lstColumns.add([...lstText]); // copy clone
+          lstText.clear();
+          currentPageHeight = 0;
           foundAnyText = false;
+        }
       }
-      lstText.clear();
-      currentPageHeight = 0;
     }
 
     if(foundAnyText) lstColumns.add([...lstText]);
