@@ -7,10 +7,8 @@ import 'package:team_player/pages/playlist_page.dart';
 import 'package:team_player/pages/profile_page.dart';
 import 'package:team_player/pages/settings_page.dart';
 import 'package:team_player/pages/Songslibrary_page.dart';
-import 'package:team_player/pages/song_page.dart';
 import 'package:team_player/pages/sync_page.dart';
-import 'package:team_player/utils/dropbox.dart';
-import 'package:team_player/utils/helpers.dart';
+import 'package:team_player/pages/splash.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -33,35 +31,67 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      //backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(
-        title: Text('Team Player'),
-        centerTitle: true,
-      ),
+      //backgroundColor: Colors.white,
       //bottomNavigationBar: BottomNavBarHome(),
-      body: Center(
-        child: CircleList(
-            origin: Offset(0,0),
-          centerWidget: GestureDetector(
-            onTap: () => exit(0),
-            child: ClipRRect(
-              borderRadius:BorderRadius.all(Radius.circular(100)),
-              //child: RiveAnimation.asset('assets/power.riv') ,
-              child: Image.asset('images/power2.png'),
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                   image: DecorationImage(
+                    image: AssetImage("images/pearl_black_crop.png"),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 80,
+                          color: Colors.blueGrey,
+                          child: Center(
+                            child: CircleAvatar(
+                              backgroundImage: AssetImage("images/author1.jpg") ,
+                              radius: 50,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                // child: Center(
+                //   child: CircleList(
+                //       origin: Offset(0,0),
+                //     centerWidget: GestureDetector(
+                //       onTap: () => exit(0),
+                //       child: ClipRRect(
+                //         borderRadius:BorderRadius.all(Radius.circular(10)),
+                //         child: Image.asset('images/power2.png'),
+                //         ),
+                //       ),
+                //       children: myPageRoutes.keys.map((item) {
+                //         return GestureDetector(
+                //           onTap: () {
+                //             Navigator.push(context,
+                //               MaterialPageRoute(builder: (context) => myPageRoutes[item]!),
+                //             );
+                //           },
+                //           child: Image.asset(item,width: 50,height: 50),
+                //         );
+                //       }).toList(),
+                //     ),
+                //   ),
               ),
             ),
-            children: myPageRoutes.keys.map((item) {
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => myPageRoutes[item]!),
-                  );
-                },
-                child: Image.asset(item,width: 70,height: 70),
-              );
-            }).toList(),
-          ),
+          ],
         ),
+      ),
     );
   }
 }

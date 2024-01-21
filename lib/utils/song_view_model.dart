@@ -158,60 +158,6 @@ class _viewSong extends State<ViewSong> {
     return textPainter.size;
   }
 
-  int _calcTotalPages() {
-    int totalPages = 1;
-    double currentPageHeight = 0;
-    for (Size textSize in _textSizes) {
-      currentPageHeight += textSize.height;
-      if (currentPageHeight > _screenHeight - _padTop - _padBottom) {
-        totalPages++;
-        currentPageHeight = textSize.height;
-      }
-    }
-    return totalPages;
-  }
-
-  List<List<Text>> _getSongPages() {
-    List<List<Text>> lstPages = [];
-    List<Text> lstText = [];
-    double currentPageHeight = 0;
-
-    for (int i = 0; i < widget.songView.lstTextWords.length; i++) {
-      Text txt = widget.songView.lstTextWords[i];
-      Size textSize = _textSizes[i];
-      currentPageHeight += textSize.height;
-
-      // Check End of page
-      if (currentPageHeight > _maxScreenHeight) {
-        String? lastline = widget.songView.lstTextWords[lstText.length - 1]
-            .data!;
-
-        // Check if last line was Chords
-        if (lastline.contains('#')) {
-          Text lastText = widget.songView.lstTextWords[i - 1];
-          Size lastSize = _textSizes[i - 1];
-          lstText.removeAt(i - 1);
-          lstPages.add([...lstText]); // Clone list
-
-          lstText.clear();
-          lstText.add(_stripLineTokens(lastText));
-          currentPageHeight = lastSize.height;
-        }
-        else {
-          currentPageHeight = textSize.height;
-          lstPages.add([...lstText]); // Clone List
-          lstText.clear();
-        }
-      }
-
-      // This Page
-
-      lstText.add(_stripLineTokens(widget.songView.lstTextWords[i]));
-    }
-    lstPages.add(lstText);
-    return lstPages;
-  }
-
   List<List<Text>> _getSongColumns() {
     bool foundAnyText = false;
     List<List<Text>> lstColumns = [];
@@ -243,6 +189,12 @@ class _viewSong extends State<ViewSong> {
       // Calc Line span
       int span = (bigestSize.width / maxColumnWidth).ceil();
 
+      // Debug
+      if(lstText.length == 23)
+      {
+        int c = i;
+      }
+
       if (span >= 1) {
 
         // Break line up in correct words
@@ -251,17 +203,15 @@ class _viewSong extends State<ViewSong> {
         // Look 1 word ahead and break the line
         // if the next word will not fit
         for (int i = 0; i < lst.length; i++) {
-          if(lstText.length > 22)
-          {
-            int c = i;
-          }
           if (i + 2 <= lst.length) {
             tempWords += lst[i] + " ";
             double currentLen = _calcTextSize(
                 tempWords + lst[i + 1], songWordsStyle).width;
             if (currentLen > maxColumnWidth) {
+
               // Break Chords / Words
               if (chords.length > tempWords.length) {
+
                 // Break Chords according to Words Length
                 tempChords = chords.substring(0, tempWords.length);
 
@@ -271,11 +221,6 @@ class _viewSong extends State<ViewSong> {
                   foundAnyText = true;
                 }
                 chords = chords.replaceFirst(tempChords, "");
-
-                //lstText.add(Text(tempChords, style: songChordsStyle));
-                //currentPageHeight += sizeChords.height;
-                //if (isAscii(tempChords.replaceAll(" ", "")))
-                //  foundAnyText = true;
               }
               else {
                 // Chords fits
@@ -310,7 +255,6 @@ class _viewSong extends State<ViewSong> {
               currentPageHeight += sizeWords.height;
               foundAnyText = true;
             }
-            //break;
           }
         }
       }
@@ -372,13 +316,11 @@ Future<SongViewModel> getSongFromCloud(int index) async {
     // Title
     if (line.indexOf(tokenTitle) != -1) {
       _songView.title = getToken(tokenTitle, line);
-      //_lstTextWords.add(WriteSongLine(getToken(tokenTitle, line), songNameFontSize, Colors.white));
     }
 
     // Author
     else if (line.indexOf(tokenSubtitle) != -1) {
       _songView.author = getToken(tokenSubtitle, line);
-      //_lstTextWords.add(WriteSongLine(getToken(tokenSubtitle, line), songAuthorFontSize, Colors.white24));
     }
 
     // Transpose, Version
@@ -411,7 +353,7 @@ Future<SongViewModel> getSongFromCloud(int index) async {
 
           _lstTextChords.add(const Text(""));
           _lstTextWords.add(WriteSongLine(
-              getToken(tokenComment, line), songWordFontSize, Colors.grey));
+             getToken(tokenComment, line), songWordFontSize, Colors.grey));
         }
       }
 
@@ -445,6 +387,7 @@ Future<SongViewModel> getSongFromCloud(int index) async {
       // {Start of Chorus}
       else if (line.indexOf(tokenStartOfChorus) != -1) {
         startOfChorus = true;
+
         _songWords.add("Chorus");
         _songChords.add("");
 
@@ -462,6 +405,7 @@ Future<SongViewModel> getSongFromCloud(int index) async {
       else {
         var sbChords = StringBuffer();
         var sbWords = StringBuffer();
+        List<String> lastChord = [];
         bool chordEntry = false;
         //lineChords.write(tokenLineOfChords); // Mark chord line with #C token
 
@@ -478,21 +422,18 @@ Future<SongViewModel> getSongFromCloud(int index) async {
           if (startOfChord) {
             // Chord
             sbChords.write(line[i]);
+            lastChord.add(line[i]);
           }
           else {
             // Words
             sbWords.write(line[i]);
-            sbChords.write(" ");
+            if(lastChord.isEmpty) sbChords.write(" ");
+            else {
+                lastChord.removeAt(lastChord.length-1);
+            }
+
           }
         }
-
-        // If a chord line has any chords, the line gets a "#" prefix
-        // This # is used to determine what line contains chords
-        // When splitting over multiple pages, the last line on a page
-        // can not be a line containing chords. The # tells us that
-        // line cant be last on a page
-        //if(chordEntry)chordEntry = false;
-        //else lineChords.clear();
 
         _songChords.add(sbChords.toString());
         _songWords.add(sbWords.toString());
@@ -506,6 +447,7 @@ Future<SongViewModel> getSongFromCloud(int index) async {
           _lstTextChords.add(
               WriteSongLine(_str, songWordFontSize, Colors.deepOrangeAccent));
         }
+
         // Words
         _str = sbWords.toString();
         if (startOfChorus) _str = "  " + _str; // Indent Chorus
