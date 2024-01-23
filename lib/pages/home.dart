@@ -155,28 +155,68 @@ class _HomeState extends State<Home> {
 
                 SizedBox(height: 20,),
 
-                // Tiles
+                // Tiles - Playlist
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Container(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      width: 150,
-                      height: 150,
-                      decoration: const BoxDecoration(
-                          color: Colors.white70,
-                          borderRadius: BorderRadius.all(Radius.circular(20))
-                      ),
-                      child: ElevatedButton(
+                    GestureDetector(
+                      onTap: ()=>{},
+                      child: Container(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        width: 150,
+                        height: 150,
+                        decoration: const BoxDecoration(
+                            color: Colors.white70,
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
                         child: Column(
                           children: [
-                            ImageIcon(AssetImage('images/playlist.png')),
-                            Text('Sync'),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                width: 80,
+                                height: 80,
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage("images/playlist.png"),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 2),
+                              child: Text('Playlist',
+                              style: TextStyle(
+                                fontFamily: 'GrapeNuts',
+                                fontSize: 40,
+                                color: Colors.black,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
-                          onPressed: (){
 
-                          },
+                        // child: ElevatedButton(
+                        //   child: Container(color: Colors.white,),
+                        //   // child: Column(
+                        //   //   children: [
+                        //   //     // Container(
+                        //   //     //   decoration: const BoxDecoration(
+                        //   //     //     image: DecorationImage(
+                        //   //     //       image: AssetImage("images/pearl_black_crop.png"),
+                        //   //     //       fit: BoxFit.cover,
+                        //   //     //     ),
+                        //   //     //   ),
+                        //   //     // ),
+                        //   //     //ImageIcon(AssetImage('images/playlist.png')),
+                        //   //     //Text('Sync'),
+                        //   //   ],
+                        //   // ),
+                        //     onPressed: (){
+                        //
+                        //     },
+                        // ),
                       ),
                     ),
                     Container(

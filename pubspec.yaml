@@ -91,6 +91,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
+    - family: GrapeNuts
+      fonts:
+        - asset: fonts/GrapeNuts-Regular.ttf
     - family: Ephesis
       fonts:
         - asset: fonts/Ephesis-Regular.ttf
