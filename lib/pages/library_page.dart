@@ -9,13 +9,13 @@ import 'package:team_player/utils/helpers.dart';
 import 'package:team_player/utils/song_view_model.dart';
 import 'package:team_player/utils/firebase.dart';
 
-class SongsPage extends StatefulWidget {
-  const SongsPage({super.key});
+class LibraryPage extends StatefulWidget {
+  const LibraryPage({super.key});
 
   @override
-  State<SongsPage> createState() => _SongsPageState();
+  State<LibraryPage> createState() => _LibraryPageState();
 }
-class _SongsPageState extends State<SongsPage> {
+class _LibraryPageState extends State<LibraryPage> {
   List<BottomNavigationBarItem> navBarItems = <BottomNavigationBarItem>[
     const BottomNavigationBarItem(label: 'Add', icon: Icon(Icons.add)),
     const BottomNavigationBarItem(label: 'Edit', icon: Icon(Icons.edit)),
@@ -24,7 +24,6 @@ class _SongsPageState extends State<SongsPage> {
   ];
 
   int _selectedIndex = 0;
-
 
   Future initDropbox() async{
     //await Dropbox.init('Team_Player' , 'ilzt9kfjbiv4ofw', 'd0swgoachzofagc');

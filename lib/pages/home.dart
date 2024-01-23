@@ -7,7 +7,7 @@ import 'package:path/path.dart';
 import 'package:team_player/pages/playlist_page.dart';
 import 'package:team_player/pages/profile_page.dart';
 import 'package:team_player/pages/settings_page.dart';
-import 'package:team_player/pages/Songslibrary_page.dart';
+import 'package:team_player/pages/library_page.dart';
 import 'package:team_player/pages/sync_page.dart';
 import 'package:team_player/pages/splash.dart';
 
@@ -20,11 +20,11 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   final Map<String, Widget> myPageRoutes = {
-    'images/add.png' : SongsPage(),
+    'images/add.png' : LibraryPage(),
     'images/sync.png' : SyncPage(),
     'images/settings.png' : SettingsPage(),
     'images/profile2.png' : ProfilePage(),
-    'images/music.png' : SongsPage(),
+    'images/music.png' : LibraryPage(),
     'images/playlist.png' : PlaylistPage(),
   };
 
@@ -44,8 +44,26 @@ class _HomeState extends State<Home> {
           child: Container(
             child: Column(
               children: [
+
+               // Login Profile
                 Stack(
                   children: [
+
+                    // Settings Button
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                            child: Icon(Icons.settings),
+                          onTap: (){
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => SettingsPage(),
+                            ));
+                          },
+                        ),
+                      ],
+                    ),
+
                     // Backdrop
                     Container(
                       alignment: Alignment.topCenter,
@@ -72,8 +90,8 @@ class _HomeState extends State<Home> {
 
                     // White Container
                     Container(
-                      margin: EdgeInsets.only(
-                          top: 90,
+                      margin: const EdgeInsets.only(
+                          top: 60,
                           left: 10,
                           right: 10
                       ),
@@ -88,7 +106,7 @@ class _HomeState extends State<Home> {
 
                     // Avatar
                     Container(
-                      margin: EdgeInsets.only(top: 35),
+                      margin: EdgeInsets.only(top: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -109,7 +127,7 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          padding: EdgeInsets.only(top:155),
+                          padding: EdgeInsets.only(top:130),
                           child: Text('Welcome Marius',
                             style: TextStyle(
                               color: Colors.black,
@@ -126,9 +144,7 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(
-                              top:190,
-                          ),
+                          margin: EdgeInsets.only(top:160),
                           width: 120,
                           height: 40,
                           decoration: const BoxDecoration(
@@ -153,29 +169,33 @@ class _HomeState extends State<Home> {
                   ],
                 ),
 
-                SizedBox(height: 20,),
+                const SizedBox(height: 90),
 
-                // Tiles - Playlist
+                // Tiles
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+
+                    // Playlist
                     GestureDetector(
-                      onTap: ()=>{},
+                      onTap: ()=>{
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => LibraryPage())
+                        ),
+                      },
                       child: Container(
                         padding: EdgeInsets.only(left: 10, right: 10),
                         width: 150,
                         height: 150,
-                        decoration: const BoxDecoration(
-                            color: Colors.white70,
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                        ),
+                        decoration: tileDecoration(),
                         child: Column(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.only(top: 20),
                               child: Container(
-                                width: 80,
-                                height: 80,
+                                width: 60,
+                                height: 60,
                                 decoration: const BoxDecoration(
                                   image: DecorationImage(
                                     image: AssetImage("images/playlist.png"),
@@ -196,35 +216,146 @@ class _HomeState extends State<Home> {
                             ),
                           ],
                         ),
-
-                        // child: ElevatedButton(
-                        //   child: Container(color: Colors.white,),
-                        //   // child: Column(
-                        //   //   children: [
-                        //   //     // Container(
-                        //   //     //   decoration: const BoxDecoration(
-                        //   //     //     image: DecorationImage(
-                        //   //     //       image: AssetImage("images/pearl_black_crop.png"),
-                        //   //     //       fit: BoxFit.cover,
-                        //   //     //     ),
-                        //   //     //   ),
-                        //   //     // ),
-                        //   //     //ImageIcon(AssetImage('images/playlist.png')),
-                        //   //     //Text('Sync'),
-                        //   //   ],
-                        //   // ),
-                        //     onPressed: (){
-                        //
-                        //     },
-                        // ),
                       ),
                     ),
-                    Container(
-                      width: 150,
-                      height: 150,
-                      decoration: const BoxDecoration(
-                          color: Colors.white70,
-                          borderRadius: BorderRadius.all(Radius.circular(20))
+
+                    const SizedBox(width: 15),
+
+                    // Library
+                    GestureDetector(
+                      onTap: ()=>{
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => LibraryPage())
+                        ),
+                      },
+                      child: Container(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        width: 150,
+                        height: 150,
+                        decoration: tileDecoration(),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Container(
+                                width: 60,
+                                height: 60,
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage("images/music.png"),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 2),
+                              child: Text('Library',
+                                style: TextStyle(
+                                  fontFamily: 'GrapeNuts',
+                                  fontSize: 40,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 15),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+
+                    // Sync
+                    GestureDetector(
+                      onTap: ()=>{
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => LibraryPage())
+                        ),
+                      },
+                      child: Container(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        width: 150,
+                        height: 150,
+                        decoration: tileDecoration(),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 25),
+                              child: Container(
+                                width: 60,
+                                height: 60,
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage("images/sync.png"),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 2),
+                              child: Text('Sync',
+                                style: TextStyle(
+                                  fontFamily: 'GrapeNuts',
+                                  fontSize: 40,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 15),
+
+                    // Team
+                    GestureDetector(
+                      onTap: ()=>{
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => LibraryPage())
+                        ),
+                      },
+                      child: Container(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        width: 150,
+                        height: 150,
+                        decoration: tileDecoration(),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Container(
+                                width: 70,
+                                height: 70,
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage("images/profile.png"),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 2),
+                              child: Text('Team',
+                                style: TextStyle(
+                                  fontFamily: 'GrapeNuts',
+                                  fontSize: 40,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -236,6 +367,26 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+}
+
+BoxDecoration tileDecoration() {
+  return const BoxDecoration(
+    gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        stops: [
+          0.1,
+          0.8,
+          0.9
+        ],
+        colors: [
+          Colors.white,
+          Colors.white38,
+          Colors.white
+        ]
+    ),
+    borderRadius: BorderRadius.all(Radius.circular(20)),
+  );
 }
 
 void _butLogin(){

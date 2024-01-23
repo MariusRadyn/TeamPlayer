@@ -72,6 +72,7 @@ flutter:
     - images/ArrowDown.png
     - images/ArrowUp.png
     - images/settings.png
+    - images/profile.png
     - images/profile2.png
     - images/playlist.png
     - images/music.png
