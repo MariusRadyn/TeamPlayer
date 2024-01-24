@@ -49,24 +49,6 @@ class _HomeState extends State<Home> {
                 Stack(
                   children: [
 
-                    // Settings Button
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GestureDetector(
-                          onTap: ()=> {
-                            Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) => SettingsPage(),
-                              ),
-                            ),
-                          },
-                          child: Container(
-                              child: Icon(Icons.settings)
-                          ),
-                        ),
-                      ],
-                    ),
 
                     // Backdrop
                     Container(
@@ -126,6 +108,24 @@ class _HomeState extends State<Home> {
                       ),
                     ),
 
+                    // Settings Button
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                          onTap: ()=> {
+                            Navigator.push(context,
+                              MaterialPageRoute(
+                                builder: (context) => SettingsPage(),
+                              ),
+                            ),
+                          },
+                          child: Container(
+                              child: Icon(Icons.settings)
+                          ),
+                        ),
+                      ],
+                    ),
                     // Welcome Message
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -174,6 +174,7 @@ class _HomeState extends State<Home> {
                 ),
 
                 const SizedBox(height: 90),
+
 
                 // Tiles
                 Row(
