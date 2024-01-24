@@ -54,12 +54,16 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         GestureDetector(
-                            child: Icon(Icons.settings),
-                          onTap: (){
-                            Navigator.of(context).push(MaterialPageRoute(
+                          onTap: ()=> {
+                            Navigator.push(context,
+                              MaterialPageRoute(
                                 builder: (context) => SettingsPage(),
-                            ));
+                              ),
+                            ),
                           },
+                          child: Container(
+                              child: Icon(Icons.settings)
+                          ),
                         ),
                       ],
                     ),
@@ -179,7 +183,7 @@ class _HomeState extends State<Home> {
                     // Playlist
                     GestureDetector(
                       onTap: ()=>{
-                        Navigator.pushReplacement(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => LibraryPage())
                         ),
@@ -224,7 +228,7 @@ class _HomeState extends State<Home> {
                     // Library
                     GestureDetector(
                       onTap: ()=>{
-                        Navigator.pushReplacement(
+                        Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => LibraryPage())
                         ),
@@ -274,7 +278,7 @@ class _HomeState extends State<Home> {
                     // Sync
                     GestureDetector(
                       onTap: ()=>{
-                        Navigator.pushReplacement(
+                        Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => LibraryPage())
                         ),
@@ -319,7 +323,7 @@ class _HomeState extends State<Home> {
                     // Team
                     GestureDetector(
                       onTap: ()=>{
-                        Navigator.pushReplacement(
+                        Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => LibraryPage())
                         ),
@@ -345,7 +349,7 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             const Padding(
-                              padding: EdgeInsets.only(top: 2),
+                              padding: EdgeInsets.only(top: 0),
                               child: Text('Team',
                                 style: TextStyle(
                                   fontFamily: 'GrapeNuts',
@@ -370,8 +374,8 @@ class _HomeState extends State<Home> {
 }
 
 BoxDecoration tileDecoration() {
-  return const BoxDecoration(
-    gradient: LinearGradient(
+  return BoxDecoration(
+    gradient: const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         stops: [
@@ -385,7 +389,24 @@ BoxDecoration tileDecoration() {
           Colors.white
         ]
     ),
-    borderRadius: BorderRadius.all(Radius.circular(20)),
+    borderRadius: const BorderRadius.all(
+        Radius.circular(20)
+    ),
+    border: Border.all(
+      color: Colors.white,
+      width: 5,
+    ),
+    boxShadow:[
+      BoxShadow(
+        color: Colors.teal.withOpacity(0.5), //color of shadow
+        spreadRadius: 5, //spread radius
+        blurRadius: 20, // blur radius
+        offset: Offset(0, 2), // changes position of shadow
+        //first paramerter of offset is left-right
+        //second parameter is top to down
+      ),
+      //you can set more BoxShadow() here
+    ],
   );
 }
 
