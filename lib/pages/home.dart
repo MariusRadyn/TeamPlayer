@@ -49,7 +49,6 @@ class _HomeState extends State<Home> {
                 Stack(
                   children: [
 
-
                     // Backdrop
                     Container(
                       alignment: Alignment.topCenter,
@@ -126,6 +125,7 @@ class _HomeState extends State<Home> {
                         ),
                       ],
                     ),
+
                     // Welcome Message
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -175,56 +175,10 @@ class _HomeState extends State<Home> {
 
                 const SizedBox(height: 90),
 
-
                 // Tiles
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
-                    // Playlist
-                    GestureDetector(
-                      onTap: ()=>{
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => LibraryPage())
-                        ),
-                      },
-                      child: Container(
-                        padding: EdgeInsets.only(left: 10, right: 10),
-                        width: 150,
-                        height: 150,
-                        decoration: tileDecoration(),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 20),
-                              child: Container(
-                                width: 60,
-                                height: 60,
-                                decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage("images/playlist.png"),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 2),
-                              child: Text('Playlist',
-                              style: TextStyle(
-                                fontFamily: 'GrapeNuts',
-                                fontSize: 40,
-                                color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(width: 15),
 
                     // Library
                     GestureDetector(
@@ -257,6 +211,51 @@ class _HomeState extends State<Home> {
                             const Padding(
                               padding: EdgeInsets.only(top: 2),
                               child: Text('Library',
+                                style: TextStyle(
+                                  fontFamily: 'GrapeNuts',
+                                  fontSize: 40,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 15),
+
+                    // Playlist
+                    GestureDetector(
+                      onTap: ()=>{
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => PlaylistPage())
+                        ),
+                      },
+                      child: Container(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        width: 150,
+                        height: 150,
+                        decoration: tileDecoration(),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Container(
+                                width: 60,
+                                height: 60,
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage("images/playlist.png"),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 2),
+                              child: Text('Playlist',
                                 style: TextStyle(
                                   fontFamily: 'GrapeNuts',
                                   fontSize: 40,

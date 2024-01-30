@@ -263,26 +263,25 @@ class MyListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: InkWell(
-        child: ListTile(
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(color: Colors.blueGrey, width: 1),
-            borderRadius: BorderRadius.circular(25),
+      child: ListTile(
+        tileColor: Colors.blueGrey,
+        dense: true,
+        splashColor: Colors.cyan,
+        // Delete Icon
+        trailing: IconButton(
+          onPressed: onDelete,
+          icon: const Icon(
+          Icons.delete_forever,
+          color: Colors.red,
+          size: 30,
           ),
-          // Delete Icon
-          trailing: IconButton(
-            onPressed: onDelete,
-            icon: const Icon(
-            Icons.delete_forever,
-            color: Colors.red,
-            size: 30,
-            ),
-          ),
-          title: Text(text, overflow: TextOverflow.ellipsis),
-          subtitle: Text(subText, overflow: TextOverflow.ellipsis),
-          onTap: onTap,
-
         ),
+        title: Text(text,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(color: Colors.white),
+        ),
+        subtitle: Text(subText, overflow: TextOverflow.ellipsis),
+        onTap: onTap,
       ),
     );
   }
