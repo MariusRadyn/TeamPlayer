@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:team_player/theme/theme_constants.dart';
 import 'package:team_player/utils/global_data.dart';
+
+enum SlideActions{Share,Delete,Sync}
 
 // Functions
 saveAppSettings() async {
@@ -264,10 +268,10 @@ class MyListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: ListTile(
-        tileColor: Colors.blueGrey,
+        tileColor: COLOR_BLACK_LIGHT,
         dense: true,
         splashColor: Colors.cyan,
-        // Delete Icon
+        //Delete Icon
         trailing: IconButton(
           onPressed: onDelete,
           icon: const Icon(
@@ -282,6 +286,85 @@ class MyListTile extends StatelessWidget {
         ),
         subtitle: Text(subText, overflow: TextOverflow.ellipsis),
         onTap: onTap,
+      ),
+    );
+  }
+}
+class MySlidableListTile extends StatelessWidget {
+  final int index;
+  final String textHeader;
+  final String subText;
+  Function(BuildContext)? onDelete;
+  Function(BuildContext)? onSync;
+  Function(BuildContext)? onShare;
+  Function()? onTap;
+
+  MySlidableListTile({
+    super.key,
+    required this.textHeader,
+    required this.index,
+    this.subText = '',
+    this.onDelete,
+    this.onTap,
+    this.onSync,
+    this.onShare,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Slidable(
+        key: ValueKey(index),
+
+        // Sync, Share Button
+        startActionPane: ActionPane(
+            motion: const DrawerMotion(),
+            children: [
+              SlidableAction(
+                onPressed: (context) {onSync!(context);},
+                backgroundColor: Colors.greenAccent,
+                icon: Icons.sync,
+                label: 'Sync',
+              ),
+              SlidableAction(
+                onPressed: (context){onShare!(context);},
+                backgroundColor: Colors.blueAccent,
+                icon: Icons.share,
+                label: 'Share',
+              ),
+            ],
+          ),
+
+        // Delete Button
+        endActionPane:ActionPane(
+            motion: BehindMotion(),
+            children: [
+              SlidableAction(
+                onPressed: (context){
+                  print('Delete Button Pressed');
+                  onDelete!(context);
+                },
+                backgroundColor: Colors.redAccent,
+                icon: Icons.delete_forever,
+                label: 'Delete',
+              ),
+            ],
+          ) ,
+          child : ListTile(
+            tileColor: COLOR_BLACK_LIGHT,
+            dense: true,
+            splashColor: Colors.cyan,
+            title: Text(
+              textHeader,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: Colors.white),
+            ),
+            subtitle: Text(
+                subText,
+                overflow: TextOverflow.ellipsis
+            ),
+            onTap: onTap,
+          ),
       ),
     );
   }
@@ -390,6 +473,7 @@ class MyAlertDialogBox extends StatelessWidget {
     return _alert();
   }
 }
+
 class MyDialogBox{
   final String message;
   final String header;

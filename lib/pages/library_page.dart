@@ -1,13 +1,16 @@
 
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
+//import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import '../utils/database_manager.dart';
 import '../utils/global_data.dart';
 import 'package:team_player/utils/helpers.dart';
 import 'package:team_player/utils/song_view_model.dart';
 import 'package:team_player/utils/firebase.dart';
+
+enum Actions{share,delete,archive}
 
 class LibraryPage extends StatefulWidget {
   const LibraryPage({super.key});
@@ -25,10 +28,6 @@ class _LibraryPageState extends State<LibraryPage> {
 
   int _selectedIndex = 0;
 
-  Future initDropbox() async{
-    //await Dropbox.init('Team_Player' , 'ilzt9kfjbiv4ofw', 'd0swgoachzofagc');
-  }
-
   @override
   void initState() {
     super.initState();
@@ -38,6 +37,74 @@ class _LibraryPageState extends State<LibraryPage> {
     // WidgetsBinding.instance.addPostFrameCallback((_){
     //   fireGetFilesList("/user1");
     // });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Library',
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: navBarItems,
+        currentIndex: _selectedIndex,
+        onTap: _onNavBarTapped,
+      ),
+      body: ListView.builder(
+        itemCount: fireAllSongsRef.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Dismissible(
+            key: Key('$index'),
+            child: MySlidableListTile(
+              index: index,
+              textHeader: fireAllSongsRef[index].name,
+              subText: "Author",
+
+              //Events
+              onTap: () => {print('onTap')},
+              onShare: (context) => {print('onShare')},
+              onSync: (context) => {print('onSync')},
+              onDelete: (context) => {
+                setState(() {
+                  String song = fireAllSongsRef[index].name;
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                      MyAlertDialogBox(heading: "Move Song to Recycle Bin?",
+                      msg: "$song\n\n Move this song to the Recycle Bin\nAre you Sure?",
+                      context: context
+                      ),
+                    ),
+                  //       MyDialogBox(
+                  //   header: "Move Song to Recycle Bin?",
+                  //   message: "$song\n\n Move this song to the Recycle Bin\nAre you Sure?",
+                  //   but1Text: "Yes",
+                  //   but2Text: "No",
+                  //   onPressedBut1: (){
+                  //     //fireAllSongsRef.removeAt(index);
+                  //     Navigator.of(context).pop();
+                  //     //setState(() {});
+                  //   },
+                  // ).dialogBuilder(context);
+                  //     })
+                  );
+                }),
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  //----------------------------------------------------------------------------
+  // Methodes
+  //----------------------------------------------------------------------------
+  Future initDropbox() async{
+    //await Dropbox.init('Team_Player' , 'ilzt9kfjbiv4ofw', 'd0swgoachzofagc');
   }
 
   ListTile PlayListTile(int index){
@@ -61,11 +128,18 @@ class _LibraryPageState extends State<LibraryPage> {
                 fireAllSongsRef.removeAt(index);
                 Navigator.of(context).pop();
                 setState(() {});
-                },
+              },
             ).dialogBuilder(context);
           });
         },
       ),
+    );
+  }
+
+  ListTile PlayListTileSlide(int index){
+    return ListTile(
+      key: Key('$index'),
+      title: slideList(index),
     );
   }
 
@@ -76,6 +150,51 @@ class _LibraryPageState extends State<LibraryPage> {
       final tile = myPlayList.removeAt(oldIndex);
       myPlayList.insert(newIndex, tile);
     });
+  }
+
+  Slidable slideList(int index){
+    return Slidable(
+        key: ValueKey(index),
+        startActionPane: ActionPane(
+          motion: const StretchMotion(),
+          children: [
+            SlidableAction(
+              onPressed: (context)=>_onDismissed(index, Actions.archive),
+              backgroundColor: Colors.greenAccent,
+              icon: Icons.access_alarm,
+              label: 'archive',
+            ),
+            SlidableAction(
+              onPressed: (context)=>_onDismissed(index, Actions.share),
+              backgroundColor: Colors.blueAccent,
+              icon: Icons.access_alarm,
+              label: 'Label2',
+            ),
+          ],
+        ),
+        endActionPane:ActionPane(
+          motion: BehindMotion(),
+          children: [
+            SlidableAction(
+              onPressed: (context)=>_onDismissed(index, Actions.delete),
+              backgroundColor: Colors.redAccent,
+              icon: Icons.access_alarm,
+              label: 'Delete',
+            ),
+          ],
+        ) ,
+        child : MyListTile(
+            text: fireAllSongsRef[index].name)
+    );
+  }
+
+  void _onDismissed(int index, Actions action){
+    final song = myPlayList[index].songName;
+    if(action == Actions.delete){
+      setState(() => {
+        myPlayList.removeAt(index)
+      });
+    }
   }
 
   // Read Database
@@ -92,50 +211,15 @@ class _LibraryPageState extends State<LibraryPage> {
   }
 
   void loadDummyData() {
-     LocalSongsLibrary data = LocalSongsLibrary(
+    LocalSongsLibrary data = LocalSongsLibrary(
         id: 0,
         songName: 'How great is our God',
         author: 'Chris Tomlin',
         genre: 'Christian',
         dateCreated: DateTime.now().toString());
 
-     dbInsert(DB_TABLE_SONGS_LIB, data);
+    dbInsert(DB_TABLE_SONGS_LIB, data);
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Library',
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: navBarItems,
-        currentIndex: _selectedIndex,
-        onTap: _onNavBarTapped,
-      ),
-      body: ListView.builder(
-        itemCount: fireAllSongsRef.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Dismissible(
-            key: Key('$index'),
-            child: PlayListTile(index),
-            onDismissed: (direction) {
-              setState(() {
-                fireAllSongsRef.removeAt(index);
-              });
-
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(
-                      content: Text('item deleted')
-              ));
-            },
-          );
-        },
-      ),
-    );
-  }
-
   void _navigateToNextScreen(BuildContext context, SongViewModel view) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => ViewSong (
@@ -148,7 +232,6 @@ class _LibraryPageState extends State<LibraryPage> {
     SongViewModel _songview = await getSongFromCloud(index);
     _navigateToNextScreen(context, _songview);
   }
-
 
   void _onNavBarTapped(int index) {
     setState(() {
