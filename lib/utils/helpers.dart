@@ -320,12 +320,14 @@ class MySlidableListTile extends StatelessWidget {
         startActionPane: ActionPane(
             motion: const DrawerMotion(),
             children: [
+              // Sync Button
               SlidableAction(
                 onPressed: (context) {onSync!(context);},
                 backgroundColor: Colors.greenAccent,
                 icon: Icons.sync,
                 label: 'Sync',
               ),
+              // Share Button
               SlidableAction(
                 onPressed: (context){onShare!(context);},
                 backgroundColor: Colors.blueAccent,
@@ -337,8 +339,9 @@ class MySlidableListTile extends StatelessWidget {
 
         // Delete Button
         endActionPane:ActionPane(
-            motion: BehindMotion(),
+            motion: DrawerMotion(),
             children: [
+              // Delete Button
               SlidableAction(
                 onPressed: (context){
                   print('Delete Button Pressed');
@@ -350,20 +353,27 @@ class MySlidableListTile extends StatelessWidget {
               ),
             ],
           ) ,
-          child : ListTile(
-            tileColor: COLOR_BLACK_LIGHT,
-            dense: true,
-            splashColor: Colors.cyan,
-            title: Text(
-              textHeader,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: Colors.white),
+          child : Padding(
+            padding: const EdgeInsets.fromLTRB(8,2,8,2),
+            child: ListTile(
+              visualDensity: VisualDensity(vertical: -3),
+              tileColor: COLOR_BLACK_LIGHT,
+              dense: true,
+
+              splashColor: Colors.cyan,
+              title: Text(
+                textHeader,
+                textScaler: const TextScaler.linear(1.2),
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: Colors.white),
+              ),
+              subtitle: Text(
+                  subText,
+                  textScaler: const TextScaler.linear(1),
+                  overflow: TextOverflow.ellipsis
+              ),
+              onTap: onTap,
             ),
-            subtitle: Text(
-                subText,
-                overflow: TextOverflow.ellipsis
-            ),
-            onTap: onTap,
           ),
       ),
     );
@@ -446,7 +456,7 @@ class MyAlertDialogBox extends StatelessWidget {
     required this.context,
   });
 
-  _alert(){
+   _alert(){
     var v = AlertDialog(
       title: Text(heading),
       content: Text(msg),
@@ -471,6 +481,73 @@ class MyAlertDialogBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _alert();
+  }
+}
+
+class MyDialogWidget extends StatelessWidget {
+  final String message;
+  final String header;
+  final String but1Text;
+  final String but2Text;
+  final VoidCallback? onPressedBut1;
+  final VoidCallback? onPressedBut2;
+  String image;
+
+  MyDialogWidget({
+    super.key,
+    required this.message,
+    required this.header,
+    required this.but1Text,
+    required this.but2Text,
+    this.onPressedBut1,
+    this.onPressedBut2,
+    this.image = "images/warning.png",
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoAlertDialog(
+      title: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Image.asset(
+              image,
+              height: 30,
+              width: 30,
+            ),
+          ),
+          SizedBox(width: 20),
+          Expanded(
+              flex: 4,
+              child: Text (
+                header,
+                textAlign: TextAlign.start,
+              )
+          ),
+        ],
+      ),
+      content: Text(
+        message,
+        textAlign: TextAlign.center,
+      ),
+      actions: <Widget>[
+        TextButton(
+          style: TextButton.styleFrom(
+            textStyle: Theme.of(context).textTheme.labelLarge,
+          ),
+          child: Text(but1Text),
+          onPressed: onPressedBut1,
+        ),
+        TextButton(
+          style: TextButton.styleFrom(
+            textStyle: Theme.of(context).textTheme.labelLarge,
+          ),
+          child: Text(but2Text),
+          onPressed: onPressedBut2,
+        ),
+      ],
+    );
   }
 }
 

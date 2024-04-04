@@ -61,38 +61,39 @@ class _LibraryPageState extends State<LibraryPage> {
               textHeader: fireAllSongsRef[index].name,
               subText: "Author",
 
-              //Events
+              //On Tap
               onTap: () => {print('onTap')},
+
+              // On Share
               onShare: (context) => {print('onShare')},
+
+              // On Sync
               onSync: (context) => {print('onSync')},
+
+              //On Delete
               onDelete: (context) => {
                 setState(() {
                   String song = fireAllSongsRef[index].name;
-
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                      MyAlertDialogBox(heading: "Move Song to Recycle Bin?",
-                      msg: "$song\n\n Move this song to the Recycle Bin\nAre you Sure?",
-                      context: context
+                      MyDialogWidget(
+                        message: "$song\n\n Move this song to the Recycle Bin\nAre you Sure?",
+                        header: "Move Song to Recycle Bin?",
+                        but1Text: "Yes",
+                        but2Text: "No",
+                        onPressedBut1:() {
+                          fireAllSongsRef.removeAt(index);
+                          Navigator.of(context).pop();
+                          setState(() {});
+                        }
                       ),
                     ),
-                  //       MyDialogBox(
-                  //   header: "Move Song to Recycle Bin?",
-                  //   message: "$song\n\n Move this song to the Recycle Bin\nAre you Sure?",
-                  //   but1Text: "Yes",
-                  //   but2Text: "No",
-                  //   onPressedBut1: (){
-                  //     //fireAllSongsRef.removeAt(index);
-                  //     Navigator.of(context).pop();
-                  //     //setState(() {});
-                  //   },
-                  // ).dialogBuilder(context);
-                  //     })
                   );
                 }),
-              },
+              },// On Delete
+
             ),
           );
         },
