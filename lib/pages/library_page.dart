@@ -1,16 +1,20 @@
 
-import 'dart:convert';
+import 'dart:io';
 
-//import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:path_provider/path_provider.dart';
 import '../utils/database_manager.dart';
 import '../utils/global_data.dart';
 import 'package:team_player/utils/helpers.dart';
 import 'package:team_player/utils/song_view_model.dart';
 import 'package:team_player/utils/firebase.dart';
 
-enum Actions{share,delete,archive}
+enum Actions{
+  share,
+  delete,
+  archive
+}
 
 class LibraryPage extends StatefulWidget {
   const LibraryPage({super.key});
@@ -27,6 +31,8 @@ class _LibraryPageState extends State<LibraryPage> {
   ];
 
   int _selectedIndex = 0;
+  List<Map<String, dynamic>> _songsLibrary = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -56,13 +62,13 @@ class _LibraryPageState extends State<LibraryPage> {
         itemBuilder: (BuildContext context, int index) {
           return Dismissible(
             key: Key('$index'),
-            child: MySlidableListTile(
+             child: MySlidableListTile(
               index: index,
               textHeader: fireAllSongsRef[index].name,
               subText: "Author",
 
               //On Tap
-              onTap: () => {print('onTap')},
+              onTap: () => _onTap(index),
 
               // On Share
               onShare: (context) => {print('onShare')},
@@ -84,16 +90,21 @@ class _LibraryPageState extends State<LibraryPage> {
                         but1Text: "Yes",
                         but2Text: "No",
                         onPressedBut1:() {
-                          fireAllSongsRef.removeAt(index);
                           Navigator.of(context).pop();
+                          //fireUploadImage("");
+                          //fireUploadFile("C:\\Temp\\script.txt");
+                          MoveSongToRecyclebin(context, fireAllSongsRef[index].fullPath);
+                          fireAllSongsRef.removeAt(index);
                           setState(() {});
-                        }
+                        },
+                        onPressedBut2: (){
+                          Navigator.of(context).pop();
+                        },
                       ),
                     ),
                   );
                 }),
               },// On Delete
-
             ),
           );
         },
@@ -101,13 +112,36 @@ class _LibraryPageState extends State<LibraryPage> {
     );
   }
 
-  //----------------------------------------------------------------------------
-  // Methodes
-  //----------------------------------------------------------------------------
+  // Methods -------------------------------------------------------------------
+
   Future initDropbox() async{
     //await Dropbox.init('Team_Player' , 'ilzt9kfjbiv4ofw', 'd0swgoachzofagc');
   }
+  void MoveSongToRecyclebin(BuildContext context, String filename) async {
+    final directory = await getApplicationDocumentsDirectory();
+    File path = File('$directory.path/$filename');
+    new Directory('testDir').create();
+    path.writeAsString('$path');
 
+    final exist = await path.exists();
+    if(!exist){
+      Navigator.push(
+        context,
+          MaterialPageRoute(
+          builder: (context) =>
+            MyAlertDialogBox(
+              context: context,
+              heading: "File not found",
+              msg: "File not found: $path",
+              but2Text: "OK",
+            ),
+          ),
+      );
+      Navigator.pop(context);
+    }
+    else
+      fireUploadFile('$path');
+  }
   ListTile PlayListTile(int index){
     return ListTile(
       key: Key('$index'),
@@ -136,14 +170,12 @@ class _LibraryPageState extends State<LibraryPage> {
       ),
     );
   }
-
   ListTile PlayListTileSlide(int index){
     return ListTile(
       key: Key('$index'),
       title: slideList(index),
     );
   }
-
   void reorderItems(int oldIndex, int newIndex){
     setState(() {
       // Fix error when moving down
@@ -152,7 +184,6 @@ class _LibraryPageState extends State<LibraryPage> {
       myPlayList.insert(newIndex, tile);
     });
   }
-
   Slidable slideList(int index){
     return Slidable(
         key: ValueKey(index),
@@ -188,21 +219,17 @@ class _LibraryPageState extends State<LibraryPage> {
             text: fireAllSongsRef[index].name)
     );
   }
-
   void _onDismissed(int index, Actions action){
     final song = myPlayList[index].songName;
     if(action == Actions.delete){
+      fireUploadFile(song);
       setState(() => {
         myPlayList.removeAt(index)
       });
     }
   }
 
-  // Read Database
-  List<Map<String, dynamic>> _songsLibrary = [];
-  bool _isLoading = true;
-  void getSongLibrary() async
-  {
+  void getSongLibrary() async {
     final data = await dbReadTable(DB_TABLE_SONGS_LIB);
     setState(() {
       _songsLibrary = data;
@@ -210,7 +237,6 @@ class _LibraryPageState extends State<LibraryPage> {
     });
     print(_songsLibrary);
   }
-
   void loadDummyData() {
     LocalSongsLibrary data = LocalSongsLibrary(
         id: 0,
@@ -228,12 +254,10 @@ class _LibraryPageState extends State<LibraryPage> {
         )
     ));
   }
-
   Future<void> _onTap(int index) async{
     SongViewModel _songview = await getSongFromCloud(index);
     _navigateToNextScreen(context, _songview);
   }
-
   void _onNavBarTapped(int index) {
     setState(() {
       _selectedIndex = index;

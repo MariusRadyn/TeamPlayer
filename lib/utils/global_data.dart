@@ -1,5 +1,9 @@
 import '../theme/theme_manager.dart';
 import 'package:flutter/material.dart';
+// UserData
+final String fireUserName = 'user1';
+final String fireUserRecyclebin = fireUserName + '_recycle/';
+
 
 // Song Font Sizes
 const String songWordsFont = 'SpaceMono';

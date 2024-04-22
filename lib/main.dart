@@ -15,7 +15,7 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await getAppSettings();
   await Firebase.initializeApp();
-  await fireGetFilesList("/user1");
+  await fireGetFilesList(fireUserName);
   runApp(MyApp());
 }
 

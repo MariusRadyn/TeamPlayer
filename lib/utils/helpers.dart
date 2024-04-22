@@ -312,70 +312,69 @@ class MySlidableListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Slidable(
-        key: ValueKey(index),
+    return Slidable(
+      key: ValueKey(index),
 
-        // Sync, Share Button
-        startActionPane: ActionPane(
-            motion: const DrawerMotion(),
-            children: [
-              // Sync Button
-              SlidableAction(
-                onPressed: (context) {onSync!(context);},
-                backgroundColor: Colors.greenAccent,
-                icon: Icons.sync,
-                label: 'Sync',
-              ),
-              // Share Button
-              SlidableAction(
-                onPressed: (context){onShare!(context);},
-                backgroundColor: Colors.blueAccent,
-                icon: Icons.share,
-                label: 'Share',
-              ),
-            ],
-          ),
-
-        // Delete Button
-        endActionPane:ActionPane(
-            motion: DrawerMotion(),
-            children: [
-              // Delete Button
-              SlidableAction(
-                onPressed: (context){
-                  print('Delete Button Pressed');
-                  onDelete!(context);
-                },
-                backgroundColor: Colors.redAccent,
-                icon: Icons.delete_forever,
-                label: 'Delete',
-              ),
-            ],
-          ) ,
-          child : Padding(
-            padding: const EdgeInsets.fromLTRB(8,2,8,2),
-            child: ListTile(
-              visualDensity: VisualDensity(vertical: -3),
-              tileColor: COLOR_BLACK_LIGHT,
-              dense: true,
-
-              splashColor: Colors.cyan,
-              title: Text(
-                textHeader,
-                textScaler: const TextScaler.linear(1.2),
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: Colors.white),
-              ),
-              subtitle: Text(
-                  subText,
-                  textScaler: const TextScaler.linear(1),
-                  overflow: TextOverflow.ellipsis
-              ),
-              onTap: onTap,
+      // Sync, Share Button
+      startActionPane: ActionPane(
+          motion: const DrawerMotion(),
+          children: [
+            // Sync Button
+            SlidableAction(
+              onPressed: (context) {onSync!(context);},
+              backgroundColor: Colors.greenAccent,
+              icon: Icons.sync,
+              label: 'Sync',
             ),
+            // Share Button
+            SlidableAction(
+              onPressed: (context){onShare!(context);},
+              backgroundColor: Colors.blueAccent,
+              icon: Icons.share,
+              label: 'Share',
+            ),
+          ],
+        ),
+
+      // Delete Button
+      endActionPane:ActionPane(
+          motion: DrawerMotion(),
+          children: [
+            // Delete Button
+            SlidableAction(
+              onPressed: (context){
+                print('Delete Button Pressed');
+                onDelete!(context);
+              },
+              backgroundColor: Colors.redAccent,
+              icon: Icons.delete_forever,
+              label: 'Delete',
+            ),
+          ],
+        ) ,
+
+       child : Padding(
+           padding: const EdgeInsets.fromLTRB(8,2,8,2),
+          child: ListTile(
+            visualDensity: VisualDensity(vertical: -3),
+            tileColor: COLOR_BLACK_LIGHT,
+            dense: true,
+
+            splashColor: Colors.cyan,
+            title: Text(
+              textHeader,
+              textScaler: const TextScaler.linear(1.2),
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: Colors.white),
+            ),
+            subtitle: Text(
+                subText,
+                textScaler: const TextScaler.linear(1),
+                overflow: TextOverflow.ellipsis
+            ),
+            onTap: onTap,
           ),
-      ),
+       ),
     );
   }
 }
@@ -481,6 +480,14 @@ class MyAlertDialogBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _alert();
+  }
+}
+class EmptyWdget extends StatelessWidget {
+  const EmptyWdget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }
 
