@@ -118,7 +118,7 @@ class _LibraryPageState extends State<LibraryPage> {
     //await Dropbox.init('Team_Player' , 'ilzt9kfjbiv4ofw', 'd0swgoachzofagc');
   }
   void MoveSongToRecyclebin(BuildContext context, String filename) async {
-    final directory = await getApplicationDocumentsDirectory();
+    final directory = await getDownloadsDirectory();
     File path = File('$directory.path/$filename');
     new Directory('testDir').create();
     path.writeAsString('$path');
