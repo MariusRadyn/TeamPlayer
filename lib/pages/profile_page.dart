@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:team_player/utils/helpers.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -18,20 +19,9 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        iconTheme: IconThemeData(
-          size: 40.0,
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.blue[700],
         title: const Text('Profile',
-          style: TextStyle(
-            fontSize: 30.0,
-            color: Colors.white,
-          ),
         ),
-        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -39,40 +29,22 @@ class _ProfilePageState extends State<ProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // Expanded(
-            //     child: Container(
-            //       child: Text(_cntrUserName.text),
-            //     )
-            // ),
-            TextField(
-              controller: _cntrUserName,
-              decoration: InputDecoration(
-                hintText: 'Name',
-                border: UnderlineInputBorder(),
-                suffixIcon: IconButton(
-                  onPressed: (){
-                    _cntrUserName.clear();
-                  },
-                  icon: const Icon(Icons.clear),
-                ),
-              ),
+            MyTextFieldWithIcon(
+              text: 'Name',
+              textController: _cntrUserName,
+              icon: Icons.delete_forever,
+              iconColor: Theme.of(context).cardColor,
             ),
-            SizedBox(
-              height: 10.0,
+
+            SizedBox(height: 10.0),
+
+            MyTextFieldWithIcon(
+              text: 'Surname',
+              textController: _cntrUserSurname,
+              icon: Icons.delete_forever,
+              iconColor: Theme.of(context).cardColor,
             ),
-            TextField(
-              controller: _cntrUserSurname,
-              decoration: InputDecoration(
-                hintText: 'Surname',
-                border: UnderlineInputBorder(),
-                suffixIcon: IconButton(
-                  onPressed: (){
-                    _cntrUserSurname.clear();
-                  },
-                  icon: const Icon(Icons.clear),
-                ),
-              ),
-            ),
+
             MaterialButton(
               onPressed: (){
                 setState(() {
@@ -80,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 });
               },
               color: Colors.blue,
-              child: Text('Save',
+              child: const Text('Save',
                   style: TextStyle(
                       color: Colors.white)),
             ),

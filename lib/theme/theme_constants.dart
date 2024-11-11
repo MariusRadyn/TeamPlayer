@@ -1,14 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+//import 'package:google_fonts/google_fonts.dart';
 import 'package:flex_seed_scheme/flex_seed_scheme.dart';
 
-const FONT_MAIN =   GoogleFonts.aBeeZee;
+const FONT_MAIN = 'SpaceMono';
 
-const COLOR_DARK_PRIMARY = Colors.deepOrange;
-const COLOR_DARK_BACKGROUND = Colors.black12;
-const COLOR_DARK_APPBAR = Colors.black26;
-const COLOR_DARK_BUTTON = Colors.black54;
+
 
 // Define your seed colors.
 // const Color primarySeedColor = Color(0xFF6750A4);
@@ -32,28 +29,46 @@ ThemeData lightTheme = ThemeData(
 //---------------------------------------------------
 // Theme Dark
 //---------------------------------------------------
+const COLOR_DARK_PRIMARY = Colors.deepOrange;
+const COLOR_DARK_BACKGROUND = Colors.black12;
+const COLOR_DARK_APPBAR = Colors.black26;
+const COLOR_DARK_BUTTON = Colors.black54;
+
+const COLOR_ORANGE = Color(0xFFF26800);
+const COLOR_BLACK = Color(0xFF14140F);
+const COLOR_BLACK_LIGHT = Color(0x10A3CCAB);
+const COLOR_TEAL_LIGHT = Color(0xFFA3CCAB);
+const COLOR_TEAL_MID = Color(0xFF34675C);
+const COLOR_TEAL_DARK = Color(0xFF053D38);
+
 ThemeData darkTheme = ThemeData(
-  useMaterial3: false,
+  useMaterial3: true,
   colorScheme: const ColorScheme.dark(
-    primary: COLOR_DARK_PRIMARY,
+    primary: COLOR_ORANGE,
     onPrimary: Colors.blue,
     brightness: Brightness.dark,
-    background: COLOR_DARK_BACKGROUND,
-
+    background: COLOR_BLACK,
   ),
   appBarTheme: const AppBarTheme(
     backgroundColor: COLOR_DARK_APPBAR,
   ),
-  textTheme: TextTheme(
-    displayLarge: FONT_MAIN(
+  textTheme: const TextTheme(
+    displayLarge: TextStyle(
+      fontFamily: FONT_MAIN,
       fontSize: 40,
       fontWeight: FontWeight.bold,
     ),
-    titleLarge: FONT_MAIN(
+    titleLarge: TextStyle(
+      fontFamily: FONT_MAIN,
       fontSize: 30,
     ),
-    displayMedium: FONT_MAIN(fontSize: 20),
-    displaySmall: FONT_MAIN(fontSize: 10),
+    displayMedium: TextStyle(
+        fontFamily: FONT_MAIN,
+        fontSize: 20
+    ),
+    displaySmall: TextStyle(
+        fontFamily: FONT_MAIN,fontSize: 10
+    ),
   ),
   floatingActionButtonTheme: FloatingActionButtonThemeData(
     backgroundColor: Colors.grey[700]

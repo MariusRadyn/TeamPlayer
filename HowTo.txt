@@ -8,3 +8,12 @@ Point to flutter GIT folder
 
 Circle app bar
 https://github.com/asjqkkkk/circle_list/tree/master
+
+Dropbox
+https://pub.dev/packages/dropbox_client
+register client 
+https://www.dropbox.com/developers
+const String dropbox_clientId = 'TeamPlayer4Jesus';
+const String dropbox_key = 'vin6yi2slkfpp1e';
+const String dropbox_secret = 'hu2k0ee675tsooa';
+const String token = 'sl.BoaxkjEdy4_0QdXBlF3GgKWC5rt5qeF7mTzCpUqC30kgKxXl0p5DreflFAg25tHpIo-I2cCXvBCI5RcdevyOUT28dSV3xnYb451vLlza2IkokTAfaumJHdG7G0vccTJomelmYrS4muIxZQD6FFW8TAs';

@@ -1,19 +1,26 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:team_player/pages/home.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:team_player/pages/playlist_page.dart';
-import 'package:team_player/pages/profile_page.dart';
-import 'package:team_player/theme/theme_constants.dart';
 import 'package:team_player/theme/theme_manager.dart';
+import 'package:team_player/utils/helpers.dart';
+import 'package:team_player/utils/global_data.dart';
+import 'package:team_player/utils/firebase.dart';
 
-ThemeManager _themeManager = ThemeManager();
 
-void main(){
+// Gradle = 7.5
+// SDK = 30
+
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await getAppSettings();
+  await Firebase.initializeApp();
+  await fireGetFilesList(fireUserName);
   runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+   MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -22,25 +29,33 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    _themeManager.addListener(themeListner);
+    getAppSettings();
+    themeManager.addListener(themeListner);
+    themeManager.toggleTheme(true);
     super.initState();
   }
 
   @override
   void dispose() {
-    _themeManager.removeListener(themeListner);
+    themeManager.removeListener(themeListner);
     super.dispose();
   }
 
   themeListner() {
+    if (mounted) {
+      setState((){});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-        theme: darkTheme,
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: themeManager.themeMode,
       home: Home(),
     );
   }
 }
+
